@@ -74,24 +74,14 @@ int force_swap(T &a, T &b)
     return is_swapped;
 };
 
-// int force_swap(int &a, int &b)
-// {
-//     int is_swapped = 1;
-//     int temp = a;
-//     a = b;
-//     b = temp;
-
-//     return is_swapped;
-// };
-
 sort_func_result default_sort(int *array, int array_size, bool (*cmp)(int a, int b))
 {
     sort_func_result ret;
     ret.func_name = __FUNCTION__;
-    int swap_count = 0, cmp_count = 0;
+    init_counter();
     sort(array, array + array_size, cmp);
-    ret.swap_count = swap_count;
-    ret.compare_count = cmp_count;
+    ret.swap_count = GLOBAL_SWAP_CNT;
+    ret.compare_count = GLOBAL_CMP_CNT;
     return ret;
 };
 
@@ -99,17 +89,16 @@ sort_func_result bubble_sort(int *array, int array_size, bool (*cmp)(int a, int 
 {
     sort_func_result ret;
     ret.func_name = __FUNCTION__;
-    int swap_count = 0, cmp_count = 0;
+    init_counter();
     for (int i = array_size - 1; i >= 0; i--)
     {
         for (int j = 0; j < i; j++)
         {
-            swap_count += compare_and_swap(array[j], array[j + 1], cmp);
-            cmp_count++;
+            compare_and_swap(array[j], array[j + 1], cmp);
         };
     };
-    ret.swap_count = swap_count;
-    ret.compare_count = cmp_count;
+    ret.swap_count = GLOBAL_SWAP_CNT;
+    ret.compare_count = GLOBAL_CMP_CNT;
     return ret;
 };
 
@@ -117,17 +106,16 @@ sort_func_result selection_sort(int *array, int array_size, bool (*cmp)(int a, i
 {
     sort_func_result ret;
     ret.func_name = __FUNCTION__;
-    int swap_count = 0, cmp_count = 0;
+    init_counter();
     for (int i = 0; i < array_size; i++)
     {
         for (int j = i + 1; j < array_size; j++)
         {
-            swap_count += compare_and_swap(array[i], array[j], cmp);
-            cmp_count++;
+            compare_and_swap(array[i], array[j], cmp);
         };
     };
-    ret.swap_count = swap_count;
-    ret.compare_count = cmp_count;
+    ret.swap_count = GLOBAL_SWAP_CNT;
+    ret.compare_count = GLOBAL_CMP_CNT;
     return ret;
 };
 
@@ -135,7 +123,7 @@ sort_func_result insertion_sort(int *array, int array_size, bool (*cmp)(int a, i
 {
     sort_func_result ret;
     ret.func_name = __FUNCTION__;
-    int swap_count = 0, cmp_count = 0;
+    init_counter();
     for (int i = 0; i < array_size; i++)
     {
         int tmp = array[i];
@@ -143,15 +131,15 @@ sort_func_result insertion_sort(int *array, int array_size, bool (*cmp)(int a, i
 
         while (pos > 0 && cmp(tmp, array[pos - 1]))
         {
-            cmp_count++;
+
             array[pos] = array[pos - 1];
-            swap_count++;
+
             pos--;
         };
         array[pos] = tmp;
     };
-    ret.swap_count = swap_count;
-    ret.compare_count = cmp_count;
+    ret.swap_count = GLOBAL_SWAP_CNT;
+    ret.compare_count = GLOBAL_CMP_CNT;
     return ret;
 };
 
@@ -159,7 +147,7 @@ sort_func_result binary_insertion_sort(int *array, int array_size, bool (*cmp)(i
 {
     sort_func_result ret;
     ret.func_name = __FUNCTION__;
-    int swap_count = 0, cmp_count = 0;
+    init_counter();
     for (int i = 0; i < array_size; i++)
     {
         int tmp = array[i];
@@ -171,17 +159,15 @@ sort_func_result binary_insertion_sort(int *array, int array_size, bool (*cmp)(i
                 end = mid;
             else
                 begin = mid + 1;
-            cmp_count++;
         }
         for (int k = i - 1; k >= begin; k--)
         {
             array[k + 1] = array[k];
-            swap_count++;
         }
         array[begin] = tmp;
     };
-    ret.swap_count = swap_count;
-    ret.compare_count = cmp_count;
+    ret.swap_count = GLOBAL_SWAP_CNT;
+    ret.compare_count = GLOBAL_CMP_CNT;
     return ret;
 };
 
@@ -189,7 +175,7 @@ sort_func_result shell_sort(int *array, int array_size, bool (*cmp)(int a, int b
 {
     sort_func_result ret;
     ret.func_name = __FUNCTION__;
-    int swap_count = 0, cmp_count = 0;
+    init_counter();
     int gap = 1;
     while (gap < array_size / 3)
         gap = 3 * gap + 1;
@@ -202,37 +188,27 @@ sort_func_result shell_sort(int *array, int array_size, bool (*cmp)(int a, int b
             int pos = i;
             while (pos >= gap && cmp(temp, array[pos - gap]))
             {
-                cmp_count++;
+
                 force_swap(array[pos], array[pos - gap]);
-                swap_count++;
+
                 pos -= gap;
             };
             array[pos] = temp;
-            swap_count++;
         };
         gap /= 3;
-        swap_count++;
     };
-    ret.swap_count = swap_count;
-    ret.compare_count = cmp_count;
+    ret.swap_count = GLOBAL_SWAP_CNT;
+    ret.compare_count = GLOBAL_CMP_CNT;
     return ret;
 };
 
 sort_func_result inside_quick_sort(int *array, int left, int right, bool (*cmp)(int a, int b))
 {
-    // cout << "*** A QUICK FOX IS CALLED. ***" << endl;
     sort_func_result ret, ret_left, ret_right;
     ret.func_name = __FUNCTION__;
     int swap_count = 0, cmp_count = 0;
-
     if (left < right)
     {
-        // cout << '[' << array[left] << ']' << ' ';
-        // for (int i = 0; i < right; i++)
-        // {
-        //     cout << array[i] << ' ';
-        // };
-        // cout << endl;
         int pivot = array[left];
         int low = left, high = right;
         while (low < high)
@@ -250,20 +226,11 @@ sort_func_result inside_quick_sort(int *array, int left, int right, bool (*cmp)(
             };
 
             swap_count += force_swap(array[high], array[low]);
-            // cout << '[' << low << ']' << '<' << '[' << high << ']' << endl;
-            // for (int i = 0; i < right; i++)
-            // {
-            //     cout << array[i] << ' ';
-            // };
-            // cout << endl;
         }
         swap_count += force_swap(array[left], array[high]);
-        // cout << "*** FOX IS GONE. ***" << endl;
         ret_left = inside_quick_sort(array, left, high - 1, cmp);
         ret_right = inside_quick_sort(array, low + 1, right, cmp);
     };
-    // ret.swap_count = swap_count+ret_left.swap_count+ret_right.swap_count;
-    // ret.compare_count = cmp_count+ret_left.compare_count+ret_right.compare_count;
     GLOBAL_SWAP_CNT += swap_count;
     GLOBAL_CMP_CNT += cmp_count;
     ret.swap_count = 0;
@@ -277,8 +244,6 @@ sort_func_result quick_sort(int *array, int array_size, bool (*cmp)(int a, int b
     ret.func_name = __FUNCTION__;
     int swap_count = 0, cmp_count = 0;
     init_counter();
-    //inside_quick_sort(array, 0, array_size, cmp);
-    // Be sure to use (array_size - 1) to solve overflow problems.
     ret = inside_quick_sort(array, 0, array_size - 1, cmp);
     ret.swap_count = GLOBAL_SWAP_CNT;
     ret.compare_count = GLOBAL_CMP_CNT;
@@ -318,8 +283,8 @@ sort_func_result heap_sort(int *array, int array_size, bool (*cmp)(int a, int b)
     while (heap_size > 0)
     {
         array[pos] = heap[0];
-        heap[0] = heap[heap_size-1];
-        heap[heap_size-1] = 2147483647;
+        heap[0] = heap[heap_size - 1];
+        heap[heap_size - 1] = 2147483647;
         heap_size--;
         pos++;
         int current_node = 0;
