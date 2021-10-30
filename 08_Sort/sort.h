@@ -8,6 +8,8 @@
 
 using namespace std;
 
+int GLOBAL_SWAP_CNT,GLOBAL_CMP_CNT; //Side effects introduced, TOO BAD!
+
 struct sort_func_result
 {
     string func_name;
@@ -248,8 +250,12 @@ sort_func_result inside_quick_sort(int *array, int left, int right, bool (*cmp)(
         ret_left = inside_quick_sort(array, left, high - 1, cmp);
         ret_right = inside_quick_sort(array, low + 1, right, cmp);
     };
-    ret.swap_count = swap_count+ret_left.swap_count+ret_right.swap_count;
-    ret.compare_count = cmp_count+ret_left.compare_count+ret_right.compare_count;
+    // ret.swap_count = swap_count+ret_left.swap_count+ret_right.swap_count;
+    // ret.compare_count = cmp_count+ret_left.compare_count+ret_right.compare_count;
+    GLOBAL_SWAP_CNT += swap_count;
+    GLOBAL_CMP_CNT += cmp_count;
+    ret.swap_count = 0;
+    ret.compare_count = 0;
     return ret;
 };
 
@@ -258,9 +264,13 @@ sort_func_result quick_sort(int *array, int array_size, bool (*cmp)(int a, int b
     sort_func_result ret;
     ret.func_name = __FUNCTION__;
     int swap_count = 0, cmp_count = 0;
+    GLOBAL_SWAP_CNT = 0;
+    GLOBAL_CMP_CNT = 0;
     //inside_quick_sort(array, 0, array_size, cmp);
     // Be sure to use (array_size - 1) to solve overflow problems.
     ret = inside_quick_sort(array, 0, array_size - 1, cmp);
+    ret.swap_count = GLOBAL_SWAP_CNT;
+    ret.compare_count = GLOBAL_CMP_CNT;
     return ret;
 };
 
