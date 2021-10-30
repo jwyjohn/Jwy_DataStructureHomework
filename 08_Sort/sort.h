@@ -31,6 +31,12 @@ bool less_than(int a, int b)
     return flag;
 };
 
+bool grater_than(int a, int b)
+{
+    bool flag = (a > b);
+    return flag;
+};
+
 int compare_and_swap(int &a, int &b, bool (*cmp)(int a, int b))
 {
     int is_swapped = 0;
@@ -59,7 +65,7 @@ sort_func_result default_sort(int *array, int array_size, bool (*cmp)(int a, int
     sort_func_result ret;
     ret.func_name = __FUNCTION__;
     int swap_count = 0, cmp_count = 0;
-    sort(array,array+array_size,cmp);
+    sort(array, array + array_size, cmp);
     ret.swap_count = swap_count;
     ret.compare_count = cmp_count;
     return ret;
@@ -149,6 +155,39 @@ sort_func_result binary_insertion_sort(int *array, int array_size, bool (*cmp)(i
             swap_count++;
         }
         array[begin] = tmp;
+    };
+    ret.swap_count = swap_count;
+    ret.compare_count = cmp_count;
+    return ret;
+};
+
+sort_func_result shell_sort(int *array, int array_size, bool (*cmp)(int a, int b))
+{
+    sort_func_result ret;
+    ret.func_name = __FUNCTION__;
+    int swap_count = 0, cmp_count = 0;
+    int gap = 1;
+    while (gap < array_size / 3)
+        gap = 3 * gap + 1;
+    while (gap)
+    {
+        for (int i = gap; i < array_size; i++)
+        {
+            int temp = array[i];
+
+            int pos = i;
+            while (pos >= gap && cmp(temp, array[pos - gap]))
+            {
+                cmp_count++;
+                force_swap(array[pos], array[pos - gap]);
+                swap_count++;
+                pos -= gap;
+            };
+            array[pos] = temp;
+            swap_count++;
+        };
+        gap /= 3;
+        swap_count++;
     };
     ret.swap_count = swap_count;
     ret.compare_count = cmp_count;

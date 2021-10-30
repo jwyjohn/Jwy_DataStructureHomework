@@ -29,6 +29,10 @@ int main()
 	test_sort_function(insertion_sort, random_int_array, N, less_than);
 	test_sort_function(binary_insertion_sort, random_int_array, N, less_than);
 	test_sort_function(default_sort, random_int_array, N, less_than);
+	test_sort_function(shell_sort, random_int_array, N, less_than);
+
+	test_sort_function(bubble_sort, random_int_array, N, grater_than);
+
 
 	return 0;
 }
