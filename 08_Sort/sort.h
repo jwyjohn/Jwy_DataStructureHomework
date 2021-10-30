@@ -80,7 +80,7 @@ sort_func_result default_sort(int *array, int array_size, bool (*cmp)(int a, int
     ret.func_name = __FUNCTION__;
     init_counter();
     sort(array, array + array_size, cmp);
-    ret.swap_count = GLOBAL_SWAP_CNT;
+    ret.swap_count = -1;
     ret.compare_count = GLOBAL_CMP_CNT;
     return ret;
 };
@@ -128,15 +128,15 @@ sort_func_result insertion_sort(int *array, int array_size, bool (*cmp)(int a, i
     {
         int tmp = array[i];
         int pos = i;
-
         while (pos > 0 && cmp(tmp, array[pos - 1]))
         {
-
+            GLOBAL_SWAP_CNT += 1;
+            GLOBAL_CMP_CNT += 1;
             array[pos] = array[pos - 1];
-
             pos--;
         };
         array[pos] = tmp;
+        GLOBAL_SWAP_CNT += 1;
     };
     ret.swap_count = GLOBAL_SWAP_CNT;
     ret.compare_count = GLOBAL_CMP_CNT;
