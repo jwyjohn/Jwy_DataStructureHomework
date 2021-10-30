@@ -54,6 +54,17 @@ int force_swap(T &a, T &b)
     return is_swapped;
 };
 
+sort_func_result default_sort(int *array, int array_size, bool (*cmp)(int a, int b))
+{
+    sort_func_result ret;
+    ret.func_name = __FUNCTION__;
+    int swap_count = 0, cmp_count = 0;
+    sort(array,array+array_size,cmp);
+    ret.swap_count = swap_count;
+    ret.compare_count = cmp_count;
+    return ret;
+};
+
 sort_func_result bubble_sort(int *array, int array_size, bool (*cmp)(int a, int b))
 {
     sort_func_result ret;

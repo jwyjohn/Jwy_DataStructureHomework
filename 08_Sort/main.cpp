@@ -28,6 +28,7 @@ int main()
 	test_sort_function(selection_sort, random_int_array, N, less_than);
 	test_sort_function(insertion_sort, random_int_array, N, less_than);
 	test_sort_function(binary_insertion_sort, random_int_array, N, less_than);
+	test_sort_function(default_sort, random_int_array, N, less_than);
 
 	return 0;
 }
