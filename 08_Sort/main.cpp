@@ -8,8 +8,6 @@
 #include "sort.h"
 using namespace std;
 
-int test_sort_function(sort_func_result (*fp)(int *array, int array_size), const vector<int> random_int_array, const int array_size);
-
 int main()
 {
 	cout << "Testing.." << endl;
@@ -26,35 +24,8 @@ int main()
 	//print_array(random_int_array);
 	//Copy the vector to an array, which will be sorted later.
 
-	test_sort_function(bubble_sort, random_int_array, N);
-	test_sort_function(selection_sort, random_int_array, N);
+	test_sort_function(bubble_sort, random_int_array, N, less_than);
+	test_sort_function(selection_sort, random_int_array, N, less_than);
 
 	return 0;
 }
-
-int test_sort_function(sort_func_result (*fp)(int *array, int array_size), const vector<int> random_int_array, const int array_size)
-{
-	int array_to_sort[random_int_array.size()], array_after_sort[random_int_array.size()];
-	sort_func_result res;
-	memcpy(array_to_sort, &random_int_array[0], random_int_array.size() * sizeof(random_int_array[0]));
-	memcpy(array_after_sort, &random_int_array[0], random_int_array.size() * sizeof(random_int_array[0]));
-
-	cout << endl;
-	res = fp(array_to_sort, array_size);
-	cout<<"===================="<<res.func_name<<"===================="<<endl;
-	cout << "Before sorting: ";
-	for (int i = 0; i < array_size; i++)
-	{
-		cout << array_to_sort[i] << ' ';
-	};
-	cout<<endl;
-	cout << "After sorting: ";
-	for (int i = 0; i < array_size; i++)
-	{
-		cout << array_to_sort[i] << ' ';
-	};
-	cout << endl
-		 << endl;
-	cout << "Swap calls = " << res.swap_count << endl;
-	return 0;
-};
