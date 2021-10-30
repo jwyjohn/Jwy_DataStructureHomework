@@ -8,12 +8,19 @@
 
 using namespace std;
 
-int GLOBAL_SWAP_CNT,GLOBAL_CMP_CNT; //Side effects introduced, TOO BAD!
+int GLOBAL_SWAP_CNT, GLOBAL_CMP_CNT; //Side effects introduced, TOO BAD!
 
 struct sort_func_result
 {
     string func_name;
     int swap_count, compare_count;
+};
+
+int init_counter()
+{
+    GLOBAL_SWAP_CNT = 0;
+    GLOBAL_CMP_CNT = 0;
+    return 0;
 };
 
 template <class T>
@@ -30,12 +37,14 @@ int print_array(T &array)
 bool less_than(int a, int b)
 {
     bool flag = (a < b);
+    GLOBAL_CMP_CNT += 1;
     return flag;
 };
 
 bool grater_than(int a, int b)
 {
     bool flag = (a > b);
+    GLOBAL_CMP_CNT += 1;
     return flag;
 };
 
@@ -49,6 +58,8 @@ int compare_and_swap(int &a, int &b, bool (*cmp)(int a, int b))
         b = temp;
         is_swapped = 1;
     };
+    GLOBAL_SWAP_CNT += 1;
+    GLOBAL_CMP_CNT += 1;
     return is_swapped;
 };
 
@@ -59,6 +70,7 @@ int force_swap(T &a, T &b)
     T temp = a;
     a = b;
     b = temp;
+    GLOBAL_SWAP_CNT += 1;
     return is_swapped;
 };
 
@@ -209,7 +221,7 @@ sort_func_result shell_sort(int *array, int array_size, bool (*cmp)(int a, int b
 sort_func_result inside_quick_sort(int *array, int left, int right, bool (*cmp)(int a, int b))
 {
     // cout << "*** A QUICK FOX IS CALLED. ***" << endl;
-    sort_func_result ret,ret_left,ret_right;
+    sort_func_result ret, ret_left, ret_right;
     ret.func_name = __FUNCTION__;
     int swap_count = 0, cmp_count = 0;
 
@@ -264,11 +276,64 @@ sort_func_result quick_sort(int *array, int array_size, bool (*cmp)(int a, int b
     sort_func_result ret;
     ret.func_name = __FUNCTION__;
     int swap_count = 0, cmp_count = 0;
-    GLOBAL_SWAP_CNT = 0;
-    GLOBAL_CMP_CNT = 0;
+    init_counter();
     //inside_quick_sort(array, 0, array_size, cmp);
     // Be sure to use (array_size - 1) to solve overflow problems.
     ret = inside_quick_sort(array, 0, array_size - 1, cmp);
+    ret.swap_count = GLOBAL_SWAP_CNT;
+    ret.compare_count = GLOBAL_CMP_CNT;
+    return ret;
+};
+
+sort_func_result heap_sort(int *array, int array_size, bool (*cmp)(int a, int b))
+{
+    sort_func_result ret;
+    ret.func_name = __FUNCTION__;
+    int swap_count = 0, cmp_count = 0;
+    int last_non_leaf_node = array_size / 2 - 1;
+    init_counter();
+    int heap[array_size];
+    int heap_size = array_size;
+    for (int i = 0; i < array_size; i++)
+        heap[i] = array[i];
+    for (int i = last_non_leaf_node; i >= 0; i--)
+    {
+        int current_node = i;
+        int smaller_child = current_node * 2 + (cmp(heap[i * 2 + 1], heap[i * 2 + 2]) ? 1 : 2);
+        if (i * 2 + 2 > array_size - 1)
+            smaller_child = current_node * 2 + 1;
+        while (!cmp(heap[current_node], heap[smaller_child]) && smaller_child < array_size)
+        {
+            force_swap(heap[current_node], heap[smaller_child]);
+            current_node = smaller_child;
+            smaller_child = current_node * 2 + (cmp(heap[current_node * 2 + 1], heap[current_node * 2 + 2]) ? 1 : 2);
+        };
+    };
+    for (int i = 0; i < array_size; i++)
+    {
+        cout << heap[i] << ' ';
+    };
+    cout << endl;
+    int pos = 0;
+    while (heap_size > 0)
+    {
+        array[pos] = heap[0];
+        heap[0] = heap[heap_size-1];
+        heap[heap_size-1] = 2147483647;
+        heap_size--;
+        pos++;
+        int current_node = 0;
+        int smaller_child = current_node * 2 + (cmp(heap[current_node * 2 + 1], heap[current_node * 2 + 2]) ? 1 : 2);
+        if (current_node * 2 + 2 > heap_size - 1)
+            smaller_child = current_node * 2 + 1;
+        while (!cmp(heap[current_node], heap[smaller_child]) && smaller_child < heap_size)
+        {
+            force_swap(heap[current_node], heap[smaller_child]);
+            current_node = smaller_child;
+            smaller_child = current_node * 2 + (cmp(heap[current_node * 2 + 1], heap[current_node * 2 + 2]) ? 1 : 2);
+        };
+    };
+
     ret.swap_count = GLOBAL_SWAP_CNT;
     ret.compare_count = GLOBAL_CMP_CNT;
     return ret;
