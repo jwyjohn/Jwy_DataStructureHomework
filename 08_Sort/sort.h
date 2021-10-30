@@ -194,6 +194,46 @@ sort_func_result shell_sort(int *array, int array_size, bool (*cmp)(int a, int b
     return ret;
 };
 
+sort_func_result inside_quick_sort(int *array, int left, int right, bool (*cmp)(int a, int b))
+{
+    //cout<<"A QUICK FOX IS CALLED."<<endl;
+    sort_func_result ret;
+    ret.func_name = __FUNCTION__;
+    int swap_count = 0, cmp_count = 0;
+
+    if (left < right)
+    {
+        int pivot = array[left];
+        int low = left, high = right;
+        while (low < high)
+        {
+            while (!cmp(array[high], pivot) && low < high)
+                high--;
+            array[low] = array[high];
+            while (!cmp(pivot, array[low]) && low < high)
+                low++;
+            array[high] = array[low];
+        }
+        array[low] = pivot;
+        inside_quick_sort(array, left, low - 1, cmp);
+        inside_quick_sort(array, low + 1, right, cmp);
+    };
+    ret.swap_count = swap_count;
+    ret.compare_count = cmp_count;
+    return ret;
+};
+
+sort_func_result quick_sort(int *array, int array_size, bool (*cmp)(int a, int b))
+{
+    sort_func_result ret;
+    ret.func_name = __FUNCTION__;
+    int swap_count = 0, cmp_count = 0;
+    inside_quick_sort(array, 0, array_size, cmp);
+    ret.swap_count = swap_count;
+    ret.compare_count = cmp_count;
+    return ret;
+};
+
 int test_sort_function(sort_func_result (*fp)(int *array, int array_size, bool (*cmp)(int a, int b)), const vector<int> random_int_array, const int array_size, bool (*cmp)(int a, int b))
 {
     int array_to_sort[random_int_array.size()], array_after_sort[random_int_array.size()];
