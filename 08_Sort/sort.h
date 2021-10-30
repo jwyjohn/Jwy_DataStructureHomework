@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <vector>
 #include <algorithm>
 
@@ -301,6 +302,34 @@ sort_func_result heap_sort(int *array, int array_size, bool (*cmp)(int a, int b)
 
     ret.swap_count = GLOBAL_SWAP_CNT;
     ret.compare_count = GLOBAL_CMP_CNT;
+    return ret;
+};
+
+sort_func_result bucket_sort(int *array, int array_size, bool (*cmp)(int a, int b))
+{
+    sort_func_result ret;
+    ret.func_name = __FUNCTION__;
+    init_counter();
+    const int bucket_size = 1000;
+    unsigned char *bucket = new unsigned char[bucket_size];
+    memset(bucket, 0, sizeof(bucket));
+    for (int i = 0; i < array_size; i++)
+    {
+        bucket[array[i]] += 1;
+    };
+    int pos = 0;
+    for (int i = 0; i < bucket_size; i++)
+    {
+        while (bucket[i] > 0)
+        {
+            bucket[i]--;
+            array[pos] = i;
+            pos++;
+        };
+    };
+    ret.swap_count = GLOBAL_SWAP_CNT;
+    ret.compare_count = GLOBAL_CMP_CNT;
+    delete[] bucket;
     return ret;
 };
 
