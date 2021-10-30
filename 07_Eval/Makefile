@@ -1,7 +1,7 @@
 CFLAGS   = -c -Wall -Werror
 COMPILE  = g++
 RM       = rm -f
-OBJ      = linux
+OBJ      = a.out
 SOURCE   = main.o
 DEPEND   = main.cpp eval.h
 
