@@ -60,6 +60,16 @@ int force_swap(T &a, T &b)
     return is_swapped;
 };
 
+// int force_swap(int &a, int &b)
+// {
+//     int is_swapped = 1;
+//     int temp = a;
+//     a = b;
+//     b = temp;
+
+//     return is_swapped;
+// };
+
 sort_func_result default_sort(int *array, int array_size, bool (*cmp)(int a, int b))
 {
     sort_func_result ret;
@@ -196,30 +206,50 @@ sort_func_result shell_sort(int *array, int array_size, bool (*cmp)(int a, int b
 
 sort_func_result inside_quick_sort(int *array, int left, int right, bool (*cmp)(int a, int b))
 {
-    //cout<<"A QUICK FOX IS CALLED."<<endl;
-    sort_func_result ret;
+    // cout << "*** A QUICK FOX IS CALLED. ***" << endl;
+    sort_func_result ret,ret_left,ret_right;
     ret.func_name = __FUNCTION__;
     int swap_count = 0, cmp_count = 0;
 
     if (left < right)
     {
+        // cout << '[' << array[left] << ']' << ' ';
+        // for (int i = 0; i < right; i++)
+        // {
+        //     cout << array[i] << ' ';
+        // };
+        // cout << endl;
         int pivot = array[left];
         int low = left, high = right;
         while (low < high)
         {
             while (!cmp(array[high], pivot) && low < high)
+            {
                 high--;
-            array[low] = array[high];
+                cmp_count++;
+            };
+
             while (!cmp(pivot, array[low]) && low < high)
+            {
                 low++;
-            array[high] = array[low];
+                cmp_count++;
+            };
+
+            swap_count += force_swap(array[high], array[low]);
+            // cout << '[' << low << ']' << '<' << '[' << high << ']' << endl;
+            // for (int i = 0; i < right; i++)
+            // {
+            //     cout << array[i] << ' ';
+            // };
+            // cout << endl;
         }
-        array[low] = pivot;
-        inside_quick_sort(array, left, low - 1, cmp);
-        inside_quick_sort(array, low + 1, right, cmp);
+        swap_count += force_swap(array[left], array[high]);
+        // cout << "*** FOX IS GONE. ***" << endl;
+        ret_left = inside_quick_sort(array, left, high - 1, cmp);
+        ret_right = inside_quick_sort(array, low + 1, right, cmp);
     };
-    ret.swap_count = swap_count;
-    ret.compare_count = cmp_count;
+    ret.swap_count = swap_count+ret_left.swap_count+ret_right.swap_count;
+    ret.compare_count = cmp_count+ret_left.compare_count+ret_right.compare_count;
     return ret;
 };
 
@@ -228,9 +258,9 @@ sort_func_result quick_sort(int *array, int array_size, bool (*cmp)(int a, int b
     sort_func_result ret;
     ret.func_name = __FUNCTION__;
     int swap_count = 0, cmp_count = 0;
-    inside_quick_sort(array, 0, array_size, cmp);
-    ret.swap_count = swap_count;
-    ret.compare_count = cmp_count;
+    //inside_quick_sort(array, 0, array_size, cmp);
+    // Be sure to use (array_size - 1) to solve overflow problems.
+    ret = inside_quick_sort(array, 0, array_size - 1, cmp);
     return ret;
 };
 

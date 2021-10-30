@@ -13,7 +13,7 @@ int main()
 	cout << "Testing.." << endl;
 	int N;
 	cin >> N;
-
+	srand(static_cast<unsigned int>(time(0)));
 	//Generate a vector with 0 to N, and then shuffle it randomly.
 	vector<int> random_int_array;
 	for (int i = 1; i <= N; i++)
@@ -24,12 +24,12 @@ int main()
 	//print_array(random_int_array);
 	//Copy the vector to an array, which will be sorted later.
 
-	//test_sort_function(bubble_sort, random_int_array, N, less_than);
-	//test_sort_function(selection_sort, random_int_array, N, less_than);
-	//test_sort_function(insertion_sort, random_int_array, N, less_than);
-	//test_sort_function(binary_insertion_sort, random_int_array, N, less_than);
-	//test_sort_function(default_sort, random_int_array, N, less_than);
-	//test_sort_function(shell_sort, random_int_array, N, less_than);
+	test_sort_function(bubble_sort, random_int_array, N, less_than);
+	test_sort_function(selection_sort, random_int_array, N, less_than);
+	test_sort_function(insertion_sort, random_int_array, N, less_than);
+	test_sort_function(binary_insertion_sort, random_int_array, N, less_than);
+	test_sort_function(default_sort, random_int_array, N, less_than);
+	test_sort_function(shell_sort, random_int_array, N, less_than);
 
 	//test_sort_function(bubble_sort, random_int_array, N, grater_than);
 	
