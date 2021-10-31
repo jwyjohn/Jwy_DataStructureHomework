@@ -6,6 +6,7 @@
 #include <cstring>
 #include <vector>
 #include <algorithm>
+#include <queue>
 
 using namespace std;
 
@@ -175,7 +176,7 @@ sort_func_result binary_insertion_sort(int *array, int array_size, bool (*cmp)(i
 sort_func_result shell_sort(int *array, int array_size, bool (*cmp)(int a, int b))
 {
     sort_func_result ret;
-    ret.func_name = __FUNCTION__;
+    // ret.func_name = __FUNCTION__;
     init_counter();
     int gap = 1;
     while (gap < array_size / 3)
@@ -200,13 +201,12 @@ sort_func_result shell_sort(int *array, int array_size, bool (*cmp)(int a, int b
     };
     ret.swap_count = GLOBAL_SWAP_CNT;
     ret.compare_count = GLOBAL_CMP_CNT;
+    ret.func_name = __FUNCTION__;
     return ret;
 };
 
-sort_func_result inside_quick_sort(int *array, int left, int right, bool (*cmp)(int a, int b))
+int inside_quick_sort(int *array, int left, int right, bool (*cmp)(int a, int b))
 {
-    sort_func_result ret, ret_left, ret_right;
-    ret.func_name = __FUNCTION__;
     int swap_count = 0, cmp_count = 0;
     if (left < right)
     {
@@ -217,26 +217,21 @@ sort_func_result inside_quick_sort(int *array, int left, int right, bool (*cmp)(
             while (!cmp(array[high], pivot) && low < high)
             {
                 high--;
-                cmp_count++;
             };
 
             while (!cmp(pivot, array[low]) && low < high)
             {
                 low++;
-                cmp_count++;
             };
 
             swap_count += force_swap(array[high], array[low]);
         }
         swap_count += force_swap(array[left], array[high]);
-        ret_left = inside_quick_sort(array, left, high - 1, cmp);
-        ret_right = inside_quick_sort(array, low + 1, right, cmp);
+        inside_quick_sort(array, left, high - 1, cmp);
+        inside_quick_sort(array, low + 1, right, cmp);
     };
     GLOBAL_SWAP_CNT += swap_count;
-    GLOBAL_CMP_CNT += cmp_count;
-    ret.swap_count = 0;
-    ret.compare_count = 0;
-    return ret;
+    return 0;
 };
 
 sort_func_result quick_sort(int *array, int array_size, bool (*cmp)(int a, int b))
@@ -245,7 +240,7 @@ sort_func_result quick_sort(int *array, int array_size, bool (*cmp)(int a, int b
     ret.func_name = __FUNCTION__;
     int swap_count = 0, cmp_count = 0;
     init_counter();
-    ret = inside_quick_sort(array, 0, array_size - 1, cmp);
+    inside_quick_sort(array, 0, array_size - 1, cmp);
     ret.swap_count = GLOBAL_SWAP_CNT;
     ret.compare_count = GLOBAL_CMP_CNT;
     return ret;
@@ -330,6 +325,97 @@ sort_func_result bucket_sort(int *array, int array_size, bool (*cmp)(int a, int 
     ret.swap_count = GLOBAL_SWAP_CNT;
     ret.compare_count = GLOBAL_CMP_CNT;
     delete[] bucket;
+    return ret;
+};
+
+int inside_merge_sort(int *array, int left, int right, bool (*cmp)(int a, int b))
+{
+    int mid = (left + right) / 2;
+    cout << "A MERGE FOX IS CALLED. " << left << ' ' << mid << ' ' << right << endl;
+
+    if (right == left)
+    {
+        cout << "NOTHING TO DO. " << left << ' ' << mid << ' ' << right << endl;
+        return 0;
+    };
+
+    // if (right == left + 1)
+    // {
+    //     compare_and_swap(array[left], array[right], cmp);
+    //     GLOBAL_SWAP_CNT += 1;
+    //     GLOBAL_CMP_CNT += 1;
+    //     return 0;
+    // };
+    int swap_count = 0, cmp_count = 0;
+
+    inside_merge_sort(array, left, mid, cmp);
+    inside_merge_sort(array, mid + 1, right, cmp);
+
+    cout << "A MERGE FOX FINISHED. " << left << ' ' << mid << ' ' << right << endl;
+
+    vector<int> left_merged(array + left, array + mid + 1);
+    vector<int> right_merged(array + mid + 1, array + right + 1);
+    int pos = right;
+    print_array(left_merged);
+    print_array(right_merged);
+    while (!left_merged.empty() && !right_merged.empty())
+    {
+        if (cmp(left_merged.back(), right_merged.back()))
+        {
+            array[pos] = right_merged.back();
+            pos--;
+            right_merged.pop_back();
+
+            print_array(left_merged);
+            print_array(right_merged);
+        }
+        else
+        {
+            array[pos] = left_merged.back();
+            pos--;
+            left_merged.pop_back();
+
+            print_array(left_merged);
+            print_array(right_merged);
+        };
+        swap_count++;
+    };
+    while (!left_merged.empty())
+    {
+        array[pos] = left_merged.back();
+        pos--;
+        left_merged.pop_back();
+        swap_count++;
+        print_array(left_merged);
+        print_array(right_merged);
+    };
+    while (!right_merged.empty())
+    {
+        array[pos] = right_merged.back();
+        pos--;
+        right_merged.pop_back();
+        swap_count++;
+        print_array(left_merged);
+        print_array(right_merged);
+    };
+    for (int i = left; i <= right; i++)
+    {
+        cout << array[i] << ' ';
+    };
+    cout << endl;
+    GLOBAL_SWAP_CNT += swap_count;
+    return 0;
+};
+
+sort_func_result merge_sort(int *array, int array_size, bool (*cmp)(int a, int b))
+{
+    sort_func_result ret;
+    ret.func_name = __FUNCTION__;
+    int swap_count = 0, cmp_count = 0;
+    init_counter();
+    inside_merge_sort(array, 0, array_size - 1, cmp);
+    ret.swap_count = GLOBAL_SWAP_CNT;
+    ret.compare_count = GLOBAL_CMP_CNT;
     return ret;
 };
 
