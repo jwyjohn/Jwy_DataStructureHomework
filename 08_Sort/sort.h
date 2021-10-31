@@ -305,7 +305,7 @@ sort_func_result bucket_sort(int *array, int array_size, bool (*cmp)(int a, int 
     sort_func_result ret;
     ret.func_name = __FUNCTION__;
     init_counter();
-    const int bucket_size = 1000;
+    const int bucket_size = 1000000;
     unsigned char *bucket = new unsigned char[bucket_size];
     memset(bucket, 0, sizeof(bucket));
     for (int i = 0; i < array_size; i++)
@@ -331,11 +331,11 @@ sort_func_result bucket_sort(int *array, int array_size, bool (*cmp)(int a, int 
 int inside_merge_sort(int *array, int left, int right, bool (*cmp)(int a, int b))
 {
     int mid = (left + right) / 2;
-    cout << "A MERGE FOX IS CALLED. " << left << ' ' << mid << ' ' << right << endl;
+    // cout << "A MERGE FOX IS CALLED. " << left << ' ' << mid << ' ' << right << endl;
 
     if (right == left)
     {
-        cout << "NOTHING TO DO. " << left << ' ' << mid << ' ' << right << endl;
+        // cout << "NOTHING TO DO. " << left << ' ' << mid << ' ' << right << endl;
         return 0;
     };
 
@@ -351,13 +351,13 @@ int inside_merge_sort(int *array, int left, int right, bool (*cmp)(int a, int b)
     inside_merge_sort(array, left, mid, cmp);
     inside_merge_sort(array, mid + 1, right, cmp);
 
-    cout << "A MERGE FOX FINISHED. " << left << ' ' << mid << ' ' << right << endl;
+    // cout << "A MERGE FOX FINISHED. " << left << ' ' << mid << ' ' << right << endl;
 
     vector<int> left_merged(array + left, array + mid + 1);
     vector<int> right_merged(array + mid + 1, array + right + 1);
     int pos = right;
-    print_array(left_merged);
-    print_array(right_merged);
+    // print_array(left_merged);
+    // print_array(right_merged);
     while (!left_merged.empty() && !right_merged.empty())
     {
         if (cmp(left_merged.back(), right_merged.back()))
@@ -366,8 +366,8 @@ int inside_merge_sort(int *array, int left, int right, bool (*cmp)(int a, int b)
             pos--;
             right_merged.pop_back();
 
-            print_array(left_merged);
-            print_array(right_merged);
+            // print_array(left_merged);
+            // print_array(right_merged);
         }
         else
         {
@@ -375,8 +375,8 @@ int inside_merge_sort(int *array, int left, int right, bool (*cmp)(int a, int b)
             pos--;
             left_merged.pop_back();
 
-            print_array(left_merged);
-            print_array(right_merged);
+            // print_array(left_merged);
+            // print_array(right_merged);
         };
         swap_count++;
     };
@@ -386,8 +386,8 @@ int inside_merge_sort(int *array, int left, int right, bool (*cmp)(int a, int b)
         pos--;
         left_merged.pop_back();
         swap_count++;
-        print_array(left_merged);
-        print_array(right_merged);
+        // print_array(left_merged);
+        // print_array(right_merged);
     };
     while (!right_merged.empty())
     {
@@ -395,14 +395,14 @@ int inside_merge_sort(int *array, int left, int right, bool (*cmp)(int a, int b)
         pos--;
         right_merged.pop_back();
         swap_count++;
-        print_array(left_merged);
-        print_array(right_merged);
+        // print_array(left_merged);
+        // print_array(right_merged);
     };
-    for (int i = left; i <= right; i++)
-    {
-        cout << array[i] << ' ';
-    };
-    cout << endl;
+    // for (int i = left; i <= right; i++)
+    // {
+    //     cout << array[i] << ' ';
+    // };
+    // cout << endl;
     GLOBAL_SWAP_CNT += swap_count;
     return 0;
 };
