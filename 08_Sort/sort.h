@@ -419,6 +419,86 @@ sort_func_result merge_sort(int *array, int array_size, bool (*cmp)(int a, int b
     return ret;
 };
 
+// bool lsd_radix_sort_cmp(int a, int b, int pos, bool (*cmp)(int a, int b))
+// {
+//     int pos_a = (a >> pos) & 1;
+//     int pos_b = (b >> pos) & 1;
+//     return cmp(pos_a, pos_b);
+// };
+
+int inside_lsd_radix_sort(int *array, int array_size, bool (*cmp)(int a, int b), int pos)
+{
+    vector<int> num[2];
+    int lsd = 0;
+    for (int i = 0; i < array_size; i++)
+    {
+        lsd = (array[i] >> pos) & 1;
+        GLOBAL_CMP_CNT++;
+        num[lsd].push_back(array[i]);
+    };
+    num[0].insert(num[0].end(), num[1].begin(), num[1].end());
+    for (int i = 0; i < array_size; i++)
+    {
+        array[i] = num[0][i];
+        GLOBAL_SWAP_CNT++;
+    };
+    return 0;
+};
+
+sort_func_result lsd_radix_sort(int *array, int array_size, bool (*cmp)(int a, int b))
+{
+    sort_func_result ret;
+    ret.func_name = __FUNCTION__;
+    init_counter();
+    for (int i = 0; i < 32; i++)
+    {
+        inside_lsd_radix_sort(array, array_size, cmp, i);
+    };
+    ret.swap_count = GLOBAL_SWAP_CNT;
+    ret.compare_count = GLOBAL_CMP_CNT;
+    return ret;
+};
+
+int inside_msd_radix_sort(int *array, int left, int right, bool (*cmp)(int a, int b), int pos)
+{
+    if (left == right || pos < 0)
+        return 0;
+    vector<int> num[2];
+    int lsd = 0;
+    for (int i = left; i <= right; i++)
+    {
+        lsd = (array[i] >> pos) & 1;
+        GLOBAL_CMP_CNT++;
+        num[lsd].push_back(array[i]);
+    };
+    int size_0 = num[0].size();
+    int size_1 = num[1].size();
+    // cout << '*' << size_0 << ' ' << size_1 << ' ' << right - left + 1 << ' ' << left << ' ' << left + size_0 - 1 << ' ' << left + size_0 << ' ' << right << endl;
+    num[0].insert(num[0].end(), num[1].begin(), num[1].end());
+    for (int i = 0; i < num[0].size(); i++)
+    {
+        array[left + i] = num[0][i];
+        GLOBAL_SWAP_CNT++;
+    };
+    // print_array(num[0]);
+    if (size_0 > 0)
+        inside_msd_radix_sort(array, left, left + size_0 - 1, cmp, pos - 1);
+    if (size_1 > 0)
+        inside_msd_radix_sort(array, left + size_0, right, cmp, pos - 1);
+    return 0;
+};
+
+sort_func_result msd_radix_sort(int *array, int array_size, bool (*cmp)(int a, int b))
+{
+    sort_func_result ret;
+    ret.func_name = __FUNCTION__;
+    init_counter();
+    inside_msd_radix_sort(array, 0, array_size - 1, cmp, 31);
+    ret.swap_count = GLOBAL_SWAP_CNT;
+    ret.compare_count = GLOBAL_CMP_CNT;
+    return ret;
+};
+
 int test_sort_function(sort_func_result (*fp)(int *array, int array_size, bool (*cmp)(int a, int b)), const vector<int> random_int_array, const int array_size, bool (*cmp)(int a, int b))
 {
     int array_to_sort[random_int_array.size()], array_after_sort[random_int_array.size()];

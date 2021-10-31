@@ -35,6 +35,8 @@ int main()
 	test_sort_function(heap_sort, random_int_array, N, less_than);
 	test_sort_function(bucket_sort, random_int_array, N, less_than);
 	test_sort_function(merge_sort, random_int_array, N, less_than);
+	test_sort_function(lsd_radix_sort, random_int_array, N, less_than);
+	test_sort_function(msd_radix_sort, random_int_array, N, less_than);
 	// test_sort_function(bubble_sort, random_int_array, N, grater_than);
 	return 0;
 }
