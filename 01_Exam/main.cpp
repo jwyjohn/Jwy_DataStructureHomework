@@ -9,45 +9,22 @@
 #include "exam.h"
 using namespace std;
 
-int (*func_ptr[4])(op_parms parms) = {show_candidates,show_single_candidate,insert_candidate_after,remove_candidate}; // Thank 644617926.
-
 int main()
 {
-	cout << "Op N : ";
 	int no, ret_code;
-	char op;
+	string op;
 	string candidate_name;
-	cin >> op;
 	int i = 0;
-	while (op != EOF)
+
+	cout << "[Op]# ";
+	cin >> op;
+	while (op != ":q")
 	{
-		exam_candidate *candidate_to_add = new exam_candidate;
-		switch (op)
-		{
-		case 'A':
-			cin >> i >> no >> candidate_name;
-			candidate_to_add->No = no;
-			candidate_to_add->name = candidate_name;
-			ret_code = insert_candidate_after(i, candidate_to_add);
-			i++;
-			break;
-		case 'R':
-			cin >> no;
-			ret_code = remove_candidate(no);
-			break;
-		case 'S':
-			ret_code = show_candidates();
-			break;
-		case 'F':
-			cin >> no;
-			ret_code = show_single_candidate(find_candidate(no));
-			break;
-		default:
-			cout << "Unknown command" << endl;
-			ret_code = 1;
-		};
+		ret_code = process_input(op);
+		// exam_candidate *candidate_to_add = new exam_candidate;
 		cout << "Return code is: " << ret_code << endl;
-		cout << "Op N : ";
+
+		cout << "[Op]# ";
 		cin >> op;
 	};
 
