@@ -41,6 +41,15 @@ exam_candidate *find_candidate(int no);
 int insert_candidate_after(int no, exam_candidate *candidate);
 int remove_candidate(int no);
 int show_candidates();
+int show_single_candidate(exam_candidate *candidate);
+
+int show_single_candidate(exam_candidate *candidate)
+{
+    if (candidate == NULL)
+        return 1;
+    cout << "No." << candidate->No << " Name: " << candidate->name << " Gender:" << candidate->Gender << " Age:" << candidate->Age << endl;
+    return 0;
+};
 
 int init_link()
 {
@@ -56,6 +65,7 @@ exam_candidate *find_candidate(op_parms parms);
 int insert_candidate_after(op_parms parms);
 int remove_candidate(op_parms parms);
 int show_candidates(op_parms parms);
+int show_single_candidate(op_parms parms);
 
 exam_candidate *find_candidate(op_parms parms)
 {
@@ -75,6 +85,11 @@ int remove_candidate(op_parms parms)
 int show_candidates(op_parms parms)
 {
     return show_candidates();
+};
+
+int show_single_candidate(op_parms parms)
+{
+    return show_single_candidate(parms.candidate);
 };
 
 exam_candidate *find_candidate(int no)

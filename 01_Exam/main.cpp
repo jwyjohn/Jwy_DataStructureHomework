@@ -9,7 +9,7 @@
 #include "exam.h"
 using namespace std;
 
-int (*fp)(op_parms parms);
+int (*func_ptr[4])(op_parms parms) = {show_candidates,show_single_candidate,insert_candidate_after,remove_candidate}; // Thank 644617926.
 
 int main()
 {
@@ -38,11 +38,15 @@ int main()
 		case 'S':
 			ret_code = show_candidates();
 			break;
+		case 'F':
+			cin >> no;
+			ret_code = show_single_candidate(find_candidate(no));
+			break;
 		default:
 			cout << "Unknown command" << endl;
 			ret_code = 1;
 		};
-		cout << "Return code is" << ret_code << endl;
+		cout << "Return code is: " << ret_code << endl;
 		cout << "Op N : ";
 		cin >> op;
 	};
