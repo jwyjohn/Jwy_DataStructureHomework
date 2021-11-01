@@ -98,11 +98,11 @@ int show_single_candidate(exam_candidate *candidate)
 {
     if (candidate == NULL)
         return 1;
-    cout << " No." << candidate->No
+    cout << "  No." << candidate->No
          << "  Name: " << candidate->name
          << "  Gender: " << candidate->Gender
          << "  Age: " << candidate->Age
-         << " Subject: " << candidate->subject << endl;
+         << "  Subject: " << candidate->subject << endl;
     return 0;
 };
 
