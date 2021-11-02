@@ -1,10 +1,6 @@
 #ifndef _EXAM_H__
 #define _EXAM_H__
 
-#define MAX_CHESSBOARD_SIZE 32
-#define MAX_STACK_SIZE 10000
-#define _QUEEN 7
-
 #include <iostream>
 #include <string>
 #include <cstring>
@@ -206,7 +202,5 @@ int show_candidates()
     }
     return 0;
 };
-
-
 
 #endif
