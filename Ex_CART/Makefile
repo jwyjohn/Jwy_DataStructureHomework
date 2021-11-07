@@ -3,7 +3,7 @@ COMPILE  = g++
 RM       = rm -f
 OBJ      = a.out
 SOURCE   = main.o
-DEPEND   = main.cpp BT.h
+DEPEND   = main.cpp CART.h
 
 build : $(SOURCE)
 	$(COMPILE) $(SOURCE) -o $(OBJ)
