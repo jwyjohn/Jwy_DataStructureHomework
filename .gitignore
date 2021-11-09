@@ -36,3 +36,14 @@
 *.gcov
 *.gcda
 *.gcno
+
+# Latex temp files
+*.synctex(busy)
+*.aux
+*.bbl
+*.blg
+*.log
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.pdf
