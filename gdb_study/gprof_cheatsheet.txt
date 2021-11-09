@@ -1,0 +1,18 @@
+# gdb
+
+g++ -g bugging01.cpp
+gdb a.out
+l,b,n,r,p
+
+# gprof
+
+g++ -pg bugging01.cpp
+./a.out
+gprof a.out
+
+# gcov
+
+g++ -pg -ftest-coverage -fprofile-arcs bugging01.cpp
+./a.out
+gcov bugging01
+cat bugging01.cpp.gcov

@@ -31,3 +31,8 @@
 *.out
 *.app
 *inux
+
+# Profile temp files
+*.gcov
+*.gcda
+*.gcno
