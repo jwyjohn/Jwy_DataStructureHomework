@@ -1,0 +1,30 @@
+CASE ./test_inputs/inverted_100000.in
+Compare calls = 853904
+CASE ./test_inputs/inverted_10000.in
+Compare calls = 69008
+CASE ./test_inputs/inverted_1000.in
+Compare calls = 5044
+CASE ./test_inputs/inverted_100.in
+Compare calls = 356
+CASE ./test_inputs/inverted_10.in
+Compare calls = 19
+CASE ./test_inputs/random_100000.in
+Compare calls = 1536307
+CASE ./test_inputs/random_10000.in
+Compare calls = 120483
+CASE ./test_inputs/random_1000.in
+Compare calls = 8700
+CASE ./test_inputs/random_100.in
+Compare calls = 543
+CASE ./test_inputs/random_10.in
+Compare calls = 21
+CASE ./test_inputs/sorted_100000.in
+Compare calls = 815024
+CASE ./test_inputs/sorted_10000.in
+Compare calls = 64608
+CASE ./test_inputs/sorted_1000.in
+Compare calls = 4932
+CASE ./test_inputs/sorted_100.in
+Compare calls = 316
+CASE ./test_inputs/sorted_10.in
+Compare calls = 15
