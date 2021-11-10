@@ -30,7 +30,7 @@ int print_tree_lvr(avl_tree *t)
         print_tree_lvr(t->left);
     };
     if (t->data != 0)
-        cout << " " << t->data << "[" << get_balance(t) << "," << get_height(t) <<"]";
+        cout << " " << t->data << "[" << get_balance(t) << "," << get_height(t) << "]";
     if (t->right != nullptr)
     {
         print_tree_lvr(t->right);
@@ -41,7 +41,7 @@ int print_tree_lvr(avl_tree *t)
 int print_tree_vlr(avl_tree *t)
 {
     if (t->data != 0)
-	cout << " " << t->data << "[" << get_balance(t) << "," << get_height(t) <<"]";
+        cout << " " << t->data << "[" << get_balance(t) << "," << get_height(t) << "]";
     if (t->left != nullptr)
     {
         print_tree_vlr(t->left);
@@ -69,7 +69,7 @@ int get_balance(avl_tree *t)
     return get_height(t->right) - get_height(t->left);
 };
 
-avl_tree* rotate_left(avl_tree *t)
+avl_tree *rotate_left(avl_tree *t)
 {
     avl_tree *root;
     root = t->right;
@@ -78,7 +78,7 @@ avl_tree* rotate_left(avl_tree *t)
     return root;
 };
 
-avl_tree* rotate_right(avl_tree *t)
+avl_tree *rotate_right(avl_tree *t)
 {
     avl_tree *root;
     root = t->left;
@@ -87,17 +87,17 @@ avl_tree* rotate_right(avl_tree *t)
     return root;
 };
 
-avl_tree* adjust_tree_RR(avl_tree *t)
+avl_tree *adjust_tree_RR(avl_tree *t)
 {
     return rotate_right(t);
 };
 
-avl_tree* adjust_tree_LL(avl_tree *t)
+avl_tree *adjust_tree_LL(avl_tree *t)
 {
     return rotate_left(t);
 };
 
-avl_tree* adjust_tree_LR(avl_tree *t)
+avl_tree *adjust_tree_LR(avl_tree *t)
 {
     avl_tree *root;
     t->left = rotate_left(t->left);
@@ -105,7 +105,7 @@ avl_tree* adjust_tree_LR(avl_tree *t)
     return root;
 };
 
-avl_tree* adjust_tree_RL(avl_tree *t)
+avl_tree *adjust_tree_RL(avl_tree *t)
 {
     avl_tree *root;
     t->right = rotate_right(t->right);
@@ -122,7 +122,7 @@ int balance_node(avl_tree *&t)
         {
             t = adjust_tree_LL(t);
         }
-	else
+        else
         {
             t = adjust_tree_RL(t);
         };
@@ -133,7 +133,7 @@ int balance_node(avl_tree *&t)
         {
             t = adjust_tree_RR(t);
         }
-	else
+        else
         {
             t = adjust_tree_LR(t);
         };
@@ -159,6 +159,7 @@ avl_tree *find_val(avl_tree *t, int val)
         else
             return find_val(t->right, val);
     };
+    return nullptr;
 };
 
 int insert_val(avl_tree *&t, int val)
@@ -205,34 +206,46 @@ int remove_val(avl_tree *&t, int val)
 {
     if (t->data == val)
     {
-	if (t->left == nullptr && t->right == nullptr) {
-		avl_tree *to_del = t;
-		t = nullptr;
-		delete to_del;
-		return 0;
-	} else 
-	if (t->left != nullptr && t->right == nullptr) {
-		avl_tree *to_del = t;
-		t = t->left;
-		delete to_del;
-		return 0;
-	} else
-	if (t->right != nullptr && t->left == nullptr) {
-                avl_tree *to_del = t;
-                t = t->right;
-                delete to_del;
-		return 0;
-	} else
-	if (t->left != nullptr && t->right != nullptr) {
-		avl_tree *left_max = t->left, *pre_max=nullptr;
-		while (left_max->right!=nullptr) {pre_max = left_max;left_max = left_max->right;}
-		t->data = left_max->data;
-		if (left_max==t->left){
-			t->left = left_max->left;
-		} else {pre_max->right = left_max->left;};
-		delete left_max;
-	};
-
+        if (t->left == nullptr && t->right == nullptr)
+        {
+            avl_tree *to_del = t;
+            t = nullptr;
+            delete to_del;
+            return 0;
+        }
+        else if (t->left != nullptr && t->right == nullptr)
+        {
+            avl_tree *to_del = t;
+            t = t->left;
+            delete to_del;
+            return 0;
+        }
+        else if (t->right != nullptr && t->left == nullptr)
+        {
+            avl_tree *to_del = t;
+            t = t->right;
+            delete to_del;
+            return 0;
+        }
+        else if (t->left != nullptr && t->right != nullptr)
+        {
+            avl_tree *left_max = t->left, *pre_max = nullptr;
+            while (left_max->right != nullptr)
+            {
+                pre_max = left_max;
+                left_max = left_max->right;
+            }
+            t->data = left_max->data;
+            if (left_max == t->left)
+            {
+                t->left = left_max->left;
+            }
+            else
+            {
+                pre_max->right = left_max->left;
+            };
+            delete left_max;
+        };
     }
     else
     {
@@ -240,8 +253,8 @@ int remove_val(avl_tree *&t, int val)
         {
             if (t->left == nullptr)
             {
-		    // cout<<"Value not found!"<<endl;
-		    return 1;
+                // cout<<"Value not found!"<<endl;
+                return 1;
             }
             else
             {
@@ -252,12 +265,12 @@ int remove_val(avl_tree *&t, int val)
         {
             if (t->right == nullptr)
             {
-		    // cout<<"Value not found!"<<endl;
-		    return 1;
+                // cout<<"Value not found!"<<endl;
+                return 1;
             }
             else
             {
-		remove_val(t->right, val);
+                remove_val(t->right, val);
             }
         };
     };
@@ -265,22 +278,23 @@ int remove_val(avl_tree *&t, int val)
     return 0;
 };
 
-
 int main()
 {
     avl_tree T;
     avl_tree *root = &T;
     int i = 0;
-    int op,N;
+    int op, N;
     while (true)
     {
         cin >> op >> N;
-	if (op == 1) insert_val(root, N);
-	if (op == 2) remove_val(root, N);
-        // print_tree_lvr(root);
+        if (op == 1)
+            insert_val(root, N);
+        if (op == 2)
+            remove_val(root, N);
+        print_tree_lvr(root);
         cout << endl;
-        // print_tree_vlr(root);
-        // cout << endl;
+        print_tree_vlr(root);
+        cout << endl;
     }
 
     return 0;
