@@ -165,7 +165,7 @@ int insert_val(avl_tree *&t, int val)
 {
     if (t->data == val)
     {
-        cout << "Value exists!" << endl;
+        // cout << "Value exists!" << endl;
         return 1;
     }
     else
@@ -240,7 +240,7 @@ int remove_val(avl_tree *&t, int val)
         {
             if (t->left == nullptr)
             {
-		    cout<<"Value not found!"<<endl;
+		    // cout<<"Value not found!"<<endl;
 		    return 1;
             }
             else
@@ -252,7 +252,7 @@ int remove_val(avl_tree *&t, int val)
         {
             if (t->right == nullptr)
             {
-		    cout<<"Value not found!"<<endl;
+		    // cout<<"Value not found!"<<endl;
 		    return 1;
             }
             else
@@ -268,8 +268,8 @@ int remove_val(avl_tree *&t, int val)
 
 int main()
 {
-    avl_tree T[1000];
-    avl_tree *root = &T[0];
+    avl_tree T;
+    avl_tree *root = &T;
     int i = 0;
     int op,N;
     while (true)
@@ -277,10 +277,10 @@ int main()
         cin >> op >> N;
 	if (op == 1) insert_val(root, N);
 	if (op == 2) remove_val(root, N);
-        print_tree_lvr(root);
+        // print_tree_lvr(root);
         cout << endl;
-        print_tree_vlr(root);
-        cout << endl;
+        // print_tree_vlr(root);
+        // cout << endl;
     }
 
     return 0;
