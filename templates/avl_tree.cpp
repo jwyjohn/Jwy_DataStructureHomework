@@ -201,16 +201,82 @@ int insert_val(avl_tree *&t, int val)
     return 0;
 };
 
+int remove_val(avl_tree *&t, int val)
+{
+    if (t->data == val)
+    {
+	if (t->left == nullptr && t->right == nullptr) {
+		avl_tree *to_del = t;
+		t = nullptr;
+		delete to_del;
+		return 0;
+	} else 
+	if (t->left != nullptr && t->right == nullptr) {
+		avl_tree *to_del = t;
+		t = t->left;
+		delete to_del;
+		return 0;
+	} else
+	if (t->right != nullptr && t->left == nullptr) {
+                avl_tree *to_del = t;
+                t = t->right;
+                delete to_del;
+		return 0;
+	} else
+	if (t->left != nullptr && t->right != nullptr) {
+		avl_tree *left_max = t->left, *pre_max=nullptr;
+		while (left_max->right!=nullptr) {pre_max = left_max;left_max = left_max->right;}
+		t->data = left_max->data;
+		if (left_max==t->left){
+			t->left = left_max->left;
+		} else {pre_max->right = left_max->left;};
+		delete left_max;
+	};
+
+    }
+    else
+    {
+        if (val < t->data)
+        {
+            if (t->left == nullptr)
+            {
+		    cout<<"Value not found!"<<endl;
+		    return 1;
+            }
+            else
+            {
+                remove_val(t->left, val);
+            }
+        };
+        if (val > t->data)
+        {
+            if (t->right == nullptr)
+            {
+		    cout<<"Value not found!"<<endl;
+		    return 1;
+            }
+            else
+            {
+		remove_val(t->right, val);
+            }
+        };
+    };
+    balance_node(t);
+    return 0;
+};
+
+
 int main()
 {
     avl_tree T[1000];
     avl_tree *root = &T[0];
     int i = 0;
-    int N;
+    int op,N;
     while (true)
     {
-        cin >> N;
-        insert_val(root, N);
+        cin >> op >> N;
+	if (op == 1) insert_val(root, N);
+	if (op == 2) remove_val(root, N);
         print_tree_lvr(root);
         cout << endl;
         print_tree_vlr(root);
