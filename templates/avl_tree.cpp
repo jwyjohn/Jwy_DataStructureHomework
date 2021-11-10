@@ -19,6 +19,9 @@ typedef struct avl_tree_node
 
 } avl_tree;
 
+int get_balance(avl_tree *t);
+int get_height(avl_tree *t);
+
 int print_tree_lvr(avl_tree *t)
 {
 
@@ -27,7 +30,7 @@ int print_tree_lvr(avl_tree *t)
         print_tree_lvr(t->left);
     };
     if (t->data != 0)
-        cout << " " << t->data;
+        cout << " " << t->data << "[" << get_balance(t) << "," << get_height(t) <<"]";
     if (t->right != nullptr)
     {
         print_tree_lvr(t->right);
@@ -38,7 +41,7 @@ int print_tree_lvr(avl_tree *t)
 int print_tree_vlr(avl_tree *t)
 {
     if (t->data != 0)
-        cout << " " << t->data;
+	cout << " " << t->data << "[" << get_balance(t) << "," << get_height(t) <<"]";
     if (t->left != nullptr)
     {
         print_tree_vlr(t->left);
@@ -66,75 +69,73 @@ int get_balance(avl_tree *t)
     return get_height(t->right) - get_height(t->left);
 };
 
-int rotate_left(avl_tree *t, avl_tree *&p)
+avl_tree* rotate_left(avl_tree *t)
 {
-    p = t->right;
-    avl_tree *tmp;
-    tmp = t->right;
+    avl_tree *root;
+    root = t->right;
     t->right = t->right->left;
-    tmp->left = t;
-    return 0;
+    root->left = t;
+    return root;
 };
 
-int rotate_right(avl_tree *t, avl_tree *&p)
+avl_tree* rotate_right(avl_tree *t)
 {
-    p = t->left;
-    avl_tree *tmp;
-    tmp = t->left;
+    avl_tree *root;
+    root = t->left;
     t->left = t->left->right;
-    tmp->right = t;
-    return 0;
+    root->right = t;
+    return root;
 };
 
-int adjust_tree_RR(avl_tree *t, avl_tree *&p)
+avl_tree* adjust_tree_RR(avl_tree *t)
 {
-    rotate_right(t, p);
-    return 0;
+    return rotate_right(t);
 };
 
-int adjust_tree_LL(avl_tree *t, avl_tree *&p)
+avl_tree* adjust_tree_LL(avl_tree *t)
 {
-    rotate_left(t, p);
-    return 0;
+    return rotate_left(t);
 };
 
-int adjust_tree_LR(avl_tree *t, avl_tree *&p)
+avl_tree* adjust_tree_LR(avl_tree *t)
 {
-    rotate_left(t->left, t->left);
-    rotate_right(t, p);
-    return 0;
+    avl_tree *root;
+    t->left = rotate_left(t->left);
+    root = rotate_right(t);
+    return root;
 };
 
-int adjust_tree_RL(avl_tree *t, avl_tree *&p)
+avl_tree* adjust_tree_RL(avl_tree *t)
 {
-    rotate_right(t->right, t->right);
-    rotate_left(t, p);
-    return 0;
+    avl_tree *root;
+    t->right = rotate_right(t->right);
+    root = rotate_left(t);
+    return root;
 };
 
-int balance_node(avl_tree *t, avl_tree *&p)
+int balance_node(avl_tree *&t)
 {
     int bf = get_balance(t);
     if (bf > 1)
     {
         if (get_balance(t->right) > 0)
         {
-            adjust_tree_LL(t, p);
-        };
-        if (get_balance(t->right) <= 0)
+            t = adjust_tree_LL(t);
+        }
+	else
         {
-            adjust_tree_RL(t, p);
+            t = adjust_tree_RL(t);
         };
     };
     if (bf < -1)
     {
-        if (get_balance(t->left) > 0)
+        if (get_balance(t->left) < 0)
         {
-            adjust_tree_RR(t, p);
-        };
-        if (get_balance(t->left) <= 0)
+            t = adjust_tree_RR(t);
+        }
+	else
         {
-            adjust_tree_LR(t, p);
+            t = adjust_tree_LR(t);
         };
     };
     return 0;
@@ -160,7 +161,7 @@ avl_tree *find_val(avl_tree *t, int val)
     };
 };
 
-int insert_val(avl_tree *t, int val)
+int insert_val(avl_tree *&t, int val)
 {
     if (t->data == val)
     {
@@ -196,25 +197,23 @@ int insert_val(avl_tree *t, int val)
             }
         };
     };
-    balance_node(t->left, t->left);
-    balance_node(t->right, t->right);
+    balance_node(t);
     return 0;
 };
 
 int main()
 {
     avl_tree T[1000];
+    avl_tree *root = &T[0];
     int i = 0;
     int N;
-    cin >> N;
-    T[0].data = N;
     while (true)
     {
         cin >> N;
-        insert_val(&T[0], N);
-        print_tree_lvr(&T[0]);
+        insert_val(root, N);
+        print_tree_lvr(root);
         cout << endl;
-        print_tree_vlr(&T[0]);
+        print_tree_vlr(root);
         cout << endl;
     }
 
