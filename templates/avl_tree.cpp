@@ -19,18 +19,34 @@ typedef struct avl_tree_node
 
 } avl_tree;
 
-int print_tree(avl_tree *t)
+int print_tree_lvr(avl_tree *t)
 {
 
     if (t->left != nullptr)
     {
-        print_tree(t->left);
+        print_tree_lvr(t->left);
     };
     if (t->data != 0)
         cout << " " << t->data;
     if (t->right != nullptr)
     {
-        print_tree(t->right);
+        print_tree_lvr(t->right);
+    };
+    return 0;
+};
+
+int print_tree_vlr(avl_tree *t)
+{
+    if (t->data != 0)
+        cout << " " << t->data;
+    if (t->left != nullptr)
+    {
+        print_tree_vlr(t->left);
+    };
+
+    if (t->right != nullptr)
+    {
+        print_tree_vlr(t->right);
     };
     return 0;
 };
@@ -60,9 +76,9 @@ int get_height(avl_tree *t)
     return max(hl, hr);
 };
 
-int rotate_left(avl_tree *p, avl_tree *t)
+int rotate_left(avl_tree *t, avl_tree *&p)
 {
-    p->right = t->right;
+    p = t->right;
     avl_tree *tmp;
     tmp = t->right;
     t->right = t->right->left;
@@ -70,9 +86,9 @@ int rotate_left(avl_tree *p, avl_tree *t)
     return 0;
 };
 
-int rotate_right(avl_tree *p, avl_tree *t)
+int rotate_right(avl_tree *t, avl_tree *&p)
 {
-    p->left = t->left;
+    p = t->left;
     avl_tree *tmp;
     tmp = t->left;
     t->left = t->left->right;
@@ -80,24 +96,50 @@ int rotate_right(avl_tree *p, avl_tree *t)
     return 0;
 };
 
+int adjust_tree_LL(avl_tree *t, avl_tree *&p)
+{
+    rotate_right(t, p);
+    return 0;
+};
+
+int adjust_tree_RR(avl_tree *t, avl_tree *&p)
+{
+    rotate_left(t, p);
+    return 0;
+};
+
+int adjust_tree_LR(avl_tree *t, avl_tree *&p)
+{
+    rotate_left(t->left, t->left);
+    rotate_right(t, p);
+    return 0;
+};
+
+int adjust_tree_RL(avl_tree *t, avl_tree *&p)
+{
+    rotate_right(t->right, t->right);
+    rotate_left(t, p);
+    return 0;
+};
+
 int main()
 {
-    avl_tree T[100];
-    for (int i = 0; i < 15; i++)
+    avl_tree T[1000];
+    for (int i = 0; i < 31; i++)
     {
         T[i].data = i + 1;
         T[i].left = &T[i * 2 + 1];
         T[i].right = &T[i * 2 + 2];
     };
-    print_tree(&T[0]);
+    print_tree_lvr(&T[0]);
+    cout << endl;
+    print_tree_vlr(&T[0]);
     cout << endl;
 
-    rotate_right(&T[0], &T[1]);
-    print_tree(&T[0]);
+    adjust_tree_LR(T[0].left, T[0].left);
+    print_tree_lvr(&T[0]);
     cout << endl;
-
-    rotate_left(&T[3], &T[1]);
-    print_tree(&T[0]);
+    print_tree_vlr(&T[0]);
     cout << endl;
     return 0;
 };
