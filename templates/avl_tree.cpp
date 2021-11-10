@@ -14,13 +14,18 @@ typedef struct avl_tree_node
 {
     int data = 0;
     int height = 0;
+    bool lazy = false;
     avl_tree_node *left = nullptr;
     avl_tree_node *right = nullptr;
 
 } avl_tree;
 
+avl_tree T;
+avl_tree *root = &T;
+
 int get_balance(avl_tree *t);
 int get_height(avl_tree *t);
+int get_height_s(avl_tree *t);
 
 int print_tree_lvr(avl_tree *t)
 {
@@ -30,7 +35,8 @@ int print_tree_lvr(avl_tree *t)
         print_tree_lvr(t->left);
     };
     if (t->data != 0)
-        cout << " " << t->data << "[" << get_balance(t) << "," << get_height(t) << "]";
+        // cout << " " << t->data << "[" << get_balance(t) << "," << get_height(t) << "," << get_height_s(t) << "]";
+        cout << " " << t->data;
     if (t->right != nullptr)
     {
         print_tree_lvr(t->right);
@@ -41,7 +47,8 @@ int print_tree_lvr(avl_tree *t)
 int print_tree_vlr(avl_tree *t)
 {
     if (t->data != 0)
-        cout << " " << t->data << "[" << get_balance(t) << "," << get_height(t) << "]";
+        // cout << " " << t->data << "[" << get_balance(t) << "," << get_height(t) << "," << get_height_s(t) << "]";
+        cout << " " << t->data;
     if (t->left != nullptr)
     {
         print_tree_vlr(t->left);
@@ -54,19 +61,41 @@ int print_tree_vlr(avl_tree *t)
     return 0;
 };
 
+// int get_height(avl_tree *t)
+// {
+//     if (t == nullptr)
+//         return 0;
+//     return max(get_height(t->left), get_height(t->right)) + 1;
+// };
+
+int get_height_s(avl_tree *t)
+{
+    if (t == nullptr)
+        return 0;
+    return max(get_height_s(t->left), get_height_s(t->right)) + 1;
+};
+
 int get_height(avl_tree *t)
 {
     if (t == nullptr)
         return 0;
-    return max(get_height(t->left), get_height(t->right)) + 1;
+    if (t->lazy == true)
+        return t->height;
+    else
+    {
+        t->height = max(get_height_s(t->left), get_height_s(t->right)) + 1;
+        // t->height = max(get_height(t->left), get_height(t->right)) + 1;
+        t->lazy = true;
+    }
+    return t->height;
 };
 
 int get_balance(avl_tree *t)
 {
     if (t == nullptr)
         return 0;
-    // return (t->right->height - t->left->height);
-    return get_height(t->right) - get_height(t->left);
+    // return get_height(t->right) - get_height(t->left);
+    return get_height_s(t->right) - get_height_s(t->left);
 };
 
 avl_tree *rotate_left(avl_tree *t)
@@ -126,8 +155,8 @@ int balance_node(avl_tree *&t)
         {
             t = adjust_tree_RL(t);
         };
-    };
-    if (bf < -1)
+    }
+    else if (bf < -1)
     {
         if (get_balance(t->left) < 0)
         {
@@ -164,6 +193,7 @@ avl_tree *find_val(avl_tree *t, int val)
 
 int insert_val(avl_tree *&t, int val)
 {
+    t->lazy = false;
     if (t->data == val)
     {
         // cout << "Value exists!" << endl;
@@ -204,6 +234,7 @@ int insert_val(avl_tree *&t, int val)
 
 int remove_val(avl_tree *&t, int val)
 {
+    t->lazy = false;
     if (t->data == val)
     {
         if (t->left == nullptr && t->right == nullptr)
@@ -245,6 +276,7 @@ int remove_val(avl_tree *&t, int val)
                 pre_max->right = left_max->left;
             };
             delete left_max;
+            return 0;
         };
     }
     else
@@ -280,8 +312,6 @@ int remove_val(avl_tree *&t, int val)
 
 int main()
 {
-    avl_tree T;
-    avl_tree *root = &T;
     int i = 0;
     int op, N;
     while (true)
@@ -291,8 +321,8 @@ int main()
             insert_val(root, N);
         if (op == 2)
             remove_val(root, N);
-        print_tree_lvr(root);
-        cout << endl;
+        // print_tree_lvr(root);
+        // cout << endl;
         print_tree_vlr(root);
         cout << endl;
     }
