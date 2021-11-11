@@ -44,6 +44,7 @@
 *.bbl
 *.blg
 *.log
+*.toc
 *.synctex.gz
 *.fls
 *.fdb_latexmk

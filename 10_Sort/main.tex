@@ -1,0 +1,77 @@
+%!TEX program = xelatex
+%!BIB program = bibtex
+\documentclass[cn,black,12pt,normal]{elegantnote}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{siunitx}[=v2]
+\usepackage{fancyhdr}
+\usepackage{newtxtext}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\newcommand{\uct}[1]{\textsuperscript{\textsuperscript{\cite{#1}}}}
+\renewcommand{\tablename}{\textbf{Table}}
+\renewcommand{\figurename}{Figure.}
+\renewcommand{\refname}{References}
+\PassOptionsToPackage{no-math}{fontspec}
+\lstset{basicstyle=\footnotesize\ttfamily,numbers=none,frame=trBL}
+
+\sisetup{mode=text}
+\sisetup{range-phrase = \text{ \textasciitilde }}
+\pagestyle{fancy}
+\fancyhead[L]{School of Software Engineering, Tongji University}
+\fancyhead[R]{Data Structure Projects}
+\renewcommand{\headrulewidth}{1pt}
+
+\title{Sort Algorithms\\8种排序算法的比较案例}
+\author{姜文渊}
+\institute{School of Software Engineering, Tongji University}
+\version{0.50}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+Sort Algorithms are a series of interesting algorithms which are widely used in almost all field of software engineering while having its unique significance in computation theories. From the beginning of computing, the sorting problem has attracted a great deal of research, perhaps due to the complexity of solving it efficiently despite its simple, familiar statement.
+
+Simple algorithms like Bubble Sort was analyzed as early as 1956\uct{demuth1957electronic}, while to 2006, novel sort algorithms like Timsort and Library Sort are still published, indicating the problem's value in computer sciences.\uct{auger2015merge}
+
+In this task, the author implemented 8 kind of sort algorithms and compares their performance under input data of different scale and different order. You can verify the author's results by using the code and binary in the repo.
+
+\section{Theoretical comparison of algorithms}
+
+On many data structure or algorithm textbooks, it has been proved that comparison-based sorting algorithms have a fundamental requirement of $\Omega(n \, log \, n) $ comparisons,\uct{cormen2009introduction} wiht those sort methods not based on comparisons, such as Bucket Sort, can have better performance at a cost of more space.
+
+Here we consider Computational complexity (best, average and worst), memory usage and stability of these Sort Algorithms, and the results are shown in the table below. Detailed proof can be found on various papers or textbooks.
+
+\begin{table}[H]
+    \caption{\textbf{Theoretical comparison of algorithms}}
+    \centering
+    \begin{tabular}{cccccc}
+        \toprule
+        Algorithm&Best&Average&Worst&Memory&Stable\\
+        \midrule
+        Bubble Sort&$n$&$n^2$&$n^2$&$1$&Yes\\
+        Insertion Sort&$n$&$n^2$&$n^2$&$1$&Yes\\
+        Selection Sort&$n^2$&$n^2$&$n^2$&$1$&Yes\\
+        Binary insertion Sort&$n$&$n^2$&$n^2$&$1$&Yes\\
+        Shell Sort&$n \, log \, n$&$n^{\frac{4}{3}}$&$n^{\frac{3}{2}}$&1&No\\
+        Quick Sort&$n \, log \, n$&$n \, log \, n$&$n^2$&$log \, n$&No\\
+        Heap Sort&$n \, log \, n$&$n \, log \, n$&$n \, log \, n$&$1$&No\\
+        Merge Sort&$n \, log \, n$&$n \, log \, n$&$n \, log \, n$&$n$&Yes\\
+        Bucket sort&$n$&$n$&$n$&$n$&Yes\\
+        Radix Sort&$-$&$nr$&$nr$&$n$&Yes\\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Note that even though these algorithms are named as sorts, some of them have more wider application with minor modification. For exapmle, Heap Sort can be adjusted to maintain a priority queue with high performance. Some of the sort algorithms seems to be of low efficiency, but they have their value in theory or in some special cases. Another thing that needs to be mentioned about these algorithms is that, in the era of big data, paralle computation is more important than ever. One of the highly parallelizable sort algorithms is the Merge Sort, which can run on clusters.\uct{ajtai19830}
+
+
+\bibliography{references}
+\end{document}
