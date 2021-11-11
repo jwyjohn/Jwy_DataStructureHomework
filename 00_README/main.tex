@@ -1,5 +1,4 @@
 %!TEX program = xelatex
-%!BIB program = bibtex
 
 \documentclass[cn,black,12pt,normal]{elegantnote}
 \usepackage{float}
@@ -13,8 +12,7 @@
 \usepackage[super]{cite}
 \renewcommand\citeform[1]{[#1]}
 \PassOptionsToPackage{no-math}{fontspec}
-
-\newcommand{\upcite}[1]{\textsuperscript{\textsuperscript{\cite{#1}}}}
+\lstset{basicstyle=\footnotesize\ttfamily,numbers=none,frame=trBL}
 
 \sisetup{mode=text}
 \sisetup{range-phrase = \text{ \textasciitilde }}
@@ -56,13 +54,73 @@ In this \lstinline{README}, the author will show the general structure of the co
 
 \section{Structure of the project}
 
+In the root folder of the git repo, dirctories named like \lstinline{10_Sort} can be found. One example of the structure of these dirctories is shown below.
+
+\begin{lstlisting}
+10_Sort/
+|-- 10_1951510_姜文渊.cpp
+|-- 10_1951510_姜文渊.exe
+`-- linux
+    |-- example.in
+    |-- example.out
+    |-- Makefile
+    |-- sort.cpp
+    `-- sort.h
+1 directory, 7 files
+\end{lstlisting}
+
+As can be seen, one \lstinline{*.cpp} file and one \lstinline{*.exe} file can be found. They are the source file and its compiled corresponding windows executable. If the windows executable won't run properly on your windows platform (which is a rare situation), then it is recommended to recompile the source file on your platform.
+
+The \lstinline{linux} dirctory holds several files: \lstinline{*.cpp}, \lstinline{*.h}, \lstinline{Makefile} and two more text files. The header and source file are to be compiled using the configurations provided in \lstinline{Makefile}. Since there are no binary provided, you may need to compiled the files on your own linux distribution.
+
+The \lstinline{example.in} and \lstinline{example.out} files are one example of the input and output of the solution program for reference.
+
+
+
 \section{How to build}
+
+Since the author follows the Minimalism principles, under normal circumstances a C++ compiler which supports the C++ 11 standard with common library properly configured will smoothly compile the project. However, on some special platforms like \lstinline{PowerPC} or \lstinline{arm64}, subtle problems may occure, and the author dose not tested the solutions on those platforms.
+
+Following are the typical ways of compiling a project solution.
+
+\subsection{On Windows}
+
+\begin{enumerate}
+    \item Download \lstinline{DevC++ 5.11}
+    \item Open the \lstinline{.\*.cpp} with \lstinline{DevC++}
+    \item Press \lstinline{F10} to compile and run
+\end{enumerate}
+
+\subsection{On Linux}
+
+\begin{enumerate}
+    \item Check you have installed \lstinline{g++} and \lstinline{make}
+    \item Check the environment virables in \lstinline{./linux/Makefile} and modify them if necessary
+    \item (in a shell) Change dirctory to \lstinline{./linux/} using \lstinline{cd ./linux}
+    \item Run \lstinline{make build} to build
+    \item Run the binary generated in the dirctory
+    \item Use \lstinline{make clean} to remove temp files and the binary
+\end{enumerate}
 
 \section{About the development platform}
 
-\section{Test}
+The author tested the projects on an \lstinline{x86_64} machine with \lstinline{Manjaro Linux} and \lstinline{Windows 7} installed as OS. More detailed information can be found below.
 
-Hello.\cite{wiki:Selenium}
+\begin{lstlisting}
+-------------------
+OS: Manjaro Linux x86_64
+Kernel: 5.10.70-1-MANJARO
+Uptime: 8 hours, 28 mins
+Packages: 1086 (pacman)
+Shell: bash 5.1.8
+Resolution: 1536x864
+Theme: Adapta-Nokto-Eta-Maia [GTK2/3]
+Icons: Papirus-Adapta-Nokto-Maia [GTK2/3]
+Terminal: /dev/pts/0
+CPU: Intel i3-10105 (8) @ 4.400GHz
+GPU: Intel CometLake-S GT2 [UHD Graphics 630]
+Memory: 867MiB / 15850MiB
+\end{lstlisting}
 
 \bibliography{references}
 \end{document}
