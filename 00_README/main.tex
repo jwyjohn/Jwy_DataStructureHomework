@@ -1,0 +1,68 @@
+%!TEX program = xelatex
+%!BIB program = bibtex
+
+\documentclass[cn,black,12pt,normal]{elegantnote}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{siunitx}[=v2]
+\usepackage{fancyhdr}
+\usepackage{newtxtext}
+\usepackage[super]{cite}
+\renewcommand\citeform[1]{[#1]}
+\PassOptionsToPackage{no-math}{fontspec}
+
+\newcommand{\upcite}[1]{\textsuperscript{\textsuperscript{\cite{#1}}}}
+
+\sisetup{mode=text}
+\sisetup{range-phrase = \text{ \textasciitilde }}
+\pagestyle{fancy}
+\fancyhead[L]{School of Software Engineering, Tongji University}
+\fancyhead[R]{Data Structure Projects}
+\renewcommand{\headrulewidth}{1pt}
+
+\title{Data Structure Projects\\Overview}
+\author{姜文渊}
+\institute{School of Software Engineering, Tongji University}
+\version{0.50}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+In the data structure project of this semester, the author completed all 10 tasks required by the course, which are listed below.
+
+\begin{enumerate}
+    \item Exam Registration System (考试报名系统)
+    \item Joseph Game (约瑟夫生者死者游戏)
+    \item Maze Game (勇闯迷宫游戏)
+    \item N-Queen Problem (N皇后问题)
+    \item Keyword Search (关键字检索系统)
+    \item Family Tree (家谱管理系统)
+    \item Expression Eval (表达式计算)
+    \item Electric Network (电网建设造价模拟系统)
+    \item Binary Sort Tree (二叉排序数)
+    \item Sort Algorithms (8种排序算法的比较案例)
+\end{enumerate}
+
+The solution of each task meets the requirements given by the course, and more work has been done to make the solutions more user-friendly and more robust. Detailed demostration will be shown in the following documents, which contains the usage of each solution, the algorithms and math behind the solutions, and related analysis.
+
+In this \lstinline{README}, the author will show the general structure of the code, together with the development environment of this project and the ways to build the solutions. All the code and the commit history of this project will be found on \url{https://github.com/jwyjohn/Jwy_DataStructureHomework}.
+
+\section{Structure of the project}
+
+\section{How to build}
+
+\section{About the development platform}
+
+\section{Test}
+
+Hello.\cite{wiki:Selenium}
+
+\bibliography{references}
+\end{document}
