@@ -42,7 +42,7 @@ static CMDF_RETURN prepare_dataset(cmdf_arglist *arglist)
 {
 	if (!arglist)
 	{
-		cout << "[Sytax Error] No arguments provided!\n [Tip] Please Enter the command like \"prepare_dataset 200 rand/seq/inv\"" << endl;
+		cout << " [Sytax Error] No arguments provided!\n [Tip] Please Enter the command like \"prepare_dataset 200 rand/seq/inv\"" << endl;
 		return CMDF_OK;
 	}
 	if (!check_prepare_dataset(arglist))
@@ -81,7 +81,7 @@ static CMDF_RETURN prepare_dataset(cmdf_arglist *arglist)
 			random_int_array.push_back(n - i + 1);
 		};
 	};
-	cout << "[Success] Dataset created." << endl;
+	cout << " [Success] Dataset created." << endl;
 	print_array_short(random_int_array);
 	return CMDF_OK;
 };
