@@ -3,7 +3,7 @@ COMPILE  = g++
 RM       = rm -f
 OBJ      = a.out
 SOURCE   = main.o
-DEPEND   = main.cpp sort.h
+DEPEND   = main.cpp 
 
 build : $(SOURCE)
 	$(COMPILE) $(SOURCE) -o $(OBJ) 
