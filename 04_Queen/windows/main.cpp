@@ -1150,10 +1150,9 @@ struct cmdf_windowsize cmdf_get_window_size_unix(void)
 
 using namespace std;
 
-#define PROG_INTRO "test - A simple test program for libcmdf.\n" \
-				   "You can use this as a reference on how to use the library!"
-#define PRINTARGS_HELP "This is a very long help string for a command.\n" \
-					   "As you can see, this is concatenated properly. It's pretty good!"
+#define PROG_INTRO "                                       \n                                       \n   __   __  __     __     __    ___    \n /'__`\\/\\ \\/\\ \\  /'__`\\ /'__`\\/' _ `\\  \n/\\ \\L\\ \\ \\ \\_\\ \\/\\  __//\\  __//\\ \\/\\ \\ \n\\ \\___, \\ \\____/\\ \\____\\ \\____\\ \\_\\ \\_\\\n \\/___/\\ \\/___/  \\/____/\\/____/\\/_/\\/_/\n      \\ \\_\\                            \n       \\/_/                            \n\n - Free Software by 1951510 Jiang Wenyuan \nNov 2021\n=======================================\n! This is a program to solve the n-queen problem.\n! Input command 'solve 8 n' to calculate the solutions in the n=8 case.\n! If you want to see all the solution chess board in detail, use 'solve 8 n'.\n! You can change 8 to any int (< than 32) to get more general solutions.\n"
+
+#define SOLVE_HELP "Use like 'solve 8 y' or 'solve 9 n'. If you want to show all chessboards, use y, else use n."
 
 static CMDF_RETURN solve_queen(cmdf_arglist *arglist)
 {
@@ -1194,9 +1193,10 @@ int main()
 	cmdf_init("queen> ", PROG_INTRO, NULL, NULL, 0, 1);
 
 	/* Register our custom commands */
-	cmdf_register_command(solve_queen, "solve", NULL);
+	cmdf_register_command(solve_queen, "solve", SOLVE_HELP);
 
 	cmdf_commandloop();
 	return 0;
 }
 /*** End of inlined file: main.cpp ***/
+
