@@ -13,10 +13,11 @@
 
 using namespace std;
 
-#define PROG_INTRO "test - A simple test program for libcmdf.\n" \
-				   "You can use this as a reference on how to use the library!"
-#define PRINTARGS_HELP "This is a very long help string for a command.\n" \
-					   "As you can see, this is concatenated properly. It's pretty good!"
+#define PROG_INTRO "                     __      \n                    /\\ \\__   \n  ____    ___   _ __\\ \\ ,_\\  \n /',__\\  / __`\\/\\`'__\\ \\ \\/  \n/\\__, `\\/\\ \\L\\ \\ \\ \\/ \\ \\ \\_ \n\\/\\____/\\ \\____/\\ \\_\\  \\ \\__\\\n \\/___/  \\/___/  \\/_/   \\/__/\n                             \n                             \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n=============================\n! This is a program to compare sort algorithms.\n! Input command 'prep 10000 rand' to generate dataset.\n! Input command 'show' to inspect dataset.\n! If you want to see all the available algorithms , use 'help test'.\n! Use 'test bubble' to run bubble sort on the dataset.\n"
+#define SHOW_HELP "Used to inspect full dataset.\n"
+#define SEED_HELP "Used to inspect the random seed.\n"
+#define TEST_HELP "Used to run sort algorithm.\n Available algorithms can be found using \"test help\""
+#define PREP_HELP "Used to prepare dataset.\n Enter the command like \"prepare_dataset N rand/seq/inv\", where N is a number and rand/seq/inv indicates the sequence of data.\n"
 
 vector<int> random_int_array;
 unsigned int seed = static_cast<unsigned int>(time(0));
@@ -42,12 +43,12 @@ static CMDF_RETURN prepare_dataset(cmdf_arglist *arglist)
 {
 	if (!arglist)
 	{
-		cout << " [Sytax Error] No arguments provided!\n [Tip] Please Enter the command like \"prepare_dataset 200 rand/seq/inv\"" << endl;
+		cout << " [Sytax Error] No arguments provided!\n [Tip] Please Enter the command like \"prep 200 rand/seq/inv\"" << endl;
 		return CMDF_OK;
 	}
 	if (!check_prepare_dataset(arglist))
 	{
-		cout << " [Sytax Error] Invaild arguments!\n [Tip] Please Enter the command like \"prepare_dataset 200 rand/seq/inv\"" << endl;
+		cout << " [Sytax Error] Invaild arguments!\n [Tip] Please Enter the command like \"prep 200 rand/seq/inv\"" << endl;
 		return CMDF_OK;
 	}
 	int n = stoi(arglist->args[0]);
@@ -103,7 +104,7 @@ static CMDF_RETURN test_sort(cmdf_arglist *arglist)
 {
 	if (random_int_array.size() < 10)
 	{
-		cout << " [Data Error] Dataset not generated or too small.\n [Tip] Please generate the dataset using \"prepare_dataset 100 rand/seq/inv\"" << endl;
+		cout << " [Data Error] Dataset not generated or too small.\n [Tip] Please generate the dataset using \"prep 100 rand/seq/inv\"" << endl;
 		return CMDF_OK;
 	};
 	if (!arglist)
@@ -114,6 +115,20 @@ static CMDF_RETURN test_sort(cmdf_arglist *arglist)
 	if (arglist->count != 1)
 	{
 		cout << " [Sytax Error] Invaild arguments!\n [Tip] Please Enter the command like \"test quick\"" << endl;
+		cout << " [Tip] Vaild sort algorithms are:" << endl;
+		for (auto u : sorts_name)
+		{
+			cout << "\t- " << u.first << endl;
+		};
+		return CMDF_OK;
+	};
+	if (strcmp(arglist->args[0], "help") == 0)
+	{
+		cout << " [Tip] Vaild sort algorithms are:" << endl;
+		for (auto u : sorts_name)
+		{
+			cout << "\t- " << u.first << endl;
+		};
 		return CMDF_OK;
 	};
 	if (sorts_name.find(arglist->args[0]) == sorts_name.end())
@@ -164,10 +179,10 @@ int main()
 	cmdf_init("sort> ", PROG_INTRO, NULL, NULL, 0, 1);
 
 	/* Register our custom commands */
-	cmdf_register_command(show_dataset, "show", NULL);
-	cmdf_register_command(show_seed, "seed", NULL);
-	cmdf_register_command(prepare_dataset, "prep", PRINTARGS_HELP);
-	cmdf_register_command(test_sort, "test", PRINTARGS_HELP);
+	cmdf_register_command(show_dataset, "show", SHOW_HELP);
+	cmdf_register_command(show_seed, "seed", SEED_HELP);
+	cmdf_register_command(prepare_dataset, "prep", PREP_HELP);
+	cmdf_register_command(test_sort, "test", TEST_HELP);
 
 	cmdf_commandloop();
 	return 0;
