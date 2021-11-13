@@ -141,13 +141,12 @@ int main()
 	cmdf_init("network> ", PROG_INTRO, NULL, NULL, 0, 1);
 
 	/* Register our custom commands */
-	cmdf_register_command(init_graph, "init", SHOW_GRAPH_HELP);
+	cmdf_register_command(init_graph, "init", INIT_HELP);
 	cmdf_register_command(show_graph, "show", SHOW_GRAPH_HELP);
 	cmdf_register_command(add_edge, "ade", ADDE_HELP);
 	cmdf_register_command(add_node, "adv", ADDV_HELP);
 	cmdf_register_command(run_prim, "run", RUNP_HELP);
 
 	cmdf_commandloop();
-	return 0;
 	return 0;
 }
