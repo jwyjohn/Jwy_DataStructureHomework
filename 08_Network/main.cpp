@@ -6,37 +6,148 @@
 #include <vector>
 #include <cstring>
 #include <stack>
-#include "network.h"
+#include "main_header.h"
+
+#define _CRT_SECURE_NO_WARNINGS
+#define LIBCMDF_IMPL
+
 using namespace std;
+
+#define PROG_INTRO "              __                               __         \n             /\\ \\__                           /\\ \\        \n  ___      __\\ \\ ,_\\  __  __  __    ___   _ __\\ \\ \\/'\\    \n/' _ `\\  /'__`\\ \\ \\/ /\\ \\/\\ \\/\\ \\  / __`\\/\\`'__\\ \\ , <    \n/\\ \\/\\ \\/\\  __/\\ \\ \\_\\ \\ \\_/ \\_/ \\/\\ \\L\\ \\ \\ \\/ \\ \\ \\\\`\\  \n\\ \\_\\ \\_\\ \\____\\\\ \\__\\\\ \\___x___/'\\ \\____/\\ \\_\\  \\ \\_\\ \\_\\\n \\/_/\\/_/\\/____/ \\/__/ \\/__//__/   \\/___/  \\/_/   \\/_/\\/_/\n                                                          \n                                                          \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n==========================================================\n! This is a program to optimize a plan for electric network.\n! Input command 'adv A' to add a city named A.\n! Input command 'ade A B 100' to add connect A WITH B at 100 million cost.\n! Input command 'show' to inspect the graph.\n! Use 'run A' to run optimization strating from city A.\n! Use 'init' to clear graph WITH CAUTION.\n"
+#define INIT_HELP "Clear graph data.\n"
+#define SHOW_GRAPH_HELP "Print the graph in a certain format.\n"
+#define ADDE_HELP "Add node to graph. Format \"adv name1 name2 ... nameN\"\n"
+#define ADDV_HELP "Add edge to graph. Format \"ade start end length\"\n"
+#define RUNP_HELP "Run prim on the graph on a chosen node. Format \"run a\"\n "
+
+enetwork elec;
+
+static CMDF_RETURN init_graph(cmdf_arglist *arglist)
+{
+	elec.init_map();
+	cout << " [Success] Graph cleared and initialized." << endl;
+	return CMDF_OK;
+};
+
+static CMDF_RETURN show_graph(cmdf_arglist *arglist)
+{
+	// cout << " [Graph] " << endl;
+	elec.print_edges();
+	return CMDF_OK;
+};
+
+static CMDF_RETURN add_node(cmdf_arglist *arglist)
+{
+	if (!arglist)
+	{
+		cout << " [Sytax Error] No arguments provided!\n [Tip] Please provide node name like \"adv a b c d\"" << endl;
+		return CMDF_OK;
+	};
+	for (int i = 0; i < arglist->count; i++)
+	{
+		int flag = elec.add_node(arglist->args[i]);
+		if (flag == 1)
+		{
+			cout << " [Success] Node " << arglist->args[i] << " added." << endl;
+		}
+		else
+		{
+			cout << " [Error] Node " << arglist->args[i] << " is alerady in graph." << endl;
+		};
+	};
+	elec.print_edges();
+	return CMDF_OK;
+};
+
+bool check_add_edge(cmdf_arglist *arglist)
+{
+	if (arglist->count != 3)
+	{
+		return false;
+	};
+
+	for (int i = 0; i < strlen(arglist->args[2]); i++)
+	{
+
+		if ((int(arglist->args[2][i]) - int('0')) < 0 || (int(arglist->args[2][i]) - int('0')) > 9)
+			return false;
+		// cout << arglist->args[2][i] << endl;
+	};
+	return true;
+};
+
+static CMDF_RETURN add_edge(cmdf_arglist *arglist)
+{
+	if (!arglist)
+	{
+		cout << " [Sytax Error] No arguments provided!\n [Tip] Please provide node name like \"ade a b 7\"" << endl;
+		return CMDF_OK;
+	};
+	if (!check_add_edge(arglist))
+	{
+		cout << " [Sytax Error] Invaild arguments!\n [Tip] Please Enter the command like \"ade a b 7\"" << endl;
+		return CMDF_OK;
+	};
+	if (!elec.has_node(arglist->args[0]))
+	{
+		cout << " [Error] Node " << arglist->args[0] << " is not in graph."
+			 << endl;
+		return CMDF_OK;
+	};
+	if (!elec.has_node(arglist->args[1]))
+	{
+		cout << " [Error] Node " << arglist->args[1] << " is not in graph."
+			 << endl;
+		return CMDF_OK;
+	};
+	int flag = elec.add_edge(arglist->args[0], arglist->args[1], stoi(arglist->args[2]));
+	if (flag == 1)
+	{
+		cout << " [Success] Edge added." << endl;
+		elec.print_edges();
+	}
+	else
+	{
+		cout << " [Error] Unknown Error." << endl;
+		elec.print_edges();
+	};
+	return CMDF_OK;
+};
+
+static CMDF_RETURN run_prim(cmdf_arglist *arglist)
+{
+	if (!arglist)
+	{
+		cout << " [Sytax Error] No arguments provided!\n [Tip] Please provide node name like \"run a\"" << endl;
+		return CMDF_OK;
+	};
+	if (arglist->count != 1)
+	{
+		cout << " [Sytax Error] Invaild arguments!\n [Tip] Please Enter the command like \"run a\"" << endl;
+		return CMDF_OK;
+	};
+	if (!elec.has_node(arglist->args[0]))
+	{
+		cout << " [Error] Node " << arglist->args[0] << " is not in graph.\n"
+			 << endl;
+		return CMDF_OK;
+	};
+	elec.run_prim(arglist->args[0]);
+	return CMDF_OK;
+};
 
 int main()
 {
-	int no, ret_code;
-	string op;
-	enetwork elec;
-	while (op != "STOP233")
-	{
-		cin >> op;
-		if (op == "A")
-		{
-			string v;
-			cin >> v;
-			elec.add_node(v);
-		}
-		else if (op == "B")
-		{
-			string a, b;
-			int c;
-			cin >> a >> b >> c;
-			elec.add_edge(a, b, c);
-		}
-		else if (op == "S")
-		{
-			elec.print_edges();
-			string s;
-			cin >> s;
-			elec.run_prim(s);
-		}
-	};
+	cmdf_init("network> ", PROG_INTRO, NULL, NULL, 0, 1);
+
+	/* Register our custom commands */
+	cmdf_register_command(init_graph, "init", SHOW_GRAPH_HELP);
+	cmdf_register_command(show_graph, "show", SHOW_GRAPH_HELP);
+	cmdf_register_command(add_edge, "ade", ADDE_HELP);
+	cmdf_register_command(add_node, "adv", ADDV_HELP);
+	cmdf_register_command(run_prim, "run", RUNP_HELP);
+
+	cmdf_commandloop();
+	return 0;
 	return 0;
 }
