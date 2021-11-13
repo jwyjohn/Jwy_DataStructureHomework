@@ -1,18 +1,19 @@
 from pyfiglet import Figlet
 
 f = Figlet(font='larry3d')
-s = f.renderText('KMP')
+s = f.renderText('exam')
 
 s += "\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n"
 print(s)
-info = ["This is a program to find substring in a file.",
-        "Can also create, read, append a file.",
-        "Input command 'c mytext.txt' to create mytext.txt.",
-        "Input command 'r mytext.txt' to read from mytext.txt.",
-        "Input command 'a mytext.txt' to append content to mytext.txt.",
-        "Input command 's' to show loaded text.",
-        "Input command 'f substr' to serach substr in loaded text.",
-        "Use 'c mytext.txt' WITH CAUTION because it can overwrite existing file."]
+info = ["This is a program to manage exam students.",
+        "Can also save student info to a file.",
+        "Input command 'i insert_position No. name gender age subject' to insert a student.",
+        "Input command 'f No.' to find info about a student.",
+        "Input command 'd No.' to delete a student.",
+        "Input command 'm No. new_No. new_name new_gender new_age new_subject' to modify student info.",
+        "Input command 's' to show statistcal data.",
+        "Input command 'l' to list all students.",
+        "Use 'w' WITH CAUTION to save data to student_data.txt because it can overwrite existing file."]
 wid = len(s.split('\n')[0])
 bar = '='*wid+'\n'
 tip = "! "+'\n! '.join(info)
