@@ -28,7 +28,7 @@
 \fancyhead[R]{Data Structure Projects}
 \renewcommand{\headrulewidth}{1pt}
 
-\title{n-Queens Puzzle\\N皇后问题}
+\title{Electrical grid\\电网建设造价模拟系统}
 \author{1951510\; 姜文渊}
 \institute{\small \url{https://github.com/jwyjohn/Jwy_DataStructureHomework}}
 \version{0.50}
@@ -40,17 +40,22 @@
 
 \section{Introduction}
 
-Sort Algorithms are a series of interesting algorithms which are widely used in almost all field of software engineering while having its unique significance in computation theories. From the beginning of computing, the sorting problem has attracted a great deal of research, perhaps due to the complexity of solving it efficiently despite its simple, familiar statement.
+Suppose in a city, there are many communities that need to be powered by a electrical grid. Due to limited budget, the network should cost as little as possible. Here we have the estimated cost for connecting two certain communities, and the author need to implement an algorithm for giving out the optimized plan for the construction of such electrical grid.
 
-Simple algorithms like Bubble Sort was analyzed as early as 1956\uct{demuth1957electronic}, while to 2006, novel sort algorithms like Timsort and Library Sort are still published, indicating the problem's value in computer sciences.\uct{auger2015merge}
+Graph is useful in modeling real world problems, and in this situation, the problem is equivalent to the construction of a minimum spanning tree in an undirected graph.
 
-In this task, the author implemented 8 kind of sort algorithms and compares their performance under input data of different scale and different order. You can verify the author's results by using the code and binary in the repo.
+A minimum spanning tree (MST) or minimum weight spanning tree is a subset of the edges of a connected, edge-weighted undirected graph that connects all the vertices together, without any cycles and with the minimum possible total edge weight. That is, it is a spanning tree whose sum of edge weights is as small as possible.\uct{wiki:Minimum_spanning_tree}
+
+Several algorithms can be used to solve such problems. The Prim's algorithm\uct{cheriton1976finding} is one of the widely used one, and another popular algorithm is Kruskal's algorithm\uct{kruskal1956shortest}. Both the two algorithms costs $O(m\, log\, n)$ time, but faster algorithm are still invented recently.
+
+The author implemented the Prim's algorithm in this project, considering its relatively fast speed and robustness.
+
 
 \section{Demostration}
 
 \subsection{Compile and run the program}
 
-On linux platform with \lstinline{make} and a \lstinline{g++} which supports C++ 11 Standard, just \lstinline{cd} to the \lstinline{./linux} and run \lstinline{make build}. The binary executable will be generated in the same dirctory named as \lstinline{a.out} or \lstinline{mysort}, according to the configurations in the \lstinline{Makefile}. Use \lstinline{./a.out} to run the program.
+On linux platform with \lstinline{make} and a \lstinline{g++} which supports C++ 11 Standard, just \lstinline{cd} to the \lstinline{./linux} and run \lstinline{make build}. The binary executable will be generated in the same dirctory named as \lstinline{a.out} or \lstinline{egrid}, according to the configurations in the \lstinline{Makefile}. Use \lstinline{./a.out} to run the program.
 
 The program is an interactive shell, where you can input commands and get results.
 
@@ -131,7 +136,7 @@ Note that even though these algorithms are named as sorts, some of them have mor
 
 \section{Notes on the source code}
 
-If you want to re-use the author's source code in a project, it is not recommended to do so for that the \lstinline{std::sort} is averagely more fast and more stable than these algorithms for testing. 
+If you want to re-use the author's source code in a project, it is not recommended to do so for that the \lstinline{std::sort} is averagely more fast and more stable than these algorithms for testing.
 
 But still, some of these algorithms are fun to test. In the author's source code \lstinline{main_header.h}, you can find a definition of a struct \lstinline{sort_func_result} like this:
 \begin{lstlisting}[language = C++]
