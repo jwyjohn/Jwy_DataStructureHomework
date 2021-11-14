@@ -5,6 +5,7 @@
 #define MAX_CHESSBOARD_SIZE 32
 #define MAX_STACK_SIZE 10000
 #define _QUEEN 1
+#define STACK_SIZE  16772512
 
 #include <iostream>
 #include <string>
