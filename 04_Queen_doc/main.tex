@@ -15,6 +15,9 @@
 \renewcommand{\tablename}{\textbf{Table}}
 \renewcommand{\figurename}{Figure.}
 \renewcommand{\refname}{References}
+\renewcommand{\contentsname}{Contents}
+\renewcommand{\versiontext}{Version: }
+\renewcommand{\updatetext}{Update: }
 \PassOptionsToPackage{no-math}{fontspec}
 \lstset{basicstyle=\footnotesize\ttfamily\color[RGB]{50,0,130},numbers=none,frame=trBL}
 
@@ -26,14 +29,18 @@
 \renewcommand{\headrulewidth}{1pt}
 
 \title{n-Queens Puzzle\\N皇后问题}
-\author{1951510\ 姜文渊 \\ \small \url{https://github.com/jwyjohn/Jwy_DataStructureHomework}}
-\institute{School of Software Engineering, Tongji University}
+\author{1951510\; 姜文渊}
+\institute{\small \url{https://github.com/jwyjohn/Jwy_DataStructureHomework}}
 \version{0.50}
 \date{\today}
 
 \begin{document}
 
 \maketitle
+
+\tableofcontents
+
+\newpage
 
 \section{Introduction}
 
@@ -46,6 +53,8 @@ This project uses the backtracking algorithm with a stack to solve the n-Queens 
 \subsection{Compile and run the program}
 
 On linux platform with \lstinline{make} and a \lstinline{g++} which supports C++ 11 Standard, just \lstinline{cd} to the \lstinline{./linux} and run \lstinline{make build}. The binary executable will be generated in the same directory named as \lstinline{a.out} or \lstinline{queen}, according to the configurations in the \lstinline{Makefile}. Use \lstinline{./a.out} to run the program.
+
+(On windows platforms, you may need to adjust the max stack size manually, to avoid stack overflow when n>10, since default stack size of windows tend to be much smaller.)
 
 The program is an interactive shell, where you can input commands and get results.
 
@@ -245,6 +254,13 @@ As can be seen in the table, the number of solutions exploded when $n$ gets bigg
 \end{equation}
 The result is calculated by FPGA rather than ordinary computers, and you can find the methods on GitHub here \url{https://github.com/preusser/q27}.\uct{preusser2017putting}
 
+Thus, the computational complexity of solving n-queens problem by backtracking algorithm is far greater than $O(2^n)$, and the same is ture for the memory needed to solve this problem (which is the max stack size here).
+
+\subsection{More than just queens}
+
+If we modify the function \lstinline{bool is_queen_safe(chessboard a, int x, int y)}, we can solve problems like n-knight, n-rook, or n-bishop problems, with the same backtracking \lstinline{while (!s.empty())} loop.
+
+In fact, 32 knights, or 14 bishops, 16 kings or 8 rooks, can be put on one $8 \times 8$ chessboard "Peacefully" without threatening each other. Detailed solutions is found using the backtracking method.
 
 \bibliography{references}
 \end{document}
