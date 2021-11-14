@@ -539,6 +539,7 @@ int test_sort_function(sort_func_result (*fp)(int *array, int array_size, bool (
 	};
 	cout << endl
 		 << endl;
+	cout << " [Sort Function] " << res.func_name << endl;
 	cout << " [Swap calls] " << res.swap_count << endl;
 	cout << " [Compare calls] " << res.compare_count << endl;
 	cout << " [Clocks used] " << (end - start) << " clocks" << endl;
