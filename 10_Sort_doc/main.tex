@@ -16,7 +16,7 @@
 \renewcommand{\figurename}{Figure.}
 \renewcommand{\refname}{References}
 \PassOptionsToPackage{no-math}{fontspec}
-\lstset{basicstyle=\footnotesize\ttfamily,numbers=none,frame=trBL}
+\lstset{basicstyle=\footnotesize\ttfamily\color[RGB]{10,0,100},numbers=none,frame=trBL}
 
 \sisetup{mode=text}
 \sisetup{range-phrase = \text{ \textasciitilde }}
@@ -26,7 +26,7 @@
 \renewcommand{\headrulewidth}{1pt}
 
 \title{Sort Algorithms\\8种排序算法的比较案例}
-\author{1951510\ 姜文渊}
+\author{1951510\ 姜文渊 \\ \small \url{https://github.com/jwyjohn/Jwy_DataStructureHomework}}
 \institute{School of Software Engineering, Tongji University}
 \version{0.50}
 \date{\today}
@@ -47,7 +47,7 @@ In this task, the author implemented 8 kind of sort algorithms and compares thei
 
 \subsection{Compile and run the program}
 
-On linux platform with \lstinline{make} and a \lstinline{g++} which supports C++ 11 Standard, just \lstinline{cd} to the \lstinline{./linux} and run \lstinline{make build}. The binary executable will be generated in the same dirctory named as \lstinline{a.out} or \lstinline{mysort}, according to the configurations in the \lstinline{Makefile}. Use \lstinline{./a.out} to run the program.
+On linux platform with \lstinline{make} and a \lstinline{g++} which supports C++ 11 Standard, just \lstinline{cd} to the \lstinline{./linux} and run \lstinline{make build}. The binary executable will be generated in the same directory named as \lstinline{a.out} or \lstinline{mysort}, according to the configurations in the \lstinline{Makefile}. Use \lstinline{./a.out} to run the program.
 
 The program is an interactive shell, where you can input commands and get results.
 
