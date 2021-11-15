@@ -61,6 +61,8 @@
         "optional": "cpp",
         "fstream": "cpp",
         "sstream": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "xstring": "cpp",
+        "xtree": "cpp"
     }
 }

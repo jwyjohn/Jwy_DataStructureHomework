@@ -16,6 +16,7 @@ using namespace std;
 class enetwork
 {
 	map<string, map<string, int>> M;
+	map<string, string> V;
 	struct edge
 	{
 		string a, b;
@@ -40,6 +41,7 @@ public:
 		{
 			map<string, int> null_node;
 			M[node] = null_node;
+			V.insert({node, node});
 			return 1;
 		}
 		else
@@ -59,11 +61,34 @@ public:
 		M[node_a][node_b] = cost;
 		return 0;
 	};
+	string find_union(string node_a)
+	{
+		if (node_a == V[node_a])
+		{
+			return node_a;
+		}
+		else
+		{
+			V[node_a] = find_union(V[node_a]); // PATH COMPRESSION
+			return find_union(V[node_a]); 
+		};
+	};
+	bool is_connected()
+	{
+		string s = find_union(V.begin()->first);
+		for (auto iter = V.begin(); iter != V.end(); iter++)
+		{
+			if (find_union(iter->first) != s)
+				return false;
+		};
+		return true;
+	};
 	int add_edge(string node_a, string node_b, int cost)
 	{
 		assert(cost > 0);
 		add_single_edge(node_a, node_b, cost);
 		add_single_edge(node_b, node_a, cost);
+		V[node_a] = find_union(V[node_b]); 
 		return 1;
 	};
 	// int find_edge(string node_a, string node_b)
@@ -83,6 +108,7 @@ public:
 			};
 			cout << endl;
 		};
+		// cout << " [Connected] " << is_connected() << endl;
 		return 0;
 	};
 	int run_prim(string start_node)

@@ -132,6 +132,12 @@ static CMDF_RETURN run_prim(cmdf_arglist *arglist)
 			 << endl;
 		return CMDF_OK;
 	};
+	if (!elec.is_connected())
+	{
+		cout << " [Error] Graph is not connected.\n"
+			 << endl;
+		return CMDF_OK;
+	};
 	elec.run_prim(arglist->args[0]);
 	return CMDF_OK;
 };

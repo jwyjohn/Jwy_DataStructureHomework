@@ -185,7 +185,7 @@ static CMDF_RETURN find_str(cmdf_arglist *arglist)
 
 int main()
 {
-	cmdf_init("network> ", PROG_INTRO, NULL, NULL, 0, 1);
+	cmdf_init("keyword> ", PROG_INTRO, NULL, NULL, 0, 1);
 
 	/* Register our custom commands */
 	cmdf_register_command(read_filename, "r", READ_HELP);
