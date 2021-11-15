@@ -28,7 +28,7 @@
 \fancyhead[R]{Data Structure Projects}
 \renewcommand{\headrulewidth}{1pt}
 
-\title{n-Queens Puzzle\\N皇后问题}
+\title{Binary Search Tree\\二叉搜索树}
 \author{1951510\; 姜文渊}
 \institute{\small \url{https://github.com/jwyjohn/Jwy_DataStructureHomework}}
 \version{0.50}
@@ -40,17 +40,22 @@
 
 \section{Introduction}
 
-Sort Algorithms are a series of interesting algorithms which are widely used in almost all field of software engineering while having its unique significance in computation theories. From the beginning of computing, the sorting problem has attracted a great deal of research, perhaps due to the complexity of solving it efficiently despite its simple, familiar statement.
+In this project, the author implemented a demo for one variant of binary search trees, the AVL Tree.
 
-Simple algorithms like Bubble Sort was analyzed as early as 1956\uct{demuth1957electronic}, while to 2006, novel sort algorithms like Timsort and Library Sort are still published, indicating the problem's value in computer sciences.\uct{auger2015merge}
+A binary search tree (BST), is a rooted binary tree data structure whose internal nodes each store a key greater than all the keys in the node’s left subtree and less than those in its right subtree (i.e. $left<root<right$).\uct{wiki:Binary_search_tree}
 
-In this task, the author implemented 8 kind of sort algorithms and compares their performance under input data of different scale and different order. You can verify the author's results by using the code and binary in the repo.
+Binary search trees allow binary search for fast lookup ($O(log\,n)$ on average), and can be used to implement dynamic sets and lookup tables. In general cases, binary search tree performs searching much faster than the linear time required to find items by key in an (unsorted) array.\uct{wiki:Binary_search_tree}
+
+Some other data structures, like hash tables, could achieve a faster speed in searching ($O(1)$), but their usage has many limitations compared with the binary search tree. Also, the \textbf{vanilla} binary search tree (which is the one without modification), can be improved in many ways, to construct more powerful data structures like the famous AVL Tree or the Splay Tree. 
+
+A recent improvement involves combination of BST with heap, which can also give us a better performance, which is widely known as \textbf{Treap}s.\uct{yi2005research} An example of Treaps is the \textbf{FHQ-Treap}, which is invented by a Chinese and can perform many operations with the cost $O(log\, n)$.
+
 
 \section{Demostration}
 
 \subsection{Compile and run the program}
 
-On linux platform with \lstinline{make} and a \lstinline{g++} which supports C++ 11 Standard, just \lstinline{cd} to the \lstinline{./linux} and run \lstinline{make build}. The binary executable will be generated in the same dirctory named as \lstinline{a.out} or \lstinline{mysort}, according to the configurations in the \lstinline{Makefile}. Use \lstinline{./a.out} to run the program.
+On linux platform with \lstinline{make} and a \lstinline{g++} which supports C++ 11 Standard, just \lstinline{cd} to the \lstinline{./linux} and run \lstinline{make build}. The binary executable will be generated in the same dirctory named as \lstinline{a.out} or \lstinline{avl}, according to the configurations in the \lstinline{Makefile}. Use \lstinline{./a.out} to run the program.
 
 The program is an interactive shell, where you can input commands and get results.
 
@@ -99,7 +104,7 @@ Type \lstinline{test merge} to run Merge Sort on the generated dataset, the resu
     \caption{Use \lstinline{test} to run a sort}
 \end{figure}
 
-\section{Theoretical comparison of algorithms}
+\section{About binary search tree}
 
 On many data structure or algorithm textbooks, it has been proved that comparison-based sorting algorithms have a fundamental requirement of $\Omega(n \, log \, n) $ comparisons,\uct{cormen2009introduction} whlie those sort methods not based on comparisons, such as Bucket Sort, can have better performance at a cost of more space.
 
