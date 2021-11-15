@@ -181,7 +181,7 @@ static CMDF_RETURN rm_node(cmdf_arglist *arglist)
 int main()
 {
 	root = new avl_tree;
-	cmdf_init("network> ", PROG_INTRO, NULL, NULL, 0, 1);
+	cmdf_init("BST> ", PROG_INTRO, NULL, NULL, 0, 1);
 
 	/* Register our custom commands */
 	cmdf_register_command(init_tree, "init", INIT_HELP);
