@@ -1,5 +1,4 @@
 %!TEX program = xelatex
-
 \documentclass[cn,black,12pt,normal]{elegantnote}
 \usepackage{float}
 \usepackage{hyperref}
@@ -9,10 +8,17 @@
 \usepackage{siunitx}[=v2]
 \usepackage{fancyhdr}
 \usepackage{newtxtext}
-\usepackage[super]{cite}
-\renewcommand\citeform[1]{[#1]}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\newcommand{\uct}[1]{\textsuperscript{\textsuperscript{\cite{#1}}}}
+\renewcommand{\tablename}{\textbf{Table}}
+\renewcommand{\figurename}{Figure.}
+\renewcommand{\refname}{References}
+\renewcommand{\contentsname}{Contents}
+\renewcommand{\versiontext}{Version: }
+\renewcommand{\updatetext}{Update: }
 \PassOptionsToPackage{no-math}{fontspec}
-\lstset{basicstyle=\footnotesize\ttfamily,numbers=none,frame=trBL}
+\lstset{basicstyle=\footnotesize\ttfamily\color[RGB]{50,0,130},numbers=none,frame=trBL}
 
 \sisetup{mode=text}
 \sisetup{range-phrase = \text{ \textasciitilde }}
@@ -33,16 +39,16 @@
 
 \section{Introduction}
 
-In the data structure project of this semester, the author completed all 10 tasks required by the course, which are listed below.
+In the data structure project of this semester, the author completed the tasks required by the course, which are listed below.
 
 \begin{enumerate}
     \item Exam Registration System (考试报名系统)
-    \item Joseph Game (约瑟夫生者死者游戏)
-    \item Maze Game (勇闯迷宫游戏)
+    %\item Joseph Game (约瑟夫生者死者游戏)
+    %\item Maze Game (勇闯迷宫游戏)
     \item N-Queen Problem (N皇后问题)
     \item Keyword Search (关键字检索系统)
-    \item Family Tree (家谱管理系统)
-    \item Expression Eval (表达式计算)
+    %\item Family Tree (家谱管理系统)
+    %\item Expression Eval (表达式计算)
     \item Electric Network (电网建设造价模拟系统)
     \item Binary Sort Tree (二叉排序数)
     \item Sort Algorithms (8种排序算法的比较案例)
@@ -61,20 +67,15 @@ In the root folder of the git repo, dirctories named like \lstinline{10_Sort} ca
 |-- 10_1951510_姜文渊.cpp
 |-- 10_1951510_姜文渊.exe
 `-- linux
-    |-- example.in
-    |-- example.out
     |-- Makefile
     |-- sort.cpp
     `-- sort.h
-1 directory, 7 files
+1 directory, 5 files
 \end{lstlisting}
 
 As can be seen, one \lstinline{*.cpp} file and one \lstinline{*.exe} file can be found. They are the source file and its compiled corresponding windows executable. If the windows executable won't run properly on your windows platform (which is a rare situation), then it is recommended to recompile the source file on your platform.
 
 The \lstinline{linux} dirctory holds several files: \lstinline{*.cpp}, \lstinline{*.h}, \lstinline{Makefile} and two more text files. The header and source file are to be compiled using the configurations provided in \lstinline{Makefile}. Since there are no binary provided, you may need to compiled the files on your own linux distribution.
-
-The \lstinline{example.in} and \lstinline{example.out} files are one example of the input and output of the solution program for reference.
-
 
 
 \section{How to build}
@@ -85,18 +86,27 @@ Following are the typical ways of compiling a project solution.
 
 \subsection{On Windows}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{image/dev02.png}
+    \caption{Change Language Standard to C++ 11 in DevC++}
+\end{figure}
+
 \begin{enumerate}
     \item Download \lstinline{DevC++ 5.11}
     \item Open the \lstinline{.\*.cpp} with \lstinline{DevC++}
+    \item In \lstinline{[Tools]->[Compiler Options...]}, change \lstinline{[Settings]->[Code Generation]->[Language Standard (-std)]} to \lstinline{ISO C++ 11}
     \item Press \lstinline{F10} to compile and run
 \end{enumerate}
+
+
 
 \subsection{On Linux}
 
 \begin{enumerate}
     \item Check you have installed \lstinline{g++} and \lstinline{make}
-    \item Check the environment virables in \lstinline{./linux/Makefile} and modify them if necessary
-    \item (in a shell) Change dirctory to \lstinline{./linux/} using \lstinline{cd ./linux}
+    \item Check the environment virables in \lstinline{./Linux/Makefile} and modify them if necessary
+    \item (in a shell) Change dirctory to \lstinline{./Linux/} using \lstinline{cd ./Linux}
     \item Run \lstinline{make build} to build
     \item Run the binary generated in the dirctory
     \item Use \lstinline{make clean} to remove temp files and the binary
@@ -108,7 +118,7 @@ The author tested the projects on an \lstinline{x86_64} machine with \lstinline{
 
 \begin{lstlisting}
 -------------------
-OS: Manjaro Linux x86_64
+OS: Linux x86_64
 Kernel: 5.10.70-1-MANJARO
 Uptime: 8 hours, 28 mins
 Shell: bash 5.1.8
@@ -118,6 +128,4 @@ CPU: Intel i3-10105 (8) @ 4.400GHz
 GPU: Intel CometLake-S GT2 [UHD Graphics 630]
 Memory: 867MiB / 15850MiB
 \end{lstlisting}
-
-\bibliography{references}
 \end{document}
