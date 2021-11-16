@@ -44,7 +44,7 @@ static CMDF_RETURN solve_queen(cmdf_arglist *arglist)
 	bool show_board = (strcmp(arglist->args[1], "y") == 0) ? true : false;
 	if (n > MAX_CHESSBOARD_SIZE)
 	{
-		cout << " [Size Error] Too large chessborad size!\n [Tip] Try between 4 to 32" << endl;
+		cout << " [Size Error] Too large chessborad size!\n [Tip] Try between 4 to 25" << endl;
 		return CMDF_OK;
 	};
 	queen_solution(n, show_board);
