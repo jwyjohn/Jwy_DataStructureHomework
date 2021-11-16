@@ -63,6 +63,7 @@
         "sstream": "cpp",
         "cinttypes": "cpp",
         "xstring": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "chrono": "cpp"
     }
 }

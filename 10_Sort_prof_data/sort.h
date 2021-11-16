@@ -7,6 +7,7 @@
 #include <vector>
 #include <algorithm>
 #include <queue>
+#include <time.h>
 
 using namespace std;
 
@@ -305,7 +306,7 @@ sort_func_result bucket_sort(int *array, int array_size, bool (*cmp)(int a, int 
     sort_func_result ret;
     ret.func_name = __FUNCTION__;
     init_counter();
-    const int bucket_size = 1000000;
+    const int bucket_size = 100000;
     unsigned char *bucket = new unsigned char[bucket_size];
     memset(bucket, 0, sizeof(bucket));
     for (int i = 0; i < array_size; i++)
@@ -501,28 +502,14 @@ sort_func_result msd_radix_sort(int *array, int array_size, bool (*cmp)(int a, i
 
 int test_sort_function(sort_func_result (*fp)(int *array, int array_size, bool (*cmp)(int a, int b)), const vector<int> random_int_array, const int array_size, bool (*cmp)(int a, int b))
 {
-    int array_to_sort[random_int_array.size()], array_after_sort[random_int_array.size()];
+    int array_to_sort[random_int_array.size()];
     sort_func_result res;
     memcpy(array_to_sort, &random_int_array[0], random_int_array.size() * sizeof(random_int_array[0]));
-    memcpy(array_after_sort, &random_int_array[0], random_int_array.size() * sizeof(random_int_array[0]));
-    cout << endl;
-    res = fp(array_after_sort, array_size, cmp);
-    cout << "====================" << res.func_name << "====================" << endl;
-    cout << "Before sorting: ";
-    for (int i = 0; i < array_size; i++)
-    {
-        cout << array_to_sort[i] << ' ';
-    };
-    cout << endl;
-    cout << "After sorting: ";
-    for (int i = 0; i < array_size; i++)
-    {
-        cout << array_after_sort[i] << ' ';
-    };
-    cout << endl
-         << endl;
-    cout << "Swap calls = " << res.swap_count << endl;
-    cout << "Compare calls = " << res.compare_count << endl;
+    clock_t start, end;
+    start = clock();
+    res = fp(array_to_sort, array_size, cmp);
+    end = clock();
+    cout << res.func_name << ',' << array_size << ',' << (end - start) << endl;
     return 0;
 };
 

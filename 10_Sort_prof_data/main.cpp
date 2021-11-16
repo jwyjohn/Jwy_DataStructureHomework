@@ -5,36 +5,55 @@
 #include <algorithm>
 #include <vector>
 #include <cstring>
+#include <map>
 #include "sort.h"
 using namespace std;
 
+sort_func_result (*sort_fp[11])(int *array, int array_size, bool (*cmp)(int a, int b)) =
+	{default_sort,
+	 bubble_sort,
+	 selection_sort,
+	 insertion_sort,
+	 binary_insertion_sort,
+	 shell_sort,
+	 quick_sort,
+	 heap_sort,
+	 merge_sort,
+	 lsd_radix_sort,
+	 msd_radix_sort};
+map<string, int> sorts_name = {
+	{"default", 0},
+	{"bubble", 1},
+	{"selection", 2},
+	{"insertion", 3},
+	{"binsertion", 4},
+	{"shell", 5},
+	{"quick", 6},
+	{"heap", 7},
+	{"bucket", 8},
+	{"merge", 9},
+	{"lsd", 10},
+	{"msd", 11},
+};
+
 int main()
 {
-	cout << "Testing.." << endl;
-	int N;
-	cin >> N;
 	srand(static_cast<unsigned int>(time(0)));
 	//Generate a vector with 0 to N, and then shuffle it randomly.
+	vector<int> test_data = {100, 1000, 10000, 100000};
 	vector<int> random_int_array;
-	for (int i = 1; i <= N; i++)
+	for (int N=1000;N<20000;N+=100)
 	{
-		random_int_array.push_back(i);
-	};
-	random_shuffle(random_int_array.begin(), random_int_array.end());
-	//print_array(random_int_array);
-	//Copy the vector to an array, which will be sorted later.
-	// test_sort_function(default_sort, random_int_array, N, less_than);
-	// test_sort_function(bubble_sort, random_int_array, N, less_than);
-	// test_sort_function(selection_sort, random_int_array, N, less_than);
-	// test_sort_function(insertion_sort, random_int_array, N, less_than);
-	// test_sort_function(binary_insertion_sort, random_int_array, N, less_than);
-	// test_sort_function(shell_sort, random_int_array, N, less_than);
-	// test_sort_function(quick_sort, random_int_array, N, less_than);
-	// test_sort_function(heap_sort, random_int_array, N, less_than);
-	// test_sort_function(bucket_sort, random_int_array, N, less_than);
-	// test_sort_function(merge_sort, random_int_array, N, less_than);
-	// test_sort_function(lsd_radix_sort, random_int_array, N, less_than);
-	// test_sort_function(msd_radix_sort, random_int_array, N, less_than);
-
+		random_int_array.clear();
+		for (int i = 1; i <= N; i++)
+		{
+			random_int_array.push_back(N-i+4);
+		};
+		// random_shuffle(random_int_array.begin(), random_int_array.end());
+		for (auto f : sort_fp)
+		{
+			test_sort_function(f, random_int_array, random_int_array.size(), less_than);
+		};
+	}
 	return 0;
 }

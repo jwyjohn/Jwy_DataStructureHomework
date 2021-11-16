@@ -24,46 +24,53 @@ struct chessboard
 {
 	int current_queen_num = 0;
 	int board[MAX_CHESSBOARD_SIZE][MAX_CHESSBOARD_SIZE];
-	// chessboard()
-	// {
-	//     memset(board, 0, sizeof(board));
-	// };
 };
 
-// struct queen_stack
-// {
-//     int ptr = 0;
-//     chessboard data[MAX_STACK_SIZE];
-//     // queen_stack() : ptr(0){};
-//     bool is_empty() { return (ptr == 0); };
-//     bool is_full() { return (ptr > (MAX_STACK_SIZE - 2)); }
-//     chessboard top() { return data[ptr]; };
-//     int pop()
-//     {
-//         if (!is_empty())
-//         {
-//             ptr--;
-//             return 0;
-//         }
-//         else
-//         {
-//             return 1;
-//         };
-//     };
-//     int push(chessboard data_to_push)
-//     {
-//         if (!is_full())
-//         {
-//             ptr++;
-//             data[ptr] = data_to_push;
-//             return 0;
-//         }
-//         else
-//         {
-//             return 1;
-//         };
-//     };
-// };
+struct queen_stack
+{
+	int ptr = 0;
+	chessboard data[MAX_STACK_SIZE];
+	queen_stack() : ptr(0){};
+	bool is_empty() { return (ptr == 0); };
+	bool empty() { return (ptr == 0); };
+	bool is_full() { return (ptr > (MAX_STACK_SIZE - 2)); }
+	chessboard top() { return data[ptr]; };
+	int pop()
+	{
+		if (!is_empty())
+		{
+			ptr--;
+			return 0;
+		}
+		else
+		{
+			return 1;
+		};
+	};
+	int push(chessboard data_to_push)
+	{
+		if (!is_full())
+		{
+			ptr++;
+			data[ptr] = data_to_push;
+
+			return 0;
+		}
+		else
+		{
+			return 1;
+		};
+	};
+	int size()
+	{
+		return ptr;
+	};
+	int clear()
+	{
+		ptr = 0;
+		return 0;
+	};
+} s, ans;
 
 int show_chessboard(chessboard board_to_show)
 {
@@ -118,9 +125,11 @@ bool is_queen_safe(chessboard a, int x, int y)
 
 int queen_solution(int n, bool show_board)
 {
-	N = n;
 	chessboard a;
-	stack<chessboard> s, ans;
+	// stack<chessboard> s, ans;
+	N = n;
+	s.clear();
+	ans.clear();
 	s.push(a);
 	while (!s.empty())
 	{
