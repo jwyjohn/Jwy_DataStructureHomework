@@ -171,9 +171,44 @@ Detailed implementation of each algorithm follows the textbooks used in this cou
 
 \section{Results}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{image/random.eps}
+    \caption{Performance of different sort algorithms on random dataset (log-log axis)}
+\end{figure}
+The author tested all the comparison-based sorting algorithms (i.e without bucket sort) with random data of the size from $100$ to $2\times10^5$, and their performance is shown in the figure above.
 
+The figure was a log–log plot, with its x-axis indicating the scale of input data, and the y-axis showing the time cost. You can find that there are two groups of lines that are paralle with each other, one group has the slope that is nearly twice of the other one. In a log–log plot, we have
+\begin{equation*}
+    log(n^2) = 2\,log(n)
+\end{equation*}
+\begin{equation*}
+    log(n\,log\,n) = log(\log\,n)\,log(n)
+\end{equation*}
+Therefore the more steep lines are those algorithms with $O(n^2)$ cost like the Bubble sort, while the other is the $O(n\, log\, n)$ algorithms, like the Heap sort. 
+
+On already sorted data, the log-log plot still comes with two groups, but several performs better than on random data, as is shown on the figure below.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{image/sorted.eps}
+    \caption{Performance of different sort algorithms on already sorted dataset (log-log axis)}
+\end{figure}
+
+On inverted sorted data, the log-log plot still comes with two groups. Note that Quick sort now becomes $O(n^2)$, due to its instability if the input data is not random.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{image/inv.eps}
+    \caption{Performance of different sort algorithms on already sorted dataset (log-log axis)}
+\end{figure}
 
 \section{Discussion}
 
+In this project, we implemented several sorting algorithms and compared their performance both in theory and with data generated. The results are consistent with what the theory told us, which confirms the correctness of the implementation of algorithms. Note that all the sorting algorithms are operating an array, which means the cost of visit an element is $O(1)$.
+
+Nowadays, an ordinary Personal Computer have more than several Gigabytes of memory, which seems enough for running those algorithms on less than $1\times10^7$ elements. However, the exlposion of data sizes never stops, and in banks or IT companies, there has TB or even EB of data need to be sorted, and the RAM of even a mainframe can not hold such amount of data.
+
+In the situation of BIG DATA, the array is stored in a hard drive or a tape, and visiting each element costs much more than $O(1)$. These sorting tasks are often done on a cluster. One of the widely used benchmarks for testing a cluster is called \textbf{TeraSort benchmark}.\uct{o2008terabyte} While sorting Terabyte of data, $O(n\,log\,n)$, \textbf{stable, parallelizable algorithms}, like the \textbf{Merge Sort}, is of much importance. 
+
+\newpage
 \bibliography{references}
 \end{document}
