@@ -10,8 +10,10 @@
 #include <queue>
 #include <map>
 #include <time.h>
+#include <chrono>
 
 using namespace std;
+using namespace std::chrono;
 
 int GLOBAL_SWAP_CNT, GLOBAL_CMP_CNT; //Side effects introduced, TOO BAD!
 
@@ -523,10 +525,10 @@ int test_sort_function(sort_func_result (*fp)(int *array, int array_size, bool (
 	memcpy(array_to_sort, &random_int_array[0], random_int_array.size() * sizeof(random_int_array[0]));
 	memcpy(array_after_sort, &random_int_array[0], random_int_array.size() * sizeof(random_int_array[0]));
 	cout << " [Done] Data prepared, start to sort." << endl;
-	long start, end;
-	start = clock();
+	time_point<high_resolution_clock> start, end;
+	start = high_resolution_clock::now();;
 	res = fp(array_after_sort, array_size, cmp);
-	end = clock();
+	end = high_resolution_clock::now();;
 	cout << " [" << res.func_name << "]" << endl;
 	cout << " [After sorting]";
 	int w = 8;
@@ -542,7 +544,7 @@ int test_sort_function(sort_func_result (*fp)(int *array, int array_size, bool (
 		 << endl;
 	cout << " [Swap calls] " << res.swap_count << endl;
 	cout << " [Compare calls] " << res.compare_count << endl;
-	cout << " [Clocks used] " << (end - start) << " clocks" << endl;
+	cout << " [Clocks used] " << duration_cast<microseconds>(end - start).count() << " clocks" << endl;
 	return 0;
 };
 
