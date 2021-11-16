@@ -58,6 +58,8 @@ In this task, the author implemented 8 kind of sort algorithms and compares thei
 
 On linux platform with \lstinline{make} and a \lstinline{g++} which supports C++ 11 Standard, just \lstinline{cd} to the \lstinline{./linux} and run \lstinline{make build}. The binary executable will be generated in the same directory named as \lstinline{a.out} or \lstinline{mysort}, according to the configurations in the \lstinline{Makefile}. Use \lstinline{./a.out} or or \lstinline{./mysort} to run the program.
 
+\textbf{CAUTION} On windows platforms, the traditional \lstinline{clock()} won't work at high resolution, so the implementation on windows used \lstinline{std::chrono}. Make sure you compile the correct code on corresponding platform.
+
 The program is an interactive shell, where you can input commands and get results.
 
 \begin{figure}[H]

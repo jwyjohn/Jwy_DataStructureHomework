@@ -194,9 +194,11 @@ Then is the main loop for operating the stack and generate the results.
 \begin{lstlisting}[language = C++]
 int queen_solution(int n, bool show_board)
 {
-	N = n;
 	chessboard a;
-	stack<chessboard> s, ans;
+    // stack<chessboard> s, ans;
+	N = n;
+	s.clear();
+	ans.clear();
 	s.push(a);
 	while (!s.empty())
 	{
