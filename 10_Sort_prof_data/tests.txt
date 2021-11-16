@@ -1,8 +1,0 @@
-1) Performance on random data with different scale
-    N = 10^n, where n = 1,2,3,4,5,6,7
-
-2) Performance on sorted data with different scale
-    N = 10^n, where n = 1,2,3,4,5,6,7
-
-2) Performance on inverted sorted data with different scale
-    N = 10^n, where n = 1,2,3,4,5,6,7
