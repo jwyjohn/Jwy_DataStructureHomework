@@ -109,23 +109,21 @@ int print_M()
 	};
 	M[2][1] = 0;
 	M[2 * w - 1][2 * h - 2] = 9;
-	cout << "   \\/" << endl;
+	// cout << "   \\/" << endl;
 	for (int i = 1; i <= 2 * w - 1; i++)
 	{
 		for (int j = 1; j <= 2 * h - 1; j++)
 		{
 			if (M[i][j] != 0)
 			{
-				cout << setw(2) << setfill(' ') << " ";
-				// cout << setw(3) << setfill(' ') << M[i][j];
+				// cout << setw(2) << setfill(' ') << " ";
 			}
 			else
 			{
-				// cout << setw(3) << setfill(' ') << '#';
-				cout << setw(2) << setfill(' ') << "#";
+				// cout << setw(2) << setfill(' ') << "#";
 			};
 		};
-		cout << endl;
+		// cout << endl;
 	};
 };
 
@@ -140,12 +138,12 @@ int Solve(int x, int y, vector<pair<int, int>> sol)
 		if (x == (2 * w - 1) && y == (2 * h - 2))
 		{
 			SOLUTION = tmp;
-			cout << "[SOLUTION] ";
+			// cout << "[SOLUTION] ";
 			for (auto i : sol)
 			{
-				cout << "(" << i.first << "," << i.second << ")->";
+				// cout << "(" << i.first << "," << i.second << ")->";
 			};
-			cout << "(" << x << "," << y << ")" << endl;
+			// cout << "(" << x << "," << y << ")" << endl;
 			;
 		};
 		for (int i = 0; i < 4; i++)
