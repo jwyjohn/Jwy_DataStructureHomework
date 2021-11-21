@@ -111,11 +111,11 @@ int solve()
 			pre = pre->next;
 		};
 		// cout << endl;
-		if (j % 10 == 1)
+		if (j % 10 == 1 || j != 11)
 			ch = "st";
-		else if (j % 10 == 2)
+		else if (j % 10 == 2 || j != 12)
 			ch = "nd";
-		else if (j % 10 == 3)
+		else if (j % 10 == 3 || j != 13)
 			ch = "rd";
 		else
 			ch = "th";
@@ -127,7 +127,14 @@ int solve()
 		count--;
 	};
 	cout << endl;
-	cout << "The " << K << " survivors are: ";
+	if (K != 1)
+	{
+		cout << "The " << K << " survivors are: ";
+	}
+	else
+	{
+		cout << "The only survivor is: ";
+	};
 	node *stop = current;
 	while (current->next != stop)
 	{
