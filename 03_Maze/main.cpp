@@ -94,6 +94,7 @@ int print_M()
 	};
 	M[2][1] = 0;
 	M[2 * w - 1][2 * h - 2] = 9;
+	cout << "   \\/" << endl;
 	for (int i = 1; i <= 2 * w - 1; i++)
 	{
 		for (int j = 1; j <= 2 * h - 1; j++)
