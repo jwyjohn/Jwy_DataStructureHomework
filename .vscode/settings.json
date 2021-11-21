@@ -66,6 +66,7 @@
         "xstring": "cpp",
         "xtree": "cpp",
         "chrono": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "ctime": "cpp"
     }
 }

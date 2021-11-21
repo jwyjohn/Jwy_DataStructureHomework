@@ -1,3 +1,4 @@
+#include "main_header.h"
 #include <iostream>
 #include <iomanip>
 #include <string>
@@ -6,7 +7,16 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define _CRT_SECURE_NO_WARNINGS
+#define LIBCMDF_IMPL
+
 using namespace std;
+
+#define PROG_INTRO "                                     \n                                     \n  ___ ___      __     ____      __   \n/' __` __`\\  /'__`\\  /\\_ ,`\\  /'__`\\ \n/\\ \\/\\ \\/\\ \\/\\ \\L\\.\\_\\/_/  /_/\\  __/ \n\\ \\_\\ \\_\\ \\_\\ \\__/.\\_\\ /\\____\\ \\____\\\n \\/_/\\/_/\\/_/\\/__/\\/_/ \\/____/\\/____/\n                                     \n                                     \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n=====================================\n! This is a program to simulate the Joseph problem.\n! FIRST, use 'init [H] [W]', to initialize a H*W maze. (H,W >= 10)\n! Then use 'solve', to solve the maze.\n! Use 'show', to show the maze.\n"
+
+#define INIT_HELP "Use 'init [H] [W]', to initialize a H*W maze. (H,W >= 10)"
+#define SOLVE_HELP "Use 'solve', to solve the maze."
+#define SHOW_HELP "Use 'show', to show the maze."
 
 const int dx[4] = {1, 0, -1, 0};
 const int dy[4] = {0, 1, 0, -1};
@@ -18,6 +28,7 @@ bool visited[1000][1000];
 int R[1000][1000];
 bool S_visited[1000][1000];
 bool is_solved;
+bool is_init = false;
 vector<vector<pair<int, int>>> SOLUTION;
 int walkmaze(int x, int y, int n);
 int print_R();
@@ -112,6 +123,7 @@ int print_M()
 		};
 		cout << endl;
 	};
+	return 0;
 };
 
 int Solve(int x, int y, vector<pair<int, int>> sol)
@@ -139,7 +151,7 @@ int calc_solution()
 	Solve(1, 2, {});
 	for (auto i : SOLUTION)
 	{
-		cout << "[SOLUTION] ";
+		cout << " [SOLUTION] ";
 		for (auto j : i)
 		{
 			cout << "(" << j.first << "," << j.second << ")->";
@@ -153,18 +165,78 @@ int calc_solution()
 	return 0;
 };
 
+static CMDF_RETURN init_cmd(cmdf_arglist *arglist)
+{
+	if (!arglist)
+	{
+		cout << " [Sytax Error] No arguments provided!\n [Tip] Please Enter the command like \"init 10 10\"." << endl;
+		return CMDF_OK;
+	};
+	if (arglist->count != 2)
+	{
+		cout << " [Sytax Error] Invaild arguments!\n [Tip] Please Enter the command like \"init 10 10\"." << endl;
+		return CMDF_OK;
+	};
+	for (int j = 0; j < 2; j++)
+		for (int i = 0; i < strlen(arglist->args[j]); i++)
+			if ((int(arglist->args[j][i]) - int('0')) < 0 || (int(arglist->args[j][i]) - int('0')) > 9)
+			{
+				cout << " [Sytax Error] Invaild arguments!\n [Tip] Please Enter the command like \"init 10 10\"." << endl;
+				return CMDF_OK;
+			};
+	int wt = stoi(arglist->args[0]);
+	int ht = stoi(arglist->args[1]);
+	if (wt < 10 || ht < 10)
+	{
+		cout << " [Error] Invaild arguments!\n [Tip] H and W should be >= 10." << endl;
+		return CMDF_OK;
+	};
+	w = wt;
+	h = ht;
+	start_generate_maze();
+	cout << " [DONE] Maze generated:" << endl;
+	print_M();
+	is_init = true;
+	return CMDF_OK;
+};
+
+static CMDF_RETURN solve_cmd(cmdf_arglist *arglist)
+{
+	if (!is_init)
+	{
+		cout << " [ERROR] Need to Initialize maze first using \"init [H] [W]\"." << endl;
+		return CMDF_OK;
+	};
+	cout << " [SOVING] ..." << endl;
+	calc_solution();
+	cout << " [DONE] One solution is:" << endl;
+	print_M();
+	return CMDF_OK;
+};
+
+static CMDF_RETURN show_cmd(cmdf_arglist *arglist)
+{
+	if (!is_init)
+	{
+		cout << " [ERROR] Need to Initialize maze first using \"init [H] [W]\"." << endl;
+		return CMDF_OK;
+	};
+	cout << " [DONE] The current maze is:" << endl;
+	print_M();
+	return CMDF_OK;
+};
+
 int main()
 {
 	time_t t;
 	srand((unsigned)time(&t));
-	while (1)
-	{
-		cin >> w >> h;
-		start_generate_maze();
-		cout << endl;
-		print_M();
-		calc_solution();
-		print_M();
-	};
+	cmdf_init("maze> ", PROG_INTRO, NULL, NULL, 0, 1);
+
+	/* Register our custom commands */
+	cmdf_register_command(init_cmd, "init", INIT_HELP);
+	cmdf_register_command(solve_cmd, "solve", SOLVE_HELP);
+	cmdf_register_command(show_cmd, "show", SHOW_HELP);
+
+	cmdf_commandloop();
 	return 0;
 }
