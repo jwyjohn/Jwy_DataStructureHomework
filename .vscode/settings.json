@@ -15,6 +15,7 @@
         "*.ASSEMBLE*": "hlasm",
         "*.HLASM*": "hlasm",
         "*.HLA*": "hlasm",
+        "*.rmd": "markdown",
         "string": "cpp",
         "*.tcc": "cpp",
         "array": "cpp",
@@ -64,6 +65,7 @@
         "cinttypes": "cpp",
         "xstring": "cpp",
         "xtree": "cpp",
-        "chrono": "cpp"
+        "chrono": "cpp",
+        "iomanip": "cpp"
     }
 }
