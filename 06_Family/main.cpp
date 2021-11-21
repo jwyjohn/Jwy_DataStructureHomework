@@ -55,6 +55,20 @@ int add_family(string rname, string name)
 	return 0;
 };
 
+int rename_family(string rname, string name)
+{
+	family_node *ins = find_family(&root, rname);
+	if (ins != NULL)
+	{
+		ins->name = name;
+	}
+	else
+	{
+		cout << " [ERROR] family " << rname << " not found" << endl;
+	};
+	return 0;
+};
+
 int del_family(family_node *to_del)
 {
 	if (to_del != NULL)
@@ -145,6 +159,10 @@ int main()
 		case 3:
 			cin >> n1;
 			remove_family(n1);
+			break;
+		case 4:
+			cin >> n1 >> n2;
+			rename_family(n1, n2);
 			break;
 		};
 	};
