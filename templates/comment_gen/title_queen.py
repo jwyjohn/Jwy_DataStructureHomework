@@ -1,19 +1,14 @@
 from pyfiglet import Figlet
 
 f = Figlet(font='larry3d')
-s = f.renderText('exam')
+s = f.renderText('joseph')
 
 s += "\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n"
 print(s)
-info = ["This is a program to manage exam students.",
-        "Can also save student info to a file.",
-        "Input command 'i insert_position No. name gender age subject' to insert a student.",
-        "Input command 'f No.' to find info about a student.",
-        "Input command 'd No.' to delete a student.",
-        "Input command 'm No. new_No. new_name new_gender new_age new_subject' to modify student info.",
-        "Input command 's' to show statistcal data.",
-        "Input command 'l' to list all students.",
-        "Use 'w' WITH CAUTION to save data to student_data.txt because it can overwrite existing file."]
+info = ["This is a program to simulate the Joseph problem.",
+        "Use 'solve [N] [S] [M] [K]', to solve a Joseph case with N participants,",
+        " start from position S, kill every M position, and have K survivors. ",
+        "(note: N>K>0, N>=S>=1 and M>0)"]
 wid = len(s.split('\n')[0])
 bar = '='*wid+'\n'
 tip = "! "+'\n! '.join(info)
