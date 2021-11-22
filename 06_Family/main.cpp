@@ -1,4 +1,4 @@
-// #include "main_header.h"
+#include "main_header.h"
 #include <iostream>
 #include <iomanip>
 #include <string>
@@ -7,7 +7,18 @@
 #include <set>
 #include <algorithm>
 
+#define _CRT_SECURE_NO_WARNINGS
+#define LIBCMDF_IMPL
+
 using namespace std;
+
+#define PROG_INTRO "                                     \n                                     \n  ___ ___      __     ____      __   \n/' __` __`\\  /'__`\\  /\\_ ,`\\  /'__`\\ \n/\\ \\/\\ \\/\\ \\/\\ \\L\\.\\_\\/_/  /_/\\  __/ \n\\ \\_\\ \\_\\ \\_\\ \\__/.\\_\\ /\\____\\ \\____\\\n \\/_/\\/_/\\/_/\\/__/\\/_/ \\/____/\\/____/\n                                     \n                                     \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n=====================================\n! This is a program to simulate the Joseph problem.\n! FIRST, use 'init [H] [W]', to initialize a H*W maze. (H,W >= 10)\n! Then use 'solve', to solve the maze.\n! Use 'show', to show the maze.\n"
+
+#define INIT_HELP "Use 'init [H] [W]', to initialize a H*W maze. (H,W >= 10)"
+#define SOLVE_HELP "Use 'solve', to solve the maze."
+#define SHOW_HELP "Use 'show', to show the maze."
+
+bool is_init = false;
 
 struct family_node
 {
@@ -47,6 +58,7 @@ int add_family(string rname, string name)
 		to_ins->name = name;
 		to_ins->parent = ins;
 		ins->children.push_back(to_ins);
+		cout << " [DONE] Added " << name << " to " << rname << "." << endl;
 	}
 	else
 	{
@@ -61,6 +73,7 @@ int rename_family(string rname, string name)
 	if (ins != NULL)
 	{
 		ins->name = name;
+		cout << " [DONE] Renamed " << rname << " to " << name << "." << endl;
 	}
 	else
 	{
@@ -85,11 +98,18 @@ int del_family(family_node *to_del)
 int remove_family(string rname)
 {
 	family_node *to_del = find_family(&root, rname);
+	if (to_del == &root)
+	{
+		cout << " [ERROR] Cannot delete root." << endl;
+		return 0;
+	};
 	if (to_del != NULL)
 	{
+		string tmp = to_del->name;
 		vector<family_node *>::iterator iter = std::remove(to_del->parent->children.begin(), to_del->parent->children.end(), to_del);
 		to_del->parent->children.erase(iter, to_del->parent->children.end());
 		del_family(to_del);
+		cout << " [DONE] Deleted " << tmp << "." << endl;
 	}
 	else
 	{
@@ -137,35 +157,120 @@ int print_family(family_node *r, string sp)
 	return 0;
 };
 
+static CMDF_RETURN init_cmd(cmdf_arglist *arglist)
+{
+	if (!arglist)
+	{
+		cout << " [Sytax Error] No arguments provided!\n [Tip] Please Enter the command like \"init John\"." << endl;
+		return CMDF_OK;
+	};
+	string root_name;
+	// for (int i = 0; i < arglist->count; i++)
+	// {
+	// 	root_name += arglist->args[i];
+	// };
+	root.name = arglist->args[0];
+	cout << " [DONE] Initialized family tree with root: " << root.name << endl;
+	is_init = true;
+	return CMDF_OK;
+};
+
+static CMDF_RETURN show_cmd(cmdf_arglist *arglist)
+{
+	if (!is_init)
+	{
+		cout << " [ERROR] Need to Initialize family tree first using \"init [NAME]\"." << endl;
+		return CMDF_OK;
+	};
+	print_family(&root, "");
+	return CMDF_OK;
+};
+
+static CMDF_RETURN add_cmd(cmdf_arglist *arglist)
+{
+	if (!is_init)
+	{
+		cout << " [ERROR] Need to Initialize family tree first using \"init [NAME]\"." << endl;
+		return CMDF_OK;
+	};
+	if (!arglist)
+	{
+		cout << " [Sytax Error] No arguments provided!\n [Tip] Please Enter the command like \"add [Children] [Parent] \"." << endl;
+		return CMDF_OK;
+	};
+	if (arglist->count != 2)
+	{
+		cout << " [Sytax Error] No arguments provided!\n [Tip] Please Enter the command like \"add [Children] [Parent] \"." << endl;
+		return CMDF_OK;
+	};
+	string n1, n2;
+	n1 = arglist->args[1];
+	n2 = arglist->args[0];
+	add_family(n1, n2);
+	// cout << " [DONE] Added " << n1 << " to " << n2 << "." << endl;
+	return CMDF_OK;
+};
+
+static CMDF_RETURN del_cmd(cmdf_arglist *arglist)
+{
+	if (!is_init)
+	{
+		cout << " [ERROR] Need to Initialize maze first using \"init [NAME]\"." << endl;
+		return CMDF_OK;
+	};
+	if (!arglist)
+	{
+		cout << " [Sytax Error] No arguments provided!\n [Tip] Please Enter the command like \"del [Children]\"." << endl;
+		return CMDF_OK;
+	};
+	if (arglist->count != 1)
+	{
+		cout << " [Sytax Error] No arguments provided!\n [Tip] Please Enter the command like \"del [Children]\"." << endl;
+		return CMDF_OK;
+	};
+	string n1;
+	n1 = arglist->args[0];
+	remove_family(n1);
+	return CMDF_OK;
+};
+
+static CMDF_RETURN rename_cmd(cmdf_arglist *arglist)
+{
+	if (!is_init)
+	{
+		cout << " [ERROR] Need to Initialize family tree first using \"init [NAME]\"." << endl;
+		return CMDF_OK;
+	};
+	if (!arglist)
+	{
+		cout << " [Sytax Error] No arguments provided!\n [Tip] Please Enter the command like \"rename [Before] [After] \"." << endl;
+		return CMDF_OK;
+	};
+	if (arglist->count != 2)
+	{
+		cout << " [Sytax Error] No arguments provided!\n [Tip] Please Enter the command like \"rename [Before] [After] \"." << endl;
+		return CMDF_OK;
+	};
+	string n1, n2;
+	n1 = arglist->args[0];
+	n2 = arglist->args[1];
+	rename_family(n1, n2);
+	// cout << " [DONE] Added " << n1 << " to " << n2 << "." << endl;
+	return CMDF_OK;
+};
+
 int main()
 {
-	string nr;
-	cin >> nr;
-	init(nr);
-	int op;
-	string n1, n2;
-	while (1)
-	{
-		cin >> op;
-		switch (op)
-		{
-		case 1:
-			print_family(&root, "");
-			break;
-		case 2:
-			cin >> n1 >> n2;
-			add_family(n1, n2);
-			break;
-		case 3:
-			cin >> n1;
-			remove_family(n1);
-			break;
-		case 4:
-			cin >> n1 >> n2;
-			rename_family(n1, n2);
-			break;
-		};
-	};
 
+	cmdf_init("family> ", PROG_INTRO, NULL, NULL, 0, 1);
+
+	/* Register our custom commands */
+	cmdf_register_command(init_cmd, "init", INIT_HELP);
+	cmdf_register_command(add_cmd, "add", SOLVE_HELP);
+	cmdf_register_command(show_cmd, "show", SHOW_HELP);
+	cmdf_register_command(rename_cmd, "rename", SOLVE_HELP);
+	cmdf_register_command(del_cmd, "del", SOLVE_HELP);
+
+	cmdf_commandloop();
 	return 0;
 }
