@@ -169,96 +169,139 @@ p_node *prase1(int l, int r)
 
 expr_node *prase2(p_node *r)
 {
-	stack<p_node *> v, op;
-	if (r->op == NUM)
+	stack<p_node *> v, op, s;
+	p_node *sharp = new p_node;
+	sharp->op = ENDP;
+	sharp->txt = "#";
+	op.push(sharp);
+	int ptr = 0;
+	while (ptr < r->child.size())
 	{
-		expr_node *res;
-		res->txt = r->txt;
-		res->op = NUM;
-		res->val = r->val;
-		return res;
-	}
-	else
-	{
-		p_node *sharp = new p_node;
-		sharp->op = ENDP;
-		sharp->txt = "#";
-		op.push(sharp);
-		expr_node *res;
-		int ptr = 0;
-		while (ptr < r->child.size())
+		switch (r->child[ptr]->op)
 		{
-			switch (r->child[ptr]->op)
+		case NUM:
+			v.push(r->child[ptr]);
+			ptr++;
+			break;
+		case RET:
+			v.push(r->child[ptr]);
+			ptr++;
+			break;
+		case MUL:
+			if (op.top()->op == ADD || op.top()->op == SUB || op.top()->op == ENDP)
 			{
-			case NUM:
-				v.push(r->child[ptr]);
+				op.push(r->child[ptr]);
 				ptr++;
-				break;
-			case RET:
-				v.push(r->child[ptr]);
-				ptr++;
-				break;
-			case MUL:
-				if (op.top()->op == ADD || op.top()->op == SUB || op.top()->op == ENDP)
-				{
-					op.push(r->child[ptr]);
-					ptr++;
-				}
-				else if (op.top()->op == MUL || op.top()->op == DIV)
-				{
-					v.push(op.top());
-					op.pop();
-				};
-				break;
-			case DIV:
-				if (op.top()->op == ADD || op.top()->op == SUB || op.top()->op == ENDP)
-				{
-					op.push(r->child[ptr]);
-					ptr++;
-				}
-				else if (op.top()->op == MUL || op.top()->op == DIV)
-				{
-					v.push(op.top());
-					ptr++;
-					op.pop();
-				};
-				break;
-			case ADD:
-				if (op.top()->op == ENDP)
-				{
-					op.push(r->child[ptr]);
-					ptr++;
-				}
-				else
-				{
-					v.push(op.top());
-					op.pop();
-				};
-				break;
-			case SUB:
-				if (op.top()->op == ENDP)
-				{
-					op.push(r->child[ptr]);
-					ptr++;
-				}
-				else
-				{
-					v.push(op.top());
-					op.pop();
-				};
-				break;
-			default:
-				break;
 			}
+			else if (op.top()->op == MUL || op.top()->op == DIV)
+			{
+				v.push(op.top());
+				op.pop();
+			};
+			break;
+		case DIV:
+			if (op.top()->op == ADD || op.top()->op == SUB || op.top()->op == ENDP)
+			{
+				op.push(r->child[ptr]);
+				ptr++;
+			}
+			else if (op.top()->op == MUL || op.top()->op == DIV)
+			{
+				v.push(op.top());
+				ptr++;
+				op.pop();
+			};
+			break;
+		case ADD:
+			if (op.top()->op == ENDP)
+			{
+				op.push(r->child[ptr]);
+				ptr++;
+			}
+			else
+			{
+				v.push(op.top());
+				op.pop();
+			};
+			break;
+		case SUB:
+			if (op.top()->op == ENDP)
+			{
+				op.push(r->child[ptr]);
+				ptr++;
+			}
+			else
+			{
+				v.push(op.top());
+				op.pop();
+			};
+			break;
+		default:
+			break;
 		};
+	};
+	while (!op.empty())
+	{
+		v.push(op.top());
+		op.pop();
 	};
 	while (!v.empty())
 	{
-		cout << v.top()->txt << " ";
+		if (v.top()->op != ENDP)
+			s.push(v.top());
 		v.pop();
 	};
-	cout << endl;
-	return NULL;
+	expr_node *res, *tmp;
+	stack<expr_node *> exprs;
+	while (!s.empty())
+	{
+		tmp = new expr_node;
+		tmp->op = s.top()->op;
+		tmp->txt = s.top()->txt;
+		tmp->val = s.top()->val;
+		if (s.top()->op != RET)
+		{
+			cout << s.top()->txt << " ";
+			exprs.push(tmp);
+			s.pop();
+		}
+		else
+		{
+			cout << " (";
+			exprs.push(prase2(s.top()));
+			cout << ") ";
+			s.pop();
+		};
+		if ((exprs.top()->op == ADD || exprs.top()->op == SUB || exprs.top()->op == MUL || exprs.top()->op == DIV) && (exprs.size() > 2))
+		{
+			// cout << "NEMO HERE" << endl;
+			res = new expr_node;
+			res->op = exprs.top()->op;
+			res->txt = exprs.top()->txt;
+			exprs.pop();
+			res->op2 = exprs.top();
+			exprs.top()->parent = res;
+			exprs.pop();
+			res->op1 = exprs.top();
+			exprs.top()->parent = res;
+			exprs.pop();
+			exprs.push(res);
+		};
+	};
+	return exprs.top();
+};
+
+int print_r_expr(expr_node *r, string sp)
+{
+	if (r == NULL)
+	{
+		return 0;
+	};
+	cout << sp << r->txt << endl;
+	print_r_expr(r->op1, sp + "|   ");
+	print_r_expr(r->op2, sp + "|   ");
+
+	return 0;
 };
 
 int print_root(p_node *r, string sp)
@@ -318,7 +361,9 @@ int init()
 	// ret.push_back(fst);
 	root = prase1(0, ret.size());
 	print_root(root, "");
-	prase2(root);
+	expr_node *r = prase2(root);
+	cout << endl;
+	print_r_expr(r, "");
 	return 0;
 };
 
