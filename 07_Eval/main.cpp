@@ -1,10 +1,19 @@
+#include "main_header.h"
 #include <iostream>
 #include <string>
 #include <stack>
 #include <cstring>
 #include <vector>
+#include <cmath>
+
+#define _CRT_SECURE_NO_WARNINGS
+#define LIBCMDF_IMPL
 
 using namespace std;
+
+#define PROG_INTRO "                        ___      \n                       /\\_ \\     \n   __   __  __     __  \\//\\ \\    \n /'__`\\/\\ \\/\\ \\  /'__`\\  \\ \\ \\   \n/\\  __/\\ \\ \\_/ |/\\ \\L\\.\\_ \\_\\ \\_ \n\\ \\____\\\\ \\___/ \\ \\__/.\\_\\/\\____\\\n \\/____/ \\/__/   \\/__/\\/_/\\/____/\n                                 \n                                 \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n=================================\n! This is a program to eval an expression.\n! Use \"calc [expression]\" to caculate an expression with [0-9]+_*/().\n"
+
+#define SOLVE_HELP "Use \"calc [expression]\" to caculate an expression with [0-9]+_*/()."
 
 enum node_type
 {
@@ -22,7 +31,7 @@ enum node_type
 struct raw_input
 {
 	node_type ch;
-	float val;
+	double val;
 	string txt;
 	int pos;
 };
@@ -30,7 +39,7 @@ struct raw_input
 struct p_node
 {
 	node_type op;
-	float val;
+	double val;
 	string txt;
 	vector<p_node *> child;
 	p_node *parent;
@@ -39,7 +48,7 @@ struct p_node
 struct expr_node
 {
 	node_type op;
-	float val;
+	double val;
 	string txt;
 	expr_node *parent, *op1, *op2;
 	bool is_evaled = false;
@@ -50,6 +59,8 @@ vector<raw_input> ret;
 p_node *root;
 expr_node *expr_root;
 
+bool is_error = false;
+
 bool is_num(char ch)
 {
 	if (int(ch) - int('0') < 0 || int(ch) - int('9') > 0)
@@ -58,9 +69,19 @@ bool is_num(char ch)
 		return true;
 };
 
+bool is_valid_str(string s)
+{
+	string allowed = "0123456789+-*/()";
+	for (auto ch : s)
+	{
+		if (allowed.find(ch) == allowed.npos)
+			return false;
+	};
+	return true;
+};
+
 int split_input(string s)
 {
-	// ret.clear();
 	string tmp;
 	int p = 0;
 	for (auto c : s)
@@ -280,6 +301,12 @@ expr_node *prase2(p_node *r)
 			if (exprs.top()->op2 == NULL)
 			{
 				exprs.pop();
+				if (exprs.empty())
+				{
+					is_error = true;
+					cout << " ![SYTAX ERROR]" << endl;
+					return NULL;
+				};
 				res->op2 = exprs.top();
 				exprs.top()->parent = res;
 				exprs.pop();
@@ -288,6 +315,12 @@ expr_node *prase2(p_node *r)
 			if (exprs.top()->op1 == NULL)
 			{
 				exprs.pop();
+				if (exprs.empty())
+				{
+					is_error = true;
+					cout << " ![SYTAX ERROR]" << endl;
+					return NULL;
+				};
 				res->op1 = exprs.top();
 				exprs.top()->parent = res;
 				exprs.pop();
@@ -377,41 +410,116 @@ int print_root(p_node *r, string sp)
 	return 0;
 };
 
-int init()
+double eval(expr_node *r)
 {
-	string s;
-	cout << "Testing.." << endl;
-	cin >> s;
+	if (r->is_evaled)
+	{
+		return r->val;
+	}
+	else if (r->op == NUM)
+	{
+		r->is_evaled = true;
+		// r->val = stoi(r->txt);
+		return r->val;
+	}
+	else
+	{
+		double tmp;
+		switch (r->op)
+		{
+		case ADD:
+			tmp = (eval(r->op1) + eval(r->op2));
+			r->is_evaled = true;
+			break;
+		case SUB:
+			tmp = (eval(r->op1) - eval(r->op2));
+			r->is_evaled = true;
+			break;
+		case MUL:
+			tmp = (eval(r->op1) * eval(r->op2));
+			r->is_evaled = true;
+			break;
+		case DIV:
+			if (eval(r->op2) == 0)
+			{
+				cout << " ![DIVIDED BY ZERO]" << endl;
+			};
+			tmp = (eval(r->op1) / eval(r->op2));
+			r->is_evaled = true;
+			break;
+		default:
+			break;
+		};
+		r->val = tmp;
+		return r->val;
+	};
+};
+
+int init(string s)
+{
+	is_error = false;
 	ret.clear();
-	// raw_input fst;
-	// fst.ch = LP;
-	// fst.txt = '(';
-	// fst.pos = 0;
-	// ret.push_back(fst);
+	if (!is_valid_str(s))
+	{
+		cout << " [ERROR1] Invalid expression, please recheck." << endl;
+		return 1;
+	};
+	cout << " [INPUT] " << s << endl;
 	split_input(s);
-	// fst.ch = RP;
-	// fst.txt = ')';
-	// fst.pos = ret.size();
-	// ret.push_back(fst);
+	if (is_error)
+	{
+		cout << " [ERROR2] Invalid expression, please recheck." << endl;
+		return 1;
+	};
 	root = prase1(0, ret.size());
+	if (is_error)
+	{
+		cout << " [ERROR3] Invalid expression, please recheck." << endl;
+		return 1;
+	};
+	cout << " [PRASING] "<< endl;
 	print_root(root, "");
+	cout << " [SUFFIX EXPR] "<< endl;
 	expr_root = prase2(root);
 	cout << endl;
+	if (is_error)
+	{
+		cout << " [ERROR4] Invalid expression, please recheck." << endl;
+		return 1;
+	};
+	cout << " [EXPR TREE] "<< endl;
 	print_r_expr(expr_root, "");
+	cout << eval(expr_root) << endl;
 	return 0;
+};
+
+static CMDF_RETURN calc_cmd(cmdf_arglist *arglist)
+{
+	if (!arglist)
+	{
+		cout << " [Sytax Error] No arguments provided!\n [Tip] Please Enter the command like \"calc [expression]\"." << endl;
+		return CMDF_OK;
+	};
+	if (arglist->count != 1)
+	{
+		cout << " [Sytax Error] Invaild number of arguments provided!\n [Tip] Please Enter the command like \"calc [expression]\"." << endl;
+		return CMDF_OK;
+	};
+	string e = arglist->args[0];
+	init(e);
+	return CMDF_OK;
 };
 
 p_node *parse1(int start, int end){};
 
 int main()
 {
-	init();
-	for (auto i : ret)
-	{
-		cout << i.pos << "[" << i.txt << "]"
-			 << " ";
-	}
-	cout << endl;
+	cmdf_init("eval> ", PROG_INTRO, NULL, NULL, 0, 1);
+
+	/* Register our custom commands */
+	cmdf_register_command(calc_cmd, "calc", SOLVE_HELP);
+
+	cmdf_commandloop();
 
 	return 0;
 }

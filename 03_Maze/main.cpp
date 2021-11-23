@@ -12,7 +12,7 @@
 
 using namespace std;
 
-#define PROG_INTRO "                                     \n                                     \n  ___ ___      __     ____      __   \n/' __` __`\\  /'__`\\  /\\_ ,`\\  /'__`\\ \n/\\ \\/\\ \\/\\ \\/\\ \\L\\.\\_\\/_/  /_/\\  __/ \n\\ \\_\\ \\_\\ \\_\\ \\__/.\\_\\ /\\____\\ \\____\\\n \\/_/\\/_/\\/_/\\/__/\\/_/ \\/____/\\/____/\n                                     \n                                     \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n=====================================\n! This is a program to simulate the Joseph problem.\n! FIRST, use 'init [H] [W]', to initialize a H*W maze. (H,W >= 10)\n! Then use 'solve', to solve the maze.\n! Use 'show', to show the maze.\n"
+#define PROG_INTRO "                                     \n                                     \n  ___ ___      __     ____      __   \n/' __` __`\\  /'__`\\  /\\_ ,`\\  /'__`\\ \n/\\ \\/\\ \\/\\ \\/\\ \\L\\.\\_\\/_/  /_/\\  __/ \n\\ \\_\\ \\_\\ \\_\\ \\__/.\\_\\ /\\____\\ \\____\\\n \\/_/\\/_/\\/_/\\/__/\\/_/ \\/____/\\/____/\n                                     \n                                     \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n=====================================\n! This is a program to generate and solve a maze.\n! FIRST, use 'init [H] [W]', to initialize a H*W maze. (H,W >= 10)\n! Then use 'solve', to solve the maze.\n! Use 'show', to show the maze.\n"
 
 #define INIT_HELP "Use 'init [H] [W]', to initialize a H*W maze. (H,W >= 10)"
 #define SOLVE_HELP "Use 'solve', to solve the maze."

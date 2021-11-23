@@ -12,11 +12,13 @@
 
 using namespace std;
 
-#define PROG_INTRO "                                     \n                                     \n  ___ ___      __     ____      __   \n/' __` __`\\  /'__`\\  /\\_ ,`\\  /'__`\\ \n/\\ \\/\\ \\/\\ \\/\\ \\L\\.\\_\\/_/  /_/\\  __/ \n\\ \\_\\ \\_\\ \\_\\ \\__/.\\_\\ /\\____\\ \\____\\\n \\/_/\\/_/\\/_/\\/__/\\/_/ \\/____/\\/____/\n                                     \n                                     \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n=====================================\n! This is a program to simulate the Joseph problem.\n! FIRST, use 'init [H] [W]', to initialize a H*W maze. (H,W >= 10)\n! Then use 'solve', to solve the maze.\n! Use 'show', to show the maze.\n"
+#define PROG_INTRO "   ___                     ___                    \n /'___\\                   /\\_ \\    __             \n/\\ \\__/   __      ___ ___ \\//\\ \\  /\\_\\  __  __    \n\\ \\ ,__\\/'__`\\  /' __` __`\\ \\ \\ \\ \\/\\ \\/\\ \\/\\ \\   \n \\ \\ \\_/\\ \\L\\.\\_/\\ \\/\\ \\/\\ \\ \\_\\ \\_\\ \\ \\ \\ \\_\\ \\  \n  \\ \\_\\\\ \\__/.\\_\\ \\_\\ \\_\\ \\_\\/\\____\\\\ \\_\\/`____ \\ \n   \\/_/ \\/__/\\/_/\\/_/\\/_/\\/_/\\/____/ \\/_/`/___/> \\\n                                            /\\___/\n                                            \\/__/ \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n==================================================\n! This is a program to manage a family tree.\n! FIRST, use 'init [Name]', to initialize a tree with root name [Name]\n! Then use 'add [Parent] [Child]', to add a child to a parent.\n! Use 'show', to show the family tree.\n! Use 'del', to delete a member and its children.\n! Use 'rename [Old] [New]', to rename a member.\n"
 
-#define INIT_HELP "Use 'init [H] [W]', to initialize a H*W maze. (H,W >= 10)"
-#define SOLVE_HELP "Use 'solve', to solve the maze."
-#define SHOW_HELP "Use 'show', to show the maze."
+#define INIT_HELP "Use 'init [Name]', to initialize a tree with root name [Name]"
+#define ADD_HELP "Use 'add [Parent] [Child]', to add a child to a parent."
+#define SHOW_HELP "Use 'show', to show the family tree."
+#define DEL_HELP "Use 'del', to delete a member and its children."
+#define RENAME_HELP "Use 'rename [Old] [New]', to rename a member."
 
 bool is_init = false;
 
@@ -200,7 +202,7 @@ static CMDF_RETURN add_cmd(cmdf_arglist *arglist)
 	};
 	if (arglist->count != 2)
 	{
-		cout << " [Sytax Error] No arguments provided!\n [Tip] Please Enter the command like \"add [Children] [Parent] \"." << endl;
+		cout << " [Sytax Error] Invaild number of arguments provided!\n [Tip] Please Enter the command like \"add [Children] [Parent] \"." << endl;
 		return CMDF_OK;
 	};
 	string n1, n2;
@@ -266,10 +268,10 @@ int main()
 
 	/* Register our custom commands */
 	cmdf_register_command(init_cmd, "init", INIT_HELP);
-	cmdf_register_command(add_cmd, "add", SOLVE_HELP);
+	cmdf_register_command(add_cmd, "add", ADD_HELP);
 	cmdf_register_command(show_cmd, "show", SHOW_HELP);
-	cmdf_register_command(rename_cmd, "rename", SOLVE_HELP);
-	cmdf_register_command(del_cmd, "del", SOLVE_HELP);
+	cmdf_register_command(rename_cmd, "rename", RENAME_HELP);
+	cmdf_register_command(del_cmd, "del", DEL_HELP);
 
 	cmdf_commandloop();
 	return 0;
