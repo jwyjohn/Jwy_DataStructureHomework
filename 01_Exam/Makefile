@@ -3,13 +3,13 @@ COMPILE  = g++
 RM       = rm -f
 OBJ      = a.out
 SOURCE   = main.o
-DEPEND   = main.cpp exam.h
+DEPEND   = main.cpp
 
 build : $(SOURCE)
-	$(COMPILE) $(SOURCE) -o $(OBJ) 
+	$(COMPILE) $(SOURCE) -o $(OBJ)
 
 %.o:%cpp $(DEPEND)
-	$(COMPILE) $(CFLAGS) -o $@ $< 
+	$(COMPILE) $(CFLAGS) -o $@ $<
 
 .PHONY : clean
 clean:

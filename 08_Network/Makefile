@@ -1,15 +1,15 @@
-CFLAGS   = -c -Wall -Werror
-COMPILE  = g++
-RM       = rm -f
-OBJ      = a.out
-SOURCE   = main.o
-DEPEND   = main.cpp network.h
+CXXFLAGS   = -std=c++11
+CXX        = g++
+RM         = rm -f
+OBJ        = a.out
+SOURCE     = main.o
+DEPEND     = main.cpp
 
 build : $(SOURCE)
-	$(COMPILE) $(SOURCE) -o $(OBJ) 
+	$(CXX) $(SOURCE) -o $(OBJ)
 
 %.o:%cpp $(DEPEND)
-	$(COMPILE) $(CFLAGS) -o $@ $< 
+	$(CXX) -o $@ $<
 
 .PHONY : clean
 clean:
