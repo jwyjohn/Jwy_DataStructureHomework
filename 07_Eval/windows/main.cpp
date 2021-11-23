@@ -1017,7 +1017,7 @@ struct expr_node
 	node_type op;
 	double val;
 	string txt;
-	expr_node *parent, *op1, *op2;
+	expr_node *parent=NULL, *op1=NULL, *op2=NULL;
 	bool is_evaled = false;
 };
 
