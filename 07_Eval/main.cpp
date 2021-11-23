@@ -42,11 +42,13 @@ struct expr_node
 	float val;
 	string txt;
 	expr_node *parent, *op1, *op2;
+	bool is_evaled = false;
 };
 
 vector<raw_input> ret;
 
 p_node *root;
+expr_node *expr_root;
 
 bool is_num(char ch)
 {
@@ -147,7 +149,6 @@ p_node *prase1(int l, int r)
 		{
 			if (level == 1)
 			{
-				// cout << "(" << s.top().pos + 1 << "," << i << ")  " << endl;
 				res->child.push_back(prase1(s.top().pos + 1, i));
 				res->child.back()->parent = res;
 			};
@@ -267,25 +268,31 @@ expr_node *prase2(p_node *r)
 		}
 		else
 		{
-			cout << " (";
+			cout << "(";
 			exprs.push(prase2(s.top()));
 			cout << ") ";
 			s.pop();
 		};
-		if ((exprs.top()->op == ADD || exprs.top()->op == SUB || exprs.top()->op == MUL || exprs.top()->op == DIV) && (exprs.size() > 2))
+		if ((exprs.top()->op == ADD || exprs.top()->op == SUB || exprs.top()->op == MUL || exprs.top()->op == DIV))
 		{
-			// cout << "NEMO HERE" << endl;
 			res = new expr_node;
-			res->op = exprs.top()->op;
-			res->txt = exprs.top()->txt;
-			exprs.pop();
-			res->op2 = exprs.top();
-			exprs.top()->parent = res;
-			exprs.pop();
-			res->op1 = exprs.top();
-			exprs.top()->parent = res;
-			exprs.pop();
-			exprs.push(res);
+			res = exprs.top();
+			if (exprs.top()->op2 == NULL)
+			{
+				exprs.pop();
+				res->op2 = exprs.top();
+				exprs.top()->parent = res;
+				exprs.pop();
+				exprs.push(res);
+			};
+			if (exprs.top()->op1 == NULL)
+			{
+				exprs.pop();
+				res->op1 = exprs.top();
+				exprs.top()->parent = res;
+				exprs.pop();
+				exprs.push(res);
+			};
 		};
 	};
 	return exprs.top();
@@ -297,10 +304,37 @@ int print_r_expr(expr_node *r, string sp)
 	{
 		return 0;
 	};
-	cout << sp << r->txt << endl;
-	print_r_expr(r->op1, sp + "|   ");
-	print_r_expr(r->op2, sp + "|   ");
-
+	string st;
+	if (r == expr_root)
+		st = "-- ";
+	else if (r == r->parent->op2)
+	{
+		st = "`-- ";
+	}
+	else
+	{
+		st = "|-- ";
+	};
+	cout << sp << st << r->txt << endl;
+	if (r->op == NUM)
+	{
+		return 0;
+	};
+	if (r == expr_root)
+	{
+		print_r_expr(r->op1, sp + "    ");
+		print_r_expr(r->op2, sp + "    ");
+	}
+	else if (r == r->parent->op1)
+	{
+		print_r_expr(r->op1, sp + "|   ");
+		print_r_expr(r->op2, sp + "|   ");
+	}
+	else if (r == r->parent->op2)
+	{
+		print_r_expr(r->op1, sp + "    ");
+		print_r_expr(r->op2, sp + "    ");
+	};
 	return 0;
 };
 
@@ -361,9 +395,9 @@ int init()
 	// ret.push_back(fst);
 	root = prase1(0, ret.size());
 	print_root(root, "");
-	expr_node *r = prase2(root);
+	expr_root = prase2(root);
 	cout << endl;
-	print_r_expr(r, "");
+	print_r_expr(expr_root, "");
 	return 0;
 };
 
