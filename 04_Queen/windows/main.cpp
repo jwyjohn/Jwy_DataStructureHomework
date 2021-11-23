@@ -4,8 +4,7 @@
 
 #define MAX_CHESSBOARD_SIZE 32
 #define MAX_STACK_SIZE 10000
-#define _QUEEN 1
-#define STACK_SIZE  16772512
+#define _QUEEN 7
 
 #include <iostream>
 #include <string>
@@ -18,52 +17,60 @@
 #include <time.h>
 
 using namespace std;
+
 int N = 8; //Side effects.
 
 struct chessboard
 {
 	int current_queen_num = 0;
 	int board[MAX_CHESSBOARD_SIZE][MAX_CHESSBOARD_SIZE];
-	// chessboard()
-	// {
-	//     memset(board, 0, sizeof(board));
-	// };
 };
 
-// struct queen_stack
-// {
-//     int ptr = 0;
-//     chessboard data[MAX_STACK_SIZE];
-//     // queen_stack() : ptr(0){};
-//     bool is_empty() { return (ptr == 0); };
-//     bool is_full() { return (ptr > (MAX_STACK_SIZE - 2)); }
-//     chessboard top() { return data[ptr]; };
-//     int pop()
-//     {
-//         if (!is_empty())
-//         {
-//             ptr--;
-//             return 0;
-//         }
-//         else
-//         {
-//             return 1;
-//         };
-//     };
-//     int push(chessboard data_to_push)
-//     {
-//         if (!is_full())
-//         {
-//             ptr++;
-//             data[ptr] = data_to_push;
-//             return 0;
-//         }
-//         else
-//         {
-//             return 1;
-//         };
-//     };
-// };
+struct queen_stack
+{
+	int ptr = 0;
+	chessboard data[MAX_STACK_SIZE];
+	queen_stack() : ptr(0){};
+	bool is_empty() { return (ptr == 0); };
+	bool empty() { return (ptr == 0); };
+	bool is_full() { return (ptr > (MAX_STACK_SIZE - 2)); }
+	chessboard top() { return data[ptr]; };
+	int pop()
+	{
+		if (!is_empty())
+		{
+			ptr--;
+			return 0;
+		}
+		else
+		{
+			return 1;
+		};
+	};
+	int push(chessboard data_to_push)
+	{
+		if (!is_full())
+		{
+			ptr++;
+			data[ptr] = data_to_push;
+
+			return 0;
+		}
+		else
+		{
+			return 1;
+		};
+	};
+	int size()
+	{
+		return ptr;
+	};
+	int clear()
+	{
+		ptr = 0;
+		return 0;
+	};
+} s, ans;
 
 int show_chessboard(chessboard board_to_show)
 {
@@ -109,7 +116,7 @@ bool is_queen_safe(chessboard a, int x, int y)
 		int i = x, j = y;
 		while (0 <= i && i <= N && j >= 0 && j <= N)
 		{
-			if (a.board[i][j]==_QUEEN) flag=false;
+			flag = flag && !a.board[i][j];
 			i = i + dx, j = j + dy;
 		};
 	};
@@ -118,9 +125,11 @@ bool is_queen_safe(chessboard a, int x, int y)
 
 int queen_solution(int n, bool show_board)
 {
-	N = n;
 	chessboard a;
-	stack<chessboard> s, ans;
+	// stack<chessboard> s, ans;
+	N = n;
+	s.clear();
+	ans.clear();
 	s.push(a);
 	while (!s.empty())
 	{
@@ -130,14 +139,12 @@ int queen_solution(int n, bool show_board)
 		int i = tmp.current_queen_num;
 		for (int j = 1; j < N + 1; j++)
 		{
-			
 			if (is_queen_safe(tmp, i, j))
 			{
 				tmp.board[i][j] = _QUEEN;
 				if (i < N + 1)
 				{
 					s.push(tmp);
-					
 				}
 				if (i == N)
 				{
@@ -149,6 +156,7 @@ int queen_solution(int n, bool show_board)
 	};
 	int solution_num = ans.size();
 	cout << " [Success] Solved, total solution number is " << solution_num << "." << endl;
+	// cout << " [Show detailed chessboards? (Y/N)] ";
 	if (show_board)
 	{
 		int num = 1;
@@ -1136,7 +1144,6 @@ struct cmdf_windowsize cmdf_get_window_size_unix(void)
 }
 #endif
 
-/*** Start of inlined file: main.cpp ***/
 #include <cstdio>
 #include <stdlib.h>
 #include <iostream>
@@ -1151,7 +1158,7 @@ struct cmdf_windowsize cmdf_get_window_size_unix(void)
 
 using namespace std;
 
-#define PROG_INTRO "                                       \n                                       \n   __   __  __     __     __    ___    \n /'__`\\/\\ \\/\\ \\  /'__`\\ /'__`\\/' _ `\\  \n/\\ \\L\\ \\ \\ \\_\\ \\/\\  __//\\  __//\\ \\/\\ \\ \n\\ \\___, \\ \\____/\\ \\____\\ \\____\\ \\_\\ \\_\\\n \\/___/\\ \\/___/  \\/____/\\/____/\\/_/\\/_/\n      \\ \\_\\                            \n       \\/_/                            \n\n - Free Software by 1951510 Jiang Wenyuan \nNov 2021\n=======================================\n! This is a program to solve the n-queen problem.\n! Input command 'solve 8 n' to calculate the solutions in the n=8 case.\n! If you want to see all the solution chess board in detail, use 'solve 8 n'.\n! You can change 8 to any int (< than 32) to get more general solutions.\n"
+#define PROG_INTRO "                                       \n                                       \n   __   __  __     __     __    ___    \n /'__`\\/\\ \\/\\ \\  /'__`\\ /'__`\\/' _ `\\  \n/\\ \\L\\ \\ \\ \\_\\ \\/\\  __//\\  __//\\ \\/\\ \\ \n\\ \\___, \\ \\____/\\ \\____\\ \\____\\ \\_\\ \\_\\\n \\/___/\\ \\/___/  \\/____/\\/____/\\/_/\\/_/\n      \\ \\_\\                            \n       \\/_/                            \n\n - Free Software by 1951510 Jiang Wenyuan \nNov 2021\n=======================================\n! This is a program to solve the n-queen problem.\n! Input command 'solve 8 n' to calculate the solutions in the n=8 case.\n! If you want to see all the solution chess board in detail, use 'solve 8 n'.\n! You can change 8 to any int (< than 12) to get more general solutions.\n"
 
 #define SOLVE_HELP "Use like 'solve 8 y' or 'solve 9 n'. If you want to show all chessboards, use y, else use n."
 
@@ -1180,9 +1187,9 @@ static CMDF_RETURN solve_queen(cmdf_arglist *arglist)
 		return CMDF_OK;
 	};
 	bool show_board = (strcmp(arglist->args[1], "y") == 0) ? true : false;
-	if (n > MAX_CHESSBOARD_SIZE)
+	if (n > 11)
 	{
-		cout << " [Size Error] Too large chessborad size!\n [Tip] Try between 4 to 32" << endl;
+		cout << " [Size Error] Too large chessborad size!\n [Tip] Try between 4 to 11" << endl;
 		return CMDF_OK;
 	};
 	queen_solution(n, show_board);
@@ -1199,5 +1206,3 @@ int main()
 	cmdf_commandloop();
 	return 0;
 }
-/*** End of inlined file: main.cpp ***/
-
