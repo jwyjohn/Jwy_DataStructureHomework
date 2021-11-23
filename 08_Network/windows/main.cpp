@@ -16,6 +16,7 @@ using namespace std;
 class enetwork
 {
 	map<string, map<string, int>> M;
+	map<string, string> V;
 	struct edge
 	{
 		string a, b;
@@ -40,6 +41,7 @@ public:
 		{
 			map<string, int> null_node;
 			M[node] = null_node;
+			V.insert({node, node});
 			return 1;
 		}
 		else
@@ -59,11 +61,34 @@ public:
 		M[node_a][node_b] = cost;
 		return 0;
 	};
+	string find_union(string node_a)
+	{
+		if (node_a == V[node_a])
+		{
+			return node_a;
+		}
+		else
+		{
+			V[node_a] = find_union(V[node_a]); // PATH COMPRESSION
+			return find_union(V[node_a]); 
+		};
+	};
+	bool is_connected()
+	{
+		string s = find_union(V.begin()->first);
+		for (auto iter = V.begin(); iter != V.end(); iter++)
+		{
+			if (find_union(iter->first) != s)
+				return false;
+		};
+		return true;
+	};
 	int add_edge(string node_a, string node_b, int cost)
 	{
 		assert(cost > 0);
 		add_single_edge(node_a, node_b, cost);
 		add_single_edge(node_b, node_a, cost);
+		V[node_a] = find_union(V[node_b]); 
 		return 1;
 	};
 	// int find_edge(string node_a, string node_b)
@@ -83,6 +108,7 @@ public:
 			};
 			cout << endl;
 		};
+		// cout << " [Connected] " << is_connected() << endl;
 		return 0;
 	};
 	int run_prim(string start_node)
@@ -1089,14 +1115,13 @@ struct cmdf_windowsize cmdf_get_window_size_unix(void)
 
 #endif
 
+/*** End of inlined file: libcmdf.h ***/
+
 /* For the C++ support. */
 #ifdef __cplusplus
 }
 #endif
 
-/*** End of inlined file: libcmdf.h ***/
-
-/*** Start of inlined file: main.cpp ***/
 #include <cstdio>
 #include <stdlib.h>
 #include <iostream>
@@ -1111,7 +1136,7 @@ struct cmdf_windowsize cmdf_get_window_size_unix(void)
 
 using namespace std;
 
-#define PROG_INTRO "              __                               __         \n             /\\ \\__                           /\\ \\        \n  ___      __\\ \\ ,_\\  __  __  __    ___   _ __\\ \\ \\/'\\    \n/' _ `\\  /'__`\\ \\ \\/ /\\ \\/\\ \\/\\ \\  / __`\\/\\`'__\\ \\ , <    \n/\\ \\/\\ \\/\\  __/\\ \\ \\_\\ \\ \\_/ \\_/ \\/\\ \\L\\ \\ \\ \\/ \\ \\ \\\\`\\  \n\\ \\_\\ \\_\\ \\____\\\\ \\__\\\\ \\___x___/'\\ \\____/\\ \\_\\  \\ \\_\\ \\_\\\n \\/_/\\/_/\\/____/ \\/__/ \\/__//__/   \\/___/  \\/_/   \\/_/\\/_/\n                                                          \n                                                          \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n==========================================================\n! This is a program to optimize a plan for electric network.\n! Input command 'adv A' to add a city named A.\n! Input command 'ade A B 100' to add connect A WITH B at 100 million cost.\n! Input command 'show' to inspect the graph.\n! Use 'run A' to run optimization strating from city A.\n! Use 'init' to clear graph WITH CAUTION.\n"
+#define PROG_INTRO "              __                               __         \n             /\\ \\__                           /\\ \\        \n  ___      __\\ \\ ,_\\  __  __  __    ___   _ __\\ \\ \\/'\\    \n/' _ `\\  /'__`\\ \\ \\/ /\\ \\/\\ \\/\\ \\  / __`\\/\\`'__\\ \\ , <    \n/\\ \\/\\ \\/\\  __/\\ \\ \\_\\ \\ \\_/ \\_/ \\/\\ \\L\\ \\ \\ \\/ \\ \\ \\\\`\\  \n\\ \\_\\ \\_\\ \\____\\\\ \\__\\\\ \\___x___/'\\ \\____/\\ \\_\\  \\ \\_\\ \\_\\\n \\/_/\\/_/\\/____/ \\/__/ \\/__//__/   \\/___/  \\/_/   \\/_/\\/_/\n                                                          \n                                                          \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n==========================================================\n! This is a program to optimize a plan for electric network.\n! Input command 'adv A B C ..' to add a city named A,B,C...\n! Input command 'ade A B 100' to add connect A WITH B at 100 million cost.\n! Input command 'show' to inspect the graph.\n! Use 'run A' to run optimization strating from city A.\n! Use 'init' to clear graph WITH CAUTION.\n"
 #define INIT_HELP "Clear graph data.\n"
 #define SHOW_GRAPH_HELP "Print the graph in a certain format.\n"
 #define ADDE_HELP "Add node to graph. Format \"adv name1 name2 ... nameN\"\n"
@@ -1230,6 +1255,12 @@ static CMDF_RETURN run_prim(cmdf_arglist *arglist)
 			 << endl;
 		return CMDF_OK;
 	};
+	if (!elec.is_connected())
+	{
+		cout << " [Error] Graph is not connected.\n"
+			 << endl;
+		return CMDF_OK;
+	};
 	elec.run_prim(arglist->args[0]);
 	return CMDF_OK;
 };
@@ -1239,7 +1270,7 @@ int main()
 	cmdf_init("network> ", PROG_INTRO, NULL, NULL, 0, 1);
 
 	/* Register our custom commands */
-	cmdf_register_command(init_graph, "init", SHOW_GRAPH_HELP);
+	cmdf_register_command(init_graph, "init", INIT_HELP);
 	cmdf_register_command(show_graph, "show", SHOW_GRAPH_HELP);
 	cmdf_register_command(add_edge, "ade", ADDE_HELP);
 	cmdf_register_command(add_node, "adv", ADDV_HELP);
@@ -1247,7 +1278,4 @@ int main()
 
 	cmdf_commandloop();
 	return 0;
-	return 0;
-};
-
-/*** End of inlined file: main.cpp ***/
+}
