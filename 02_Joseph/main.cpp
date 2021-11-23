@@ -111,11 +111,11 @@ int solve()
 			pre = pre->next;
 		};
 		// cout << endl;
-		if (j % 10 == 1 || j != 11)
+		if (j % 10 == 1 && j != 11)
 			ch = "st";
-		else if (j % 10 == 2 || j != 12)
+		else if (j % 10 == 2 && j != 12)
 			ch = "nd";
-		else if (j % 10 == 3 || j != 13)
+		else if (j % 10 == 3 && j != 13)
 			ch = "rd";
 		else
 			ch = "th";
