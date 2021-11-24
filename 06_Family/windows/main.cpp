@@ -1004,6 +1004,140 @@ int init(string root_name)
 	return 0;
 };
 
+class F
+{
+private:
+	bool is_init = false;
+	family_node root;
+	int init(string root_name)
+	{
+		root.name = root_name;
+		root.parent = &root;
+		root.children.clear();
+		return 0;
+	};
+	family_node *find_family_i(family_node *r, string name)
+	{
+		if (r->name == name)
+			return r;
+		family_node *ret = NULL;
+		for (auto f : r->children)
+		{
+			ret = find_family_i(f, name);
+			if (ret != NULL)
+				return ret;
+		};
+		return NULL;
+	};
+	int del_family_i(family_node *to_del)
+	{
+		if (to_del != NULL)
+		{
+			for (auto i : to_del->children)
+			{
+				del_family_i(i);
+			};
+			delete to_del;
+		};
+		return 0;
+	};
+	int print_family_i(family_node *r, string sp)
+	{
+		cout << sp;
+		string st;
+		if (r == &root)
+			st = "--- ";
+		else if (r == r->parent->children.back())
+		{
+			st = "`-- ";
+		}
+		else
+		{
+			st = "|-- ";
+		};
+		cout << st << r->name << endl;
+		if (r == &root)
+		{
+			for (auto i : r->children)
+			{
+				print_family_i(i, sp + "    ");
+			};
+		}
+		else
+		{
+			if (r == r->parent->children.back())
+				for (auto i : r->children)
+				{
+					print_family_i(i, sp + "    ");
+				}
+			else
+				for (auto i : r->children)
+				{
+					print_family_i(i, sp + "|   ");
+				};
+		};
+
+		return 0;
+	};
+
+public:
+	int print_family() { return print_family_i(&root, ""); };
+	int add_family(string rname, string name)
+	{
+		family_node *ins = find_family_i(&root, rname);
+		if (ins != NULL)
+		{
+			family_node *to_ins = new family_node;
+			to_ins->name = name;
+			to_ins->parent = ins;
+			ins->children.push_back(to_ins);
+			cout << " [DONE] Added " << name << " to " << rname << "." << endl;
+		}
+		else
+		{
+			cout << " [ERROR] family " << rname << " not found" << endl;
+		};
+		return 0;
+	};
+	int remove_family(string rname)
+	{
+		family_node *to_del = find_family_i(&root, rname);
+		if (to_del == &root)
+		{
+			cout << " [ERROR] Cannot delete root." << endl;
+			return 0;
+		};
+		if (to_del != NULL)
+		{
+			string tmp = to_del->name;
+			vector<family_node *>::iterator iter = std::remove(to_del->parent->children.begin(), to_del->parent->children.end(), to_del);
+			to_del->parent->children.erase(iter, to_del->parent->children.end());
+			del_family_i(to_del);
+			cout << " [DONE] Deleted " << tmp << "." << endl;
+		}
+		else
+		{
+			cout << " [ERROR] family " << rname << " not found" << endl;
+		};
+		return 0;
+	};
+	int rename_family(string rname, string name)
+	{
+		family_node *ins = find_family_i(&root, rname);
+		if (ins != NULL)
+		{
+			ins->name = name;
+			cout << " [DONE] Renamed " << rname << " to " << name << "." << endl;
+		}
+		else
+		{
+			cout << " [ERROR] family " << rname << " not found" << endl;
+		};
+		return 0;
+	};
+};
+
+
 family_node *find_family(family_node *r, string name)
 {
 	if (r->name == name)
