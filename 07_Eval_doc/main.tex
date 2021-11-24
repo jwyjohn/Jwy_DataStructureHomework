@@ -38,7 +38,7 @@
 
 \maketitle
 
-\textbf{Algorithms involved:} Bubble Sort, Insertion Sort, Binary insertion Sort, Selection Sort, Shell Sort, Quick Sort, Heap Sort, Merge Sort, Bucket sort, LSD/MSD Radix Sort
+\textbf{Data structure involved:} Tree, Stack, String
 
 \tableofcontents
 
@@ -46,25 +46,47 @@
 
 \section{Introduction}
 
-Sort Algorithms are a series of interesting algorithms which are widely used in almost all field of software engineering while having its unique significance in computation theories. From the beginning of computing, the sorting problem has attracted a great deal of research, perhaps due to the complexity of solving it efficiently despite its simple, familiar statement.
+One of the main purposes of computers is to evaluate arithmetic expressions much faster than human beings. One of the problems people met when trying to design and use computers to do arithmetic calculation is that, the expressions we human write is not friendly to the computers. Thus, to make computers understand what a user want to do, a conversion of languages has to be done.
 
-Simple algorithms like Bubble Sort was analyzed as early as 1956\uct{demuth1957electronic}, while to 2006, novel sort algorithms like Timsort and Library Sort are still published, indicating the problem's value in computer sciences.\uct{auger2015merge}
+One of the machine-friendly expression languages is known as the Reverse Polish notation (RPN or postfix expressions).\uct{wiki:Reverse_Polish_notation} Like the ordinary expressions we wrote, postfix expressions have operaters and oprands, but in an order that is unfamiliar to common people, in which operators follow their operands, in contrast to Polish notation (PN), in which operators precede their operands. It does not need any parentheses as long as each operator has a fixed number of operands. For example, the expression \lstinline{2 + 3 * 4} would be \lstinline{2 3 4 * +} as postfix expressions.
 
-In this task, the author implemented 8 kind of sort algorithms and compares their performance under input data of different scale and different order. You can verify the author's results by using the code and binary in the repo.
+The process of converting expressions was previously done by programmers, but due to the progress on formal language and automaton theory, we now have methods to write programs to do the conversion. More specificly, a model called Abstract Sytax Tree (AST) is generated from a user's input, and other forms of expressions is generated from the Abstract Sytax Tree. Evaluation of an expression can be done using postfix expressions or done by recursively processing the AST.
+
+In this demo, the author built a demo to process a type of simple but common expressions with integers, "$+$", "$-$", "$\times$", "$\div$", "$($" and "$)$". A AST will be generated, while the value, the postfix expression, infix expression will be outputed, if the expression is vaild.
+
+A vaild expression should follow the grammar below:
+
+\begin{lstlisting}
+exp     :	term			    
+		|   exp '+' term		
+		|   exp '-' term		
+		;
+ 
+term	:	digit               
+		|   term '*' digit		
+		|	term '/' digit		
+		;
+ 
+digit	:	NUM                 			
+		|   '(' exp ')'        
+\end{lstlisting}
+
+For example, the expression \lstinline{233+2*(3+4+9*(2+2)+(3+3))-5/6+1} is an vaild expression, while \lstinline{1+-1(7))} is not.
+
 
 \section{Demostration}
 
 \subsection{Compile and run the program}
 
-On linux platform with \lstinline{make} and a \lstinline{g++} which supports C++ 11 Standard, just \lstinline{cd} to the \lstinline{./linux} and run \lstinline{make build}. The binary executable will be generated in the same directory named as \lstinline{a.out} or \lstinline{mysort}, according to the configurations in the \lstinline{Makefile}. Use \lstinline{./a.out} or or \lstinline{./mysort} to run the program.
+On linux platform with \lstinline{make} and a \lstinline{g++} which supports C++ 11 Standard, just \lstinline{cd} to the \lstinline{./linux} and run \lstinline{make build}. The binary executable will be generated in the same directory named as \lstinline{a.out} or \lstinline{mysort}, according to the configurations in the \lstinline{Makefile}. Use \lstinline{./a.out} or or \lstinline{./eval} to run the program.
 
-\textbf{CAUTION} On windows platforms, the traditional \lstinline{clock()} won't work at high resolution, so the implementation on windows used \lstinline{std::chrono}. Make sure you compile the correct code on corresponding platform.
+\textbf{CAUTION} On windows platforms, the compilers may not perfectly support the C++ 11 standard. Therefore it is recommended to compile and run the project on Linux platforms.
 
 The program is an interactive shell, where you can input commands and get results.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\linewidth]{image/sort_01.jpg}
+    \includegraphics[width=0.7\linewidth]{image/e01.jpg}
     \caption{The user interface of the program}
 \end{figure}
 
@@ -73,143 +95,210 @@ Usage of commands can be found on the main screen, and the \lstinline{help} comm
 \begin{enumerate}
     \item \lstinline{help} : Show help for a certain command.
     \item \lstinline{exit} : Exit the program.
-    \item \lstinline{prep [N] (rand/seq/inv)} : Generate the data for sorting, where \lstinline{[N]} is an integer $> 10$ and $< 1000000$ (the limits depend on your conf and platform).
-    \item \lstinline{show} : Show your full dataset.
-    \item \lstinline{test (default/bubble/selection/insertion/binsertion/shell/quick/heap/bucket/merge/lsd/msd)} : Run certain sort algorithm and show its performance.
-    \item \lstinline{seed} : Show the random seed used in this run.
+    \item \lstinline{calc [expression]} : Process and calculate the given expression.
 \end{enumerate}
 
-\subsection{Generate the data for testing sort algorithms}
+\subsection{Calculate an expression}
 
-Type \lstinline{prep 10000 rand} to generate a sequence from 1 to 10000 and randomly suffule them as our dataset for sorting.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.7\linewidth]{image/sort_02.jpg}
-    \caption{Use \lstinline{prep 10000 rand} to generate dataset (seed: \lstinline{1636865632})}
-\end{figure}
-
-To examine our dataset, use \lstinline{show}.
+Type \lstinline{calc 233+5*(1+(2+3)+6*2+(1))-5/6} to calculate a given expression.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\linewidth]{image/sort_03.jpg}
-    \caption{Use \lstinline{show} to view our dataset}
+    \includegraphics[width=0.7\linewidth]{image/e02.jpg}
+    \caption{Evaluating an expression (1)}
 \end{figure}
-
-\subsection{Run a sort}
-
-Type \lstinline{test merge} to run Merge Sort on the generated dataset, the results and the performance indicators (Compare func calls, Swap calls and clocks used) will be shown.
-
+As can be seen, the expression tree, along with the answer and the postfix expression, infix expression is printed.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\linewidth]{image/sort_04.jpg}
-    \caption{Use \lstinline{test} to run a sort}
+    \includegraphics[width=0.7\linewidth]{image/e03.jpg}
+    \caption{Evaluating an expression (2)}
 \end{figure}
 
-\section{Theoretical comparison of algorithms}
 
-On many data structure or algorithm textbooks, it has been proved that comparison-based sorting algorithms have a fundamental requirement of $\Omega(n \, log \, n) $ comparisons,\uct{cormen2009introduction} whlie those sort methods not based on comparisons, such as Bucket Sort, can have better performance at a cost of more space.
+\section{The process of parsing an expression}
 
-Here we consider Computational complexity (best, average and worst), memory usage and stability of these Sort Algorithms, and the results are shown in the table below. Detailed proof can be found on various papers or textbooks.
+Previous researches on formal language and compilers have given out many powerful algorithms for parsing an expression. Two most famous algorithms, the LL(1)\uct{stearns1969property} and LR(1)\uct{wiki:Canonical_LR_parser} algorithms, are widely used in many compilers. However, implementation of these algorithms are relatively difficult by hand, since the parsers of common compilers are generated by utils like \lstinline{yacc} or \lstinline{bison}.
 
-\begin{table}[H]
-    \caption{\textbf{Theoretical comparison of algorithms}}
-    \centering
-    \begin{tabular}{cccccc}
-        \toprule
-        Algorithm             & Best            & Average           & Worst             & Memory     & Stable \\
-        \midrule
-        Bubble Sort           & $n$             & $n^2$             & $n^2$             & $1$        & Yes    \\
-        Insertion Sort        & $n$             & $n^2$             & $n^2$             & $1$        & Yes    \\
-        Selection Sort        & $n^2$           & $n^2$             & $n^2$             & $1$        & Yes    \\
-        Binary insertion Sort & $n$             & $n^2$             & $n^2$             & $1$        & Yes    \\
-        Shell Sort            & $n \, log \, n$ & $n^{\frac{4}{3}}$ & $n^{\frac{3}{2}}$ & 1          & No     \\
-        Quick Sort            & $n \, log \, n$ & $n \, log \, n$   & $n^2$             & $log \, n$ & No     \\
-        Heap Sort             & $n \, log \, n$ & $n \, log \, n$   & $n \, log \, n$   & $1$        & No     \\
-        Merge Sort            & $n \, log \, n$ & $n \, log \, n$   & $n \, log \, n$   & $n$        & Yes    \\
-        Bucket sort           & $n$             & $n$               & $n$               & $n$        & Yes    \\
-        Radix Sort            & $-$             & $nr$              & $nr$              & $n$        & Yes    \\
-        \bottomrule
-    \end{tabular}
-\end{table}
-
-Note that even though these algorithms are named as sorts, some of them have more wider application with minor modification. For exapmle, Heap Sort can be adjusted to maintain a priority queue with high performance. Some of the sort algorithms seems to be of low efficiency, but they have their value in theory or in some special cases. Another thing that needs to be mentioned about these algorithms is that, in the era of big data, paralle computation is more important than ever. One of the highly parallelizable sort algorithms is the Merge Sort, which can run on clusters.\uct{ajtai19830}
-
+In this project, to make the implementation more straight forward, the generation of the Abstract Sytax Tree is a two stage process. The first stage deals with parentheses, and expressions are converted into a tree by the hierarchical relation of parentheses pairs. For example, the expression \lstinline{233+2*(3+4+9*(2+2)+(3+3))-5/6+1} is converted into a tree like this:
+\begin{lstlisting}
+-- EXP
+    |-- 233
+    |-- +
+    |-- 2
+    |-- *
+    |-- EXP
+    |   |-- 3
+    |   |-- +
+    |   |-- 4
+    |   |-- +
+    |   |-- 9
+    |   |-- *
+    |   |-- EXP
+    |   |   |-- 2
+    |   |   |-- +
+    |   |   `-- 2
+    |   |-- +
+    |   `-- EXP
+    |       |-- 3
+    |       |-- +
+    |       `-- 3
+    |-- -
+    |-- 5
+    |-- /
+    |-- 6
+    |-- +
+    `-- 1
+\end{lstlisting}
+with the sub expressions converted into a token named as \lstinline{EXP} for further processing. The second stage processes each layer of the previous tree, generating the final AST, which looks like this:
+\begin{lstlisting}
+-- +
+    |-- -
+    |   |-- +
+    |   |   |-- 233
+    |   |   `-- *
+    |   |       |-- 2
+    |   |       `-- +
+    |   |           |-- +
+    |   |           |   |-- +
+    |   |           |   |   |-- 3
+    |   |           |   |   `-- 4
+    |   |           |   `-- *
+    |   |           |       |-- 9
+    |   |           |       `-- +
+    |   |           |           |-- 2
+    |   |           |           `-- 2
+    |   |           `-- +
+    |   |               |-- 3
+    |   |               `-- 3
+    |   `-- /
+    |       |-- 5
+    |       `-- 6
+    `-- 1
+\end{lstlisting}
+Both steps of tree generation involves the manipulation of Stacks, which will be shown in the next section. After we have got the AST, different traversal algorithms of the gives out different types of expressions, and the AST can be evaluated recursively to give out the answer.
 
 \section{Notes on the source code}
 
-If you want to re-use the author's source code in a project, it is not recommended to do so for that the \lstinline{std::sort} is averagely more fast and more stable than these algorithms for testing. 
-
-But still, some of these algorithms are fun to test. In the author's source code \lstinline{main_header.h}, you can find a definition of a struct \lstinline{sort_func_result} like this:
+\paragraph{Pre-processing of user input} Since the user's input is a raw string, we first separate the string into basic components named tokens. Tokens have a type (NUM, ADD, SUB, MUL...), and for a number token, it has a value. The token is defined in the following code:
 \begin{lstlisting}[language = C++]
-struct sort_func_result
+struct raw_input
 {
-	string func_name;
-	int swap_count, compare_count;
+	node_type ch;
+	double val;
+......
+};
+vector<raw_input> ret;
+\end{lstlisting}
+The functions used to process the input is the \lstinline{split_input(string s)}, which resembles the lex analysis part of a compiler.
+
+\paragraph{First stage of parsing}
+The first parsing process is named as \lstinline{prase1(int l, int r)}, which is a recursive process to deal with parentheses. The most important part is shown below.
+\begin{lstlisting}[language = C++]
+p_node *prase1(int l, int r)
+{
+......
+	stack<raw_input> s;
+	int level = 0;
+......
+				res->child.push_back(prase1(s.top().pos + 1, i)); \\ Recursion HERE
+				res->child.back()->parent = res;
+			};
+			s.pop();
+			level--;
+......
+	};
+	return res;
 };
 \end{lstlisting}
-This struct is used for showing the sort function name and some performance indicators. Implementation of different sorting algorithms are a function with return type as \lstinline{sort_func_result}. One example is the \lstinline{heap_sort}:
+With the help of a stack, we can convert the token vector into a tree, but the tree need further processing to generate the final AST.
+
+\paragraph{Second stage of parsing} is similar to the previous one, but it needs two stacks: the operater stack and the oprand stack, to deal with the expression with different priority levels. The logic of pushing and poping the stacks is more complex, which can be found in the source code.
 \begin{lstlisting}[language = C++]
-sort_func_result heap_sort(int *array, int array_size, bool (*cmp)(int a, int b))
+expr_node *prase2(p_node *r)
 {
-	sort_func_result ret;
-	ret.func_name = __FUNCTION__;
-	int swap_count = 0, cmp_count = 0;
-	int last_non_leaf_node = array_size / 2 - 1;
-	init_counter();
-	int heap[array_size];
-	int heap_size = array_size;
-	for (int i = 0; i < array_size; i++)
-		heap[i] = array[i];
-	for (int i = last_non_leaf_node; i >= 0; i--)
+.....
+	while (ptr < r->child.size())
+	{
+		switch (r->child[ptr]->op)
+		{
+		case NUM:
+.....
+		case RET:
+.....
+		case MUL:
+.....
+		case DIV:
+.....
+        exprs.push(prase2(s.top())); \\ Recursion HERE
+.....
+	return exprs.top();
+};
+\end{lstlisting}
+
+\paragraph{Evaluation and printing} The evaluation and printing of the results are also recursive, since the AST is recursively defined. For example, to print the AST:
+\begin{lstlisting}[language = C++]
+int print_r_expr(expr_node *r, string sp)
+{
+	if (r == NULL)
+	{
+		return 0;
+	};
+......
+		print_r_expr(r->op1, sp + "    ");
+		print_r_expr(r->op2, sp + "    ");
+	};
+	return 0;
+};
+\end{lstlisting}
+which is similar to the way we print the tree in the project \textit{Family Tree 家谱管理系统}.
+
+The evaluation of the expression tree is also a recursive function. If the children of a node is not yet evaluated, then we recursively evaluate the children until all nodes have got their value. The code below shows the process:
+\begin{lstlisting}[language = C++]
+double eval(expr_node *r)
+{
+	if (r->is_evaled)
+	{
+		return r->val;
+	}
+	else if (r->op == NUM)
 	{
 ......
+	}
+	else
+	{
+		double tmp;
+		switch (r->op)
+		{
+		case ADD:
+			tmp = (eval(r->op1) + eval(r->op2)); \\ Recursion HERE
+......
+		case SUB:
+......
+		case MUL:
+......
+		case DIV:
+......
+		default:
+			break;
+		};
+		r->val = tmp;
+		return r->val;
+	};
+};
 \end{lstlisting}
-Note that the parameters of \lstinline{heap_sort} are \lstinline{int *array, int array_size, bool (*cmp)(int a, int b)}, where \lstinline{cmp} is a bool function for returning the result of comparing two values.
-
-Detailed implementation of each algorithm follows the textbooks used in this course, and the comments in the code may help you understand how each algorithm actually works. Most of the code in \lstinline{main.cpp} is for processing the user's input, which is not so interesting.
 
 
-\section{Results}
+Most of the code in \lstinline{main.cpp} is for processing the user's input, which is not so interesting.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1.0\linewidth]{image/random.eps}
-    \caption{Performance of different sort algorithms on random dataset (log-log axis)}
-\end{figure}
-The author tested all the comparison-based sorting algorithms (i.e without bucket sort) with random data of the size from $100$ to $2\times10^5$, and their performance is shown in the figure above.
-
-The figure was a log–log plot, with its x-axis indicating the scale of input data, and the y-axis showing the time cost. You can find that there are two groups of lines that are paralle with each other, one group has the slope that is nearly twice of the other one. In a log–log plot, we have
-\begin{equation*}
-    log(n^2) = 2\,log(n)
-\end{equation*}
-\begin{equation*}
-    log(n\,log\,n) = log(\log\,n)\,log(n)
-\end{equation*}
-Therefore the more steep lines are those algorithms with $O(n^2)$ cost like the Bubble sort, while the other is the $O(n\, log\, n)$ algorithms, like the Heap sort. 
-
-On already sorted data, the log-log plot still comes with two groups, but several performs better than on random data, as is shown on the figure below.
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1.0\linewidth]{image/sorted.eps}
-    \caption{Performance of different sort algorithms on already sorted dataset (log-log axis)}
-\end{figure}
-
-On inverted sorted data, the log-log plot still comes with two groups. Note that Quick sort now becomes $O(n^2)$, due to its instability if the input data is not random.
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1.0\linewidth]{image/inv.eps}
-    \caption{Performance of different sort algorithms on already sorted dataset (log-log axis)}
-\end{figure}
 
 \section{Discussion}
 
-In this project, we implemented several sorting algorithms and compared their performance both in theory and with data generated. The results are consistent with what the theory told us, which confirms the correctness of the implementation of algorithms. Note that all the sorting algorithms are operating an array, which means the cost of visit an element is $O(1)$.
+In this project, we built a simple parser for converting expression string to Abstract Sytax Tree for further evaluation and manipulation. Simple as it may seems to be, the hand written parser took several stacks, some recursive functions and a lot of if-s to implement. For a more complex language than an arithmetic expression, building a parser by hand is much more difficult.
 
-Nowadays, an ordinary Personal Computer have more than several Gigabytes of memory, which seems enough for running those algorithms on less than $1\times10^7$ elements. However, the exlposion of data sizes never stops, and in banks or IT companies, there has TB or even EB of data need to be sorted, and the RAM of even a mainframe can not hold such amount of data.
+In practice, these parsers to analysis the language is generated by some util tools, which are called "Compiler Compilers". Their input is the grammar rules written in Backus–Naur form\uct{wiki:Backus–Naur_form}, and they output the code that is used to parse the language to generate the AST. One of the widely used "Compiler Compilers" is \lstinline{Bison}, which is used in the \lstinline{GNU} project for building more complex compilers.\uct{aaby2003compiler}
 
-In the situation of BIG DATA, the array is stored in a hard drive or a tape, and visiting each element costs much more than $O(1)$. These sorting tasks are often done on a cluster. One of the widely used benchmarks for testing a cluster is called \textbf{TeraSort benchmark}.\uct{o2008terabyte} While sorting Terabyte of data, $O(n\,log\,n)$, \textbf{stable, parallelizable algorithms}, like the \textbf{Merge Sort}, is of much importance. 
+Note that a simple but useful data structure, Stack, is widely used in the praser. The operations of a Stack with a set of rules are the key role of process a string to form the AST, which decides how to pop or push a stack according to the top element of each stack and the following input. The set of rules is given by the theory of Pushdown Automation and Regular Language, which will be learnt beyong the course of data structure (to be more precise, in compiler related courses).
+
 
 \newpage
 \bibliography{references}
