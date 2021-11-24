@@ -43,12 +43,12 @@ In the data structure project of this semester, the author completed the tasks r
 
 \begin{enumerate}
     \item Exam Registration System (考试报名系统)
-    %\item Joseph Game (约瑟夫生者死者游戏)
-    %\item Maze Game (勇闯迷宫游戏)
+    \item Joseph Game (约瑟夫生者死者游戏)
+    \item Maze Game (勇闯迷宫游戏)
     \item N-Queen Problem (N皇后问题)
     \item Keyword Search (关键字检索系统)
-    %\item Family Tree (家谱管理系统)
-    %\item Expression Eval (表达式计算)
+    \item Family Tree (家谱管理系统)
+    \item Expression Eval (表达式计算)
     \item Electric Network (电网建设造价模拟系统)
     \item Binary Sort Tree (二叉排序数)
     \item Sort Algorithms (8种排序算法的比较案例)
@@ -127,5 +127,26 @@ Terminal: /dev/pts/0
 CPU: Intel i3-10105 (8) @ 4.400GHz
 GPU: Intel CometLake-S GT2 [UHD Graphics 630]
 Memory: 867MiB / 15850MiB
+
+GCC Version:
+$ g++ -v
+Using built-in specs.
+COLLECT_GCC=g++
+COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-pc-linux-gnu/11.1.0/lto-wrapper
+Target: x86_64-pc-linux-gnu
+Configured with: /build/gcc/src/gcc/configure --prefix=/usr --libdir=/usr/lib --libexecdir=/usr/lib --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=https://bugs.archlinux.org/ --enable-languages=c,c++,ada,fortran,go,lto,objc,obj-c++,d --with-isl --with-linker-hash-style=gnu --with-system-zlib --enable-__cxa_atexit --enable-cet=auto --enable-checking=release --enable-clocale=gnu --enable-default-pie --enable-default-ssp --enable-gnu-indirect-function --enable-gnu-unique-object --enable-install-libiberty --enable-linker-build-id --enable-lto --enable-multilib --enable-plugin --enable-shared --enable-threads=posix --disable-libssp --disable-libstdcxx-pch --disable-libunwind-exceptions --disable-werror gdc_include_dir=/usr/include/dlang/gdc
+Thread model: posix
+Supported LTO compression algorithms: zlib zstd
+gcc version 11.1.0 (GCC)
+
 \end{lstlisting}
+
+\section{Notes on the source code}
+
+The projects are coded in a non-object-oriented way, since these projects are mostly demos for showing the author's mastery on the data structures. Thus, the C++ template-based programming features (which are often seen in our textbook) are not commonly used, since these demos do not need to be reused. Another reason for not adopting the OOP is that this project is not a group work, and the work can be maintained by a single person, so Encapsulation and Abstraction is not necessary.
+
+You may also find that in the \lstinline{*.cpp} or \lstinline{*.h} files, a \textit{Single-header library for writing CLI applications in C/C++} named \lstinline{libcmdf.h} is inlined into them, adding several hundreds of lines to each file. The implementation of the input and output processing of each demo is done using the \lstinline{libcmdf.h} from \url{https://github.com/ronen25/libcmdf}, for its Cross-platform feature and its relatively small size.
+
+Although the author tried to worte the documents and the code in English to reach a wider audience and getting more remarks on the coding, some of the comments are still in Chinese, which may cause some trouble to non-native Chinese speakers.
+
 \end{document}
