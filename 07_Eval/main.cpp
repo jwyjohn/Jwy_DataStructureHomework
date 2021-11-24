@@ -54,13 +54,6 @@ struct expr_node
 	bool is_evaled = false;
 };
 
-vector<raw_input> ret;
-
-p_node *root;
-expr_node *expr_root;
-
-bool is_error = false;
-
 bool is_num(char ch)
 {
 	if (int(ch) - int('0') < 0 || int(ch) - int('9') > 0)
@@ -80,492 +73,501 @@ bool is_valid_str(string s)
 	return true;
 };
 
-int split_input(string s)
+class E
 {
-	string tmp;
-	int p = 0;
-	for (auto c : s)
+private:
+	vector<raw_input> ret;
+	p_node *root;
+	expr_node *expr_root;
+	bool is_error = false;
+	int split_input(string s)
 	{
-		if (is_num(c))
+		string tmp;
+		int p = 0;
+		for (auto c : s)
 		{
-			tmp += c;
-		}
-		else
-		{
-			raw_input oval;
-			oval.val = 0;
-			if (tmp != "")
+			if (is_num(c))
 			{
-				raw_input tval;
-				tval.ch = NUM;
-				tval.val = stoi(tmp);
-				tval.txt = tmp;
-				tval.pos = p;
+				tmp += c;
+			}
+			else
+			{
+				raw_input oval;
+				oval.val = 0;
+				if (tmp != "")
+				{
+					raw_input tval;
+					tval.ch = NUM;
+					tval.val = stoi(tmp);
+					tval.txt = tmp;
+					tval.pos = p;
+					p++;
+					ret.push_back(tval);
+					tmp = "";
+				};
+				switch (c)
+				{
+				case '+':
+					oval.ch = ADD;
+					oval.txt = c;
+					break;
+				case '-':
+					oval.ch = SUB;
+					oval.txt = c;
+					break;
+				case '*':
+					oval.ch = MUL;
+					oval.txt = c;
+					break;
+				case '/':
+					oval.ch = DIV;
+					oval.txt = c;
+					break;
+				case '(':
+					oval.ch = LP;
+					oval.txt = c;
+					break;
+				case ')':
+					oval.ch = RP;
+					oval.txt = c;
+					break;
+				default:
+					break;
+				};
+				oval.pos = p;
 				p++;
-				ret.push_back(tval);
-				tmp = "";
+				ret.push_back(oval);
 			};
-			switch (c)
+		};
+		if (tmp != "")
+		{
+			raw_input tval;
+			tval.ch = NUM;
+			tval.val = stoi(tmp);
+			tval.txt = tmp;
+			tval.pos = p;
+			p++;
+			ret.push_back(tval);
+		};
+		return 0;
+	};
+
+	p_node *prase1(int l, int r)
+	{
+		p_node *res = new p_node;
+		res->op = RET;
+		res->txt = "EXP";
+		stack<raw_input> s;
+		int level = 0;
+		for (int i = l; i < r; i++)
+		{
+			if (ret[i].ch == LP)
 			{
-			case '+':
-				oval.ch = ADD;
-				oval.txt = c;
+				s.push(ret[i]);
+				level++;
+			}
+			else if (ret[i].ch == RP && !s.empty())
+			{
+				if (level == 1)
+				{
+					res->child.push_back(prase1(s.top().pos + 1, i));
+					res->child.back()->parent = res;
+				};
+				s.pop();
+				level--;
+			}
+			else if (level == 0)
+			{
+				p_node *tmp = new p_node;
+				tmp->op = ret[i].ch;
+				tmp->txt = ret[i].txt;
+				tmp->val = ret[i].val;
+				tmp->parent = res;
+				res->child.push_back(tmp);
+			};
+		};
+		return res;
+	};
+
+	expr_node *prase2(p_node *r)
+	{
+		stack<p_node *> v, op, s;
+		p_node *sharp = new p_node;
+		sharp->op = ENDP;
+		sharp->txt = "#";
+		op.push(sharp);
+		int ptr = 0;
+		while (ptr < r->child.size())
+		{
+			switch (r->child[ptr]->op)
+			{
+			case NUM:
+				v.push(r->child[ptr]);
+				ptr++;
 				break;
-			case '-':
-				oval.ch = SUB;
-				oval.txt = c;
+			case RET:
+				v.push(r->child[ptr]);
+				ptr++;
 				break;
-			case '*':
-				oval.ch = MUL;
-				oval.txt = c;
+			case MUL:
+				if (op.top()->op == ADD || op.top()->op == SUB || op.top()->op == ENDP)
+				{
+					op.push(r->child[ptr]);
+					ptr++;
+				}
+				else if (op.top()->op == MUL || op.top()->op == DIV)
+				{
+					v.push(op.top());
+					op.pop();
+				};
 				break;
-			case '/':
-				oval.ch = DIV;
-				oval.txt = c;
+			case DIV:
+				if (op.top()->op == ADD || op.top()->op == SUB || op.top()->op == ENDP)
+				{
+					op.push(r->child[ptr]);
+					ptr++;
+				}
+				else if (op.top()->op == MUL || op.top()->op == DIV)
+				{
+					v.push(op.top());
+					ptr++;
+					op.pop();
+				};
 				break;
-			case '(':
-				oval.ch = LP;
-				oval.txt = c;
+			case ADD:
+				if (op.top()->op == ENDP)
+				{
+					op.push(r->child[ptr]);
+					ptr++;
+				}
+				else
+				{
+					v.push(op.top());
+					op.pop();
+				};
 				break;
-			case ')':
-				oval.ch = RP;
-				oval.txt = c;
+			case SUB:
+				if (op.top()->op == ENDP)
+				{
+					op.push(r->child[ptr]);
+					ptr++;
+				}
+				else
+				{
+					v.push(op.top());
+					op.pop();
+				};
 				break;
 			default:
 				break;
 			};
-			oval.pos = p;
-			p++;
-			ret.push_back(oval);
 		};
-	};
-	if (tmp != "")
-	{
-		raw_input tval;
-		tval.ch = NUM;
-		tval.val = stoi(tmp);
-		tval.txt = tmp;
-		tval.pos = p;
-		p++;
-		ret.push_back(tval);
-	};
-	return 0;
-};
-
-p_node *prase1(int l, int r)
-{
-	p_node *res = new p_node;
-	res->op = RET;
-	res->txt = "EXP";
-	stack<raw_input> s;
-	int level = 0;
-	for (int i = l; i < r; i++)
-	{
-		if (ret[i].ch == LP)
+		while (!op.empty())
 		{
-			s.push(ret[i]);
-			level++;
-		}
-		else if (ret[i].ch == RP && !s.empty())
-		{
-			if (level == 1)
-			{
-				res->child.push_back(prase1(s.top().pos + 1, i));
-				res->child.back()->parent = res;
-			};
-			s.pop();
-			level--;
-		}
-		else if (level == 0)
-		{
-			p_node *tmp = new p_node;
-			tmp->op = ret[i].ch;
-			tmp->txt = ret[i].txt;
-			tmp->val = ret[i].val;
-			tmp->parent = res;
-			res->child.push_back(tmp);
+			v.push(op.top());
+			op.pop();
 		};
-	};
-	return res;
-};
-
-expr_node *prase2(p_node *r)
-{
-	stack<p_node *> v, op, s;
-	p_node *sharp = new p_node;
-	sharp->op = ENDP;
-	sharp->txt = "#";
-	op.push(sharp);
-	int ptr = 0;
-	while (ptr < r->child.size())
-	{
-		switch (r->child[ptr]->op)
+		while (!v.empty())
 		{
-		case NUM:
-			v.push(r->child[ptr]);
-			ptr++;
-			break;
-		case RET:
-			v.push(r->child[ptr]);
-			ptr++;
-			break;
-		case MUL:
-			if (op.top()->op == ADD || op.top()->op == SUB || op.top()->op == ENDP)
+			if (v.top()->op != ENDP)
+				s.push(v.top());
+			v.pop();
+		};
+		expr_node *res, *tmp;
+		stack<expr_node *> exprs;
+		while (!s.empty())
+		{
+			tmp = new expr_node;
+			tmp->op = s.top()->op;
+			tmp->txt = s.top()->txt;
+			tmp->val = s.top()->val;
+			if (s.top()->op != RET)
 			{
-				op.push(r->child[ptr]);
-				ptr++;
-			}
-			else if (op.top()->op == MUL || op.top()->op == DIV)
-			{
-				v.push(op.top());
-				op.pop();
-			};
-			break;
-		case DIV:
-			if (op.top()->op == ADD || op.top()->op == SUB || op.top()->op == ENDP)
-			{
-				op.push(r->child[ptr]);
-				ptr++;
-			}
-			else if (op.top()->op == MUL || op.top()->op == DIV)
-			{
-				v.push(op.top());
-				ptr++;
-				op.pop();
-			};
-			break;
-		case ADD:
-			if (op.top()->op == ENDP)
-			{
-				op.push(r->child[ptr]);
-				ptr++;
+				cout << s.top()->txt << " ";
+				exprs.push(tmp);
+				s.pop();
 			}
 			else
 			{
-				v.push(op.top());
-				op.pop();
+				cout << "(";
+				exprs.push(prase2(s.top()));
+				cout << ") ";
+				s.pop();
 			};
-			break;
-		case SUB:
-			if (op.top()->op == ENDP)
+			if ((exprs.top()->op == ADD || exprs.top()->op == SUB || exprs.top()->op == MUL || exprs.top()->op == DIV))
 			{
-				op.push(r->child[ptr]);
-				ptr++;
-			}
-			else
-			{
-				v.push(op.top());
-				op.pop();
+				res = new expr_node;
+				res = exprs.top();
+				if (exprs.top()->op2 == NULL)
+				{
+					exprs.pop();
+					if (exprs.empty())
+					{
+						is_error = true;
+						cout << " ![SYTAX ERROR]" << endl;
+						return NULL;
+					};
+					res->op2 = exprs.top();
+					exprs.top()->parent = res;
+					exprs.pop();
+					exprs.push(res);
+				};
+				if (exprs.top()->op1 == NULL)
+				{
+					exprs.pop();
+					if (exprs.empty())
+					{
+						is_error = true;
+						cout << " ![SYTAX ERROR]" << endl;
+						return NULL;
+					};
+					res->op1 = exprs.top();
+					exprs.top()->parent = res;
+					exprs.pop();
+					exprs.push(res);
+				};
 			};
-			break;
-		default:
-			break;
 		};
+		return exprs.top();
 	};
-	while (!op.empty())
+
+	int print_r_expr(expr_node *r, string sp)
 	{
-		v.push(op.top());
-		op.pop();
-	};
-	while (!v.empty())
-	{
-		if (v.top()->op != ENDP)
-			s.push(v.top());
-		v.pop();
-	};
-	expr_node *res, *tmp;
-	stack<expr_node *> exprs;
-	while (!s.empty())
-	{
-		tmp = new expr_node;
-		tmp->op = s.top()->op;
-		tmp->txt = s.top()->txt;
-		tmp->val = s.top()->val;
-		if (s.top()->op != RET)
+		if (r == NULL)
 		{
-			cout << s.top()->txt << " ";
-			exprs.push(tmp);
-			s.pop();
+			return 0;
+		};
+		string st;
+		if (r == expr_root)
+			st = "-- ";
+		else if (r == r->parent->op2)
+		{
+			st = "`-- ";
 		}
 		else
 		{
-			cout << "(";
-			exprs.push(prase2(s.top()));
-			cout << ") ";
-			s.pop();
+			st = "|-- ";
 		};
-		if ((exprs.top()->op == ADD || exprs.top()->op == SUB || exprs.top()->op == MUL || exprs.top()->op == DIV))
+		cout << sp << st << r->txt << endl;
+		if (r->op == NUM)
 		{
-			res = new expr_node;
-			res = exprs.top();
-			if (exprs.top()->op2 == NULL)
-			{
-				exprs.pop();
-				if (exprs.empty())
-				{
-					is_error = true;
-					cout << " ![SYTAX ERROR]" << endl;
-					return NULL;
-				};
-				res->op2 = exprs.top();
-				exprs.top()->parent = res;
-				exprs.pop();
-				exprs.push(res);
-			};
-			if (exprs.top()->op1 == NULL)
-			{
-				exprs.pop();
-				if (exprs.empty())
-				{
-					is_error = true;
-					cout << " ![SYTAX ERROR]" << endl;
-					return NULL;
-				};
-				res->op1 = exprs.top();
-				exprs.top()->parent = res;
-				exprs.pop();
-				exprs.push(res);
-			};
+			return 0;
 		};
-	};
-	return exprs.top();
-};
-
-int print_r_expr(expr_node *r, string sp)
-{
-	if (r == NULL)
-	{
+		if (r == expr_root)
+		{
+			print_r_expr(r->op1, sp + "    ");
+			print_r_expr(r->op2, sp + "    ");
+		}
+		else if (r == r->parent->op1)
+		{
+			print_r_expr(r->op1, sp + "|   ");
+			print_r_expr(r->op2, sp + "|   ");
+		}
+		else if (r == r->parent->op2)
+		{
+			print_r_expr(r->op1, sp + "    ");
+			print_r_expr(r->op2, sp + "    ");
+		};
 		return 0;
 	};
-	string st;
-	if (r == expr_root)
-		st = "-- ";
-	else if (r == r->parent->op2)
-	{
-		st = "`-- ";
-	}
-	else
-	{
-		st = "|-- ";
-	};
-	cout << sp << st << r->txt << endl;
-	if (r->op == NUM)
-	{
-		return 0;
-	};
-	if (r == expr_root)
-	{
-		print_r_expr(r->op1, sp + "    ");
-		print_r_expr(r->op2, sp + "    ");
-	}
-	else if (r == r->parent->op1)
-	{
-		print_r_expr(r->op1, sp + "|   ");
-		print_r_expr(r->op2, sp + "|   ");
-	}
-	else if (r == r->parent->op2)
-	{
-		print_r_expr(r->op1, sp + "    ");
-		print_r_expr(r->op2, sp + "    ");
-	};
-	return 0;
-};
 
-int print_root(p_node *r, string sp)
-{
-	cout << sp;
-	string st;
-	if (r == root)
-		st = "-- ";
-	else if (r == r->parent->child.back())
+	int print_root(p_node *r, string sp)
 	{
-		st = "`-- ";
-	}
-	else
-	{
-		st = "|-- ";
-	};
-	cout << st << r->txt << endl;
-	if (r == root)
-	{
-		for (auto i : r->child)
+		cout << sp;
+		string st;
+		if (r == root)
+			st = "-- ";
+		else if (r == r->parent->child.back())
 		{
-			print_root(i, sp + "    ");
+			st = "`-- ";
+		}
+		else
+		{
+			st = "|-- ";
 		};
-	}
-	else
-	{
-		if (r == r->parent->child.back())
+		cout << st << r->txt << endl;
+		if (r == root)
+		{
 			for (auto i : r->child)
 			{
 				print_root(i, sp + "    ");
+			};
+		}
+		else
+		{
+			if (r == r->parent->child.back())
+				for (auto i : r->child)
+				{
+					print_root(i, sp + "    ");
+				}
+			else
+				for (auto i : r->child)
+				{
+					print_root(i, sp + "|   ");
+				};
+		};
+
+		return 0;
+	};
+
+	double eval(expr_node *r)
+	{
+		if (r->is_evaled)
+		{
+			return r->val;
+		}
+		else if (r->op == NUM)
+		{
+			r->is_evaled = true;
+			// r->val = stoi(r->txt);
+			return r->val;
+		}
+		else
+		{
+			double tmp;
+			switch (r->op)
+			{
+			case ADD:
+				tmp = (eval(r->op1) + eval(r->op2));
+				r->is_evaled = true;
+				break;
+			case SUB:
+				tmp = (eval(r->op1) - eval(r->op2));
+				r->is_evaled = true;
+				break;
+			case MUL:
+				tmp = (eval(r->op1) * eval(r->op2));
+				r->is_evaled = true;
+				break;
+			case DIV:
+				if (eval(r->op2) == 0)
+				{
+					cout << " ![DIVIDED BY ZERO]" << endl;
+				};
+				tmp = (eval(r->op1) / eval(r->op2));
+				r->is_evaled = true;
+				break;
+			default:
+				break;
+			};
+			r->val = tmp;
+			return r->val;
+		};
+	};
+
+	int print_midfix(expr_node *r)
+	{
+		if (r == NULL)
+		{
+			return 0;
+		}
+		else
+		{
+			if (r->op == NUM)
+			{
+				print_midfix(r->op1);
+				cout << r->txt << " ";
+				print_midfix(r->op2);
 			}
-		else
-			for (auto i : r->child)
+			else
 			{
-				print_root(i, sp + "|   ");
+				cout << "( ";
+				print_midfix(r->op1);
+				cout << r->txt << " ";
+				print_midfix(r->op2);
+				cout << ") ";
 			};
-	};
-
-	return 0;
-};
-
-double eval(expr_node *r)
-{
-	if (r->is_evaled)
-	{
-		return r->val;
-	}
-	else if (r->op == NUM)
-	{
-		r->is_evaled = true;
-		// r->val = stoi(r->txt);
-		return r->val;
-	}
-	else
-	{
-		double tmp;
-		switch (r->op)
-		{
-		case ADD:
-			tmp = (eval(r->op1) + eval(r->op2));
-			r->is_evaled = true;
-			break;
-		case SUB:
-			tmp = (eval(r->op1) - eval(r->op2));
-			r->is_evaled = true;
-			break;
-		case MUL:
-			tmp = (eval(r->op1) * eval(r->op2));
-			r->is_evaled = true;
-			break;
-		case DIV:
-			if (eval(r->op2) == 0)
-			{
-				cout << " ![DIVIDED BY ZERO]" << endl;
-			};
-			tmp = (eval(r->op1) / eval(r->op2));
-			r->is_evaled = true;
-			break;
-		default:
-			break;
 		};
-		r->val = tmp;
-		return r->val;
-	};
-};
-
-int print_midfix(expr_node *r)
-{
-	if (r == NULL)
-	{
 		return 0;
-	}
-	else
+	};
+
+	int print_prefix(expr_node *r)
 	{
-		if (r->op == NUM)
+		if (r == NULL)
 		{
-			print_midfix(r->op1);
-			cout << r->txt << " ";
-			print_midfix(r->op2);
+			return 0;
 		}
 		else
 		{
-			cout << "( ";
-			print_midfix(r->op1);
-			cout << r->txt << " ";
-			print_midfix(r->op2);
-			cout << ") ";
+			if (r->op == NUM)
+			{
+				cout << r->txt << " ";
+				print_prefix(r->op1);
+				print_prefix(r->op2);
+			}
+			else
+			{
+				cout << "( ";
+				cout << r->txt << " ";
+				print_prefix(r->op1);
+				print_prefix(r->op2);
+				cout << ") ";
+			};
 		};
-	};
-	return 0;
-};
-
-int print_prefix(expr_node *r)
-{
-	if (r == NULL)
-	{
 		return 0;
-	}
-	else
+	};
+
+	int print_sufix(expr_node *r)
 	{
-		if (r->op == NUM)
+		if (r == NULL)
 		{
-			cout << r->txt << " ";
-			print_prefix(r->op1);
-			print_prefix(r->op2);
+			return 0;
 		}
 		else
 		{
-			cout << "( ";
+			print_sufix(r->op1);
+			print_sufix(r->op2);
 			cout << r->txt << " ";
-			print_prefix(r->op1);
-			print_prefix(r->op2);
-			cout << ") ";
 		};
-	};
-	return 0;
-};
-
-int print_sufix(expr_node *r)
-{
-	if (r == NULL)
-	{
 		return 0;
-	}
-	else
-	{
-		print_sufix(r->op1);
-		print_sufix(r->op2);
-		cout << r->txt << " ";
 	};
-	return 0;
-};
 
-int init(string s)
-{
-	is_error = false;
-	ret.clear();
-	if (!is_valid_str(s))
+public:
+	E(string s)
 	{
-		cout << " [ERROR1] Invalid expression, please recheck." << endl;
-		return 1;
+		is_error = false;
+		ret.clear();
+		if (!is_valid_str(s))
+		{
+			cout << " [ERROR1] Invalid expression, please recheck." << endl;
+			return;
+		};
+		cout << " [INPUT] " << s << endl;
+		split_input(s);
+		if (is_error)
+		{
+			cout << " [ERROR2] Invalid expression, please recheck." << endl;
+			return;
+		};
+		root = prase1(0, ret.size());
+		if (is_error)
+		{
+			cout << " [ERROR3] Invalid expression, please recheck." << endl;
+			return;
+		};
+		cout << " [PRASING] " << endl;
+		print_root(root, "");
+		expr_root = prase2(root);
+		cout << endl;
+		if (is_error)
+		{
+			cout << " [ERROR4] Invalid expression, please recheck." << endl;
+			return;
+		};
+		cout << " [EXPR TREE] " << endl;
+		print_r_expr(expr_root, "");
+		cout << " [ANS] " << eval(expr_root) << endl;
+		cout << " [Mid-fix Expr] ";
+		print_midfix(expr_root);
+		cout << endl;
+		cout << " [Pre-fix Expr] ";
+		print_prefix(expr_root);
+		cout << endl;
+		cout << " [Post-fix Expr] ";
+		print_sufix(expr_root);
+		cout << endl;
+		return;
 	};
-	cout << " [INPUT] " << s << endl;
-	split_input(s);
-	if (is_error)
-	{
-		cout << " [ERROR2] Invalid expression, please recheck." << endl;
-		return 1;
-	};
-	root = prase1(0, ret.size());
-	if (is_error)
-	{
-		cout << " [ERROR3] Invalid expression, please recheck." << endl;
-		return 1;
-	};
-	cout << " [PRASING] " << endl;
-	print_root(root, "");
-	expr_root = prase2(root);
-	cout << endl;
-	if (is_error)
-	{
-		cout << " [ERROR4] Invalid expression, please recheck." << endl;
-		return 1;
-	};
-	cout << " [EXPR TREE] " << endl;
-	print_r_expr(expr_root, "");
-	cout << " [ANS] " << eval(expr_root) << endl;
-	cout << " [Mid-fix Expr] ";
-	print_midfix(expr_root);
-	cout << endl;
-	cout << " [Pre-fix Expr] ";
-	print_prefix(expr_root);
-	cout << endl;
-	cout << " [Post-fix Expr] ";
-	print_sufix(expr_root);
-	cout << endl;
-	return 0;
 };
 
 static CMDF_RETURN calc_cmd(cmdf_arglist *arglist)
@@ -581,7 +583,7 @@ static CMDF_RETURN calc_cmd(cmdf_arglist *arglist)
 		return CMDF_OK;
 	};
 	string e = arglist->args[0];
-	init(e);
+	E tmpexp(e);
 	return CMDF_OK;
 };
 
