@@ -1017,7 +1017,7 @@ struct expr_node
 	node_type op;
 	double val;
 	string txt;
-	expr_node *parent=NULL, *op1=NULL, *op2=NULL;
+	expr_node *parent = NULL, *op1 = NULL, *op2 = NULL;
 	bool is_evaled = false;
 };
 
@@ -1422,6 +1422,73 @@ double eval(expr_node *r)
 	};
 };
 
+int print_midfix(expr_node *r)
+{
+	if (r == NULL)
+	{
+		return 0;
+	}
+	else
+	{
+		if (r->op == NUM)
+		{
+			print_midfix(r->op1);
+			cout << r->txt << " ";
+			print_midfix(r->op2);
+		}
+		else
+		{
+			cout << "( ";
+			print_midfix(r->op1);
+			cout << r->txt << " ";
+			print_midfix(r->op2);
+			cout << ") ";
+		};
+	};
+	return 0;
+};
+
+int print_prefix(expr_node *r)
+{
+	if (r == NULL)
+	{
+		return 0;
+	}
+	else
+	{
+		if (r->op == NUM)
+		{
+			cout << r->txt << " ";
+			print_prefix(r->op1);
+			print_prefix(r->op2);
+		}
+		else
+		{
+			cout << "( ";
+			cout << r->txt << " ";
+			print_prefix(r->op1);
+			print_prefix(r->op2);
+			cout << ") ";
+		};
+	};
+	return 0;
+};
+
+int print_sufix(expr_node *r)
+{
+	if (r == NULL)
+	{
+		return 0;
+	}
+	else
+	{
+		print_sufix(r->op1);
+		print_sufix(r->op2);
+		cout << r->txt << " ";
+	};
+	return 0;
+};
+
 int init(string s)
 {
 	is_error = false;
@@ -1444,9 +1511,8 @@ int init(string s)
 		cout << " [ERROR3] Invalid expression, please recheck." << endl;
 		return 1;
 	};
-	cout << " [PRASING] "<< endl;
+	cout << " [PRASING] " << endl;
 	print_root(root, "");
-	cout << " [SUFFIX EXPR] "<< endl;
 	expr_root = prase2(root);
 	cout << endl;
 	if (is_error)
@@ -1454,9 +1520,18 @@ int init(string s)
 		cout << " [ERROR4] Invalid expression, please recheck." << endl;
 		return 1;
 	};
-	cout << " [EXPR TREE] "<< endl;
+	cout << " [EXPR TREE] " << endl;
 	print_r_expr(expr_root, "");
-	cout << eval(expr_root) << endl;
+	cout << " [ANS] " << eval(expr_root) << endl;
+	cout << " [Mid-fix Expr] ";
+	print_midfix(expr_root);
+	cout << endl;
+	cout << " [Pre-fix Expr] ";
+	print_prefix(expr_root);
+	cout << endl;
+	cout << " [Post-fix Expr] ";
+	print_sufix(expr_root);
+	cout << endl;
 	return 0;
 };
 
@@ -1476,8 +1551,6 @@ static CMDF_RETURN calc_cmd(cmdf_arglist *arglist)
 	init(e);
 	return CMDF_OK;
 };
-
-p_node *parse1(int start, int end){};
 
 int main()
 {
