@@ -15,7 +15,7 @@ using namespace std;
 #define PROG_INTRO "   ___                     ___                    \n /'___\\                   /\\_ \\    __             \n/\\ \\__/   __      ___ ___ \\//\\ \\  /\\_\\  __  __    \n\\ \\ ,__\\/'__`\\  /' __` __`\\ \\ \\ \\ \\/\\ \\/\\ \\/\\ \\   \n \\ \\ \\_/\\ \\L\\.\\_/\\ \\/\\ \\/\\ \\ \\_\\ \\_\\ \\ \\ \\ \\_\\ \\  \n  \\ \\_\\\\ \\__/.\\_\\ \\_\\ \\_\\ \\_\\/\\____\\\\ \\_\\/`____ \\ \n   \\/_/ \\/__/\\/_/\\/_/\\/_/\\/_/\\/____/ \\/_/`/___/> \\\n                                            /\\___/\n                                            \\/__/ \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n==================================================\n! This is a program to manage a family tree.\n! FIRST, use 'init [Name]', to initialize a tree with root name [Name]\n! Then use 'add [Parent] [Child]', to add a child to a parent.\n! Use 'show', to show the family tree.\n! Use 'del', to delete a member and its children.\n! Use 'rename [Old] [New]', to rename a member.\n"
 
 #define INIT_HELP "Use 'init [Name]', to initialize a tree with root name [Name]"
-#define ADD_HELP "Use 'add [Parent] [Child]', to add a child to a parent."
+#define ADD_HELP "Use 'add [Child] [Parent]', to add a child to a parent."
 #define SHOW_HELP "Use 'show', to show the family tree."
 #define DEL_HELP "Use 'del', to delete a member and its children."
 #define RENAME_HELP "Use 'rename [Old] [New]', to rename a member."
