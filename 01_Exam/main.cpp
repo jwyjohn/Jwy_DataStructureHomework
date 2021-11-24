@@ -34,7 +34,101 @@ bool isNumber(const string &str)
 			return false;
 	}
 	return true;
-}
+};
+
+class Exam
+{
+private:
+public:
+	exam_candidate *head;
+	int init_link()
+	{
+		clear_link(head);
+		head = new exam_candidate;
+		head->No = -1;
+	};
+	Exam() { head = new exam_candidate; };
+	int clear_link(exam_candidate *head)
+	{
+		if (head->next == nullptr)
+		{
+			delete head;
+		}
+		else
+		{
+			clear_link(head->next);
+		};
+		return 0;
+	};
+	int show_single_candidate(exam_candidate *candidate)
+	{
+		if (candidate == NULL)
+			return 1;
+		cout << endl;
+		cout
+			<< "  [" << candidate->No << "] "
+			<< "  Name: " << candidate->name
+			<< "  Gender: " << candidate->Gender
+			<< "  Age: " << candidate->Age
+			<< "  Subject: " << candidate->subject << endl;
+		return 0;
+	};
+	exam_candidate *find_candidate(int no)
+	{
+		exam_candidate *ptr = head;
+		if (no == 0)
+			return ptr;
+		while (ptr->next != NULL)
+		{
+			ptr = ptr->next;
+			if (ptr->No == no)
+				return ptr;
+		};
+		return NULL;
+	};
+
+	int insert_candidate_after(int no, exam_candidate *candidate)
+	{
+		exam_candidate *insert_position = find_candidate(no);
+		if (insert_position == NULL)
+			return 0;
+		if (insert_position->next != NULL)
+		{
+			exam_candidate *tmp = insert_position->next;
+			insert_position->next = candidate;
+			candidate->pre = insert_position;
+			candidate->next = tmp;
+			tmp->pre = candidate;
+		}
+		else
+		{
+			insert_position->next = candidate;
+			candidate->pre = insert_position;
+		};
+		return 1;
+	};
+
+	int remove_candidate(int no)
+	{
+		exam_candidate *remove_position = find_candidate(no);
+		if (remove_position == NULL)
+			return 1;
+		if (remove_position->next != NULL)
+		{
+			remove_position->pre->next = remove_position->next;
+			remove_position->next->pre = remove_position->pre;
+			delete remove_position;
+		}
+		else
+		{
+			remove_position->pre->next = NULL;
+			delete remove_position;
+		};
+		return 0;
+	};
+};
+
+Exam E;
 
 static CMDF_RETURN insert_student(cmdf_arglist *arglist)
 {
@@ -101,11 +195,11 @@ static CMDF_RETURN insert_student(cmdf_arglist *arglist)
 	tmp->subject = arglist->args[5];
 	if (head->next == NULL)
 	{
-		insert_candidate_after(0, tmp);
+		E.insert_candidate_after(0, tmp);
 	}
 	else
 	{
-		insert_candidate_after(stoi(arglist->args[0]), tmp);
+		E.insert_candidate_after(stoi(arglist->args[0]), tmp);
 	};
 
 	return CMDF_OK;
@@ -133,7 +227,7 @@ static CMDF_RETURN find_student(cmdf_arglist *arglist)
 		cout << " [Sytax Error] No. must > 0." << endl;
 		return CMDF_OK;
 	};
-	exam_candidate *res = find_candidate(stoi(arglist->args[0]));
+	exam_candidate *res = E.find_candidate(stoi(arglist->args[0]));
 	if (res == NULL)
 	{
 		cout << " [Error] Candidate not found." << endl;
@@ -154,12 +248,12 @@ static CMDF_RETURN find_student(cmdf_arglist *arglist)
 
 static CMDF_RETURN list_student(cmdf_arglist *arglist)
 {
-	if (head->next == NULL)
+	if (E.head->next == NULL)
 	{
 		cout << " [Error] Table empty." << endl;
 		return CMDF_OK;
 	};
-	exam_candidate *ptr = head->next;
+	exam_candidate *ptr = E.head->next;
 	cout << " No." << '\t' << "Name" << '\t' << "Gender" << '\t' << "Age" << '\t' << "Subject" << '\t' << endl;
 	while (ptr != NULL)
 	{
@@ -195,7 +289,7 @@ static CMDF_RETURN remove_student(cmdf_arglist *arglist)
 		cout << " [Sytax Error] No. must > 0." << endl;
 		return CMDF_OK;
 	};
-	exam_candidate *res = find_candidate(stoi(arglist->args[0]));
+	exam_candidate *res = E.find_candidate(stoi(arglist->args[0]));
 	if (res = NULL)
 	{
 		cout << " [Error] Candidate not found." << endl;
@@ -203,7 +297,7 @@ static CMDF_RETURN remove_student(cmdf_arglist *arglist)
 	}
 	else
 	{
-		remove_candidate(stoi(arglist->args[0]));
+		E.remove_candidate(stoi(arglist->args[0]));
 	};
 	return CMDF_OK;
 };
@@ -265,7 +359,7 @@ static CMDF_RETURN modify_student(cmdf_arglist *arglist)
 		cout << " [Error] Gneder must be M (Male) or F (Female)." << endl;
 		return CMDF_OK;
 	};
-	exam_candidate *tmp = find_candidate(stoi(arglist->args[0]));
+	exam_candidate *tmp = E.find_candidate(stoi(arglist->args[0]));
 	tmp->No = stoi(arglist->args[1]);
 	tmp->name = arglist->args[2];
 	tmp->Gender = arglist->args[3];
@@ -277,14 +371,14 @@ static CMDF_RETURN modify_student(cmdf_arglist *arglist)
 
 static CMDF_RETURN stat_student(cmdf_arglist *arglist)
 {
-	if (head->next == NULL)
+	if (E.head->next == NULL)
 	{
 		cout << " [Error] Table empty." << endl;
 		return CMDF_OK;
 	};
 	map<int, int> age_count;
 	map<string, int> gender_count, subject_count;
-	exam_candidate *ptr = head->next;
+	exam_candidate *ptr = E.head->next;
 	while (ptr != NULL)
 	{
 		if (age_count.find(ptr->Age) != age_count.end())
@@ -333,13 +427,13 @@ static CMDF_RETURN stat_student(cmdf_arglist *arglist)
 
 static CMDF_RETURN save_student(cmdf_arglist *arglist)
 {
-	if (head->next == NULL)
+	if (E.head->next == NULL)
 	{
 		cout << " [Error] Table empty." << endl;
 		return CMDF_OK;
 	};
 	ofstream out("student_data.txt");
-	exam_candidate *ptr = head->next;
+	exam_candidate *ptr = E.head->next;
 	out << "i " << 1 << ' ';
 	if (out.is_open())
 	{
