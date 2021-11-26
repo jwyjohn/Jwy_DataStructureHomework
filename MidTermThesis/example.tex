@@ -17,7 +17,7 @@
   title*       = {Range Operations and their data structure},
   authors      = {
     author1 = {
-      name         = {猫猫},
+      name         = {喵喵喵},
       name*        = {JIANG Wen-yuan},
       affiliations = {aff1},
       biography    = {男，同济大学本科在读。},
@@ -62,7 +62,7 @@
 % hyperref 总是在导言区的最后加载
 \usepackage{hyperref}
 
-\lstset{basicstyle=\footnotesize\ttfamily,numberstyle=\tiny,numbers=none,frame=shadowbox}
+\lstset{basicstyle=\footnotesize\ttfamily,numberstyle=\tiny,numbers=none,frame=shadowbox,language=C++}
 
 \begin{document}
 
@@ -106,6 +106,7 @@
 其中，$F(x)$是对区间每一个元素的操作。例如，将$[i,j]$区间中的每一个数都加上$a$、将$[i,j]$区间中的每一个数都进行平方、将$[i,j]$区间中的每一个数都设为$b$等，都是典型的区间操作。
 
 \subsection{区间操作的性质}
+区间信息在很多时候可以认为是满足含幺半群的性质的信息。
 
 常用的一些区间操作通常具有比较好的性质，可以用于简化问题的求解。其中，很多区间操作的性质可以和区间求和进行类比，我们记：
 \begin{equation*}
@@ -185,7 +186,11 @@ for (int i = 1; i < n; i++)
 初始化时，首先有$f(i,0)=a_i$，其中$a_i$即是原数组中的$s[i]$。接下来利用动态规划的方式计算$f(i,j)$，由定义可知$f[i,j]=\max(f[i,j],f[i+2^{j-1},j])$。
 
 查询时，对于每个询问的区间$[l,r]$，将其分为两个部分$[l,l+2^s-1]$与$[r-2^s+1,r]$，其中$s=\left \lfloor log_2 (r-l+1) \right \rfloor $通过查表可得$f[l,l+2^s-1]$与$f[r-2^s+1,r]$，则$max(f[l,l+2^s-1],f[r-2^s+1,r])$即为区间最大值。
-
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\linewidth]{images/st.eps}
+  \caption{ST表的示意图}
+\end{figure}
 \subsubsection{复杂度分析} 
 \paragraph{时间复杂度} 对于预处理时$f[i,j]$的计算，计算的列数为$n$，而行数为$log_2\,n$，故其所耗时间为$O(n\, log \, n)$，而查询所用的时间为常数$O(1)$。
 \paragraph{空间复杂度} 与$f[i,j]$所占空间一致，为$O(n\, log \, n)$。
@@ -263,9 +268,9 @@ void update(int i, int x)
 但是对于区间修改的操作，树状数组的复杂度仍然不够理想。我们想要更进一步，实现对区间修改更加友好的数据结构。
 
 \subsection{块状数组}
-\subsubsection{实现方式}
 对于区间操作一种很直接的想法就是，把整体划分为若干个小块，对整块整体处理，零散块单独处理。块状数组就是利用分块思想处理区间操作的一种数据结构。这里我们考虑区间修改操作和区间求和操作。
 
+\subsubsection{实现方式}
 块状数组把一个长度为$n$的数组划分为$a$块，每块长度为$\frac{n}{a}$。对于一次区间操作，对区间內部的整块进行整体的操作，对区间边缘的零散块单独暴力处理。这里，块数既不能太少也不能太多。如果太少，区间中整块的数量会很少，我们要花费大量时间处理零散块；如果太多，又会让块的长度太短，失去整体处理的意义。
 
 一般来说，我们取块数为$\sqrt{n}$，这在复杂度分析部分将进行详细的说明。
@@ -353,97 +358,235 @@ for (int i = bel[x] + 1; i < bel[y]; ++i)
 
 \subsection{线段树}
 
+如果从树的角度来观察分块数组，不难发现，其实分块数组是一种具有三层的多叉树。人们进一步考虑到，由于一些区间操作具有结合律，故而可以将区间二分，对左右两部分分别递归地求解，最后得到所需的答案。将一个长度不为1的区间分为两个子区间，作为树的节点保存起来，这样的数据结构被称为线段树。后续人们又向线段树中加入了延迟求值的机制（即通常所说的懒标记），使得其对区间操作的复杂度又得到了优化。
+
+\subsubsection{实现方式}
+这里以求区间的和为例进行说明。
+
+设线段树的根节点编号为$1$，用数组$d$来保存我们的线段树，$d[i]$用来保存线段树上编号为$i$的节点的值（这里每个节点所维护的值就是这个节点所表示的区间总和）。由于这里采用堆的存储方式，故不难得到，$d[i]$的左孩子是$d[i*2]$，$d[i]$的右孩子是$d[i*2+1]$。若$d[i]$维护的区间是$[s,t]$，则其左孩子维护的区间是$[s,\frac{s+t}{2}]$，其右孩子维护的区间是$[\frac{s+t}{2}+1,t]$。建立线段树的过程可以利用递归进行：
+\begin{lstlisting}
+void build(int s, int t, int p) {
+  // 对 [s,t] 区间建立线段树,当前根的编号为 p
+  if (s == t) {
+    d[p] = a[s];
+    return;
+  }
+  int m = s + ((t - s) >> 1);
+  // 移位运算符的优先级小于加减法，所以加上括号
+  // 如果写成 (s + t) >> 1 可能会超出 int 范围
+  build(s, m, p * 2), build(m + 1, t, p * 2 + 1);
+  // 递归对左右区间建树
+  d[p] = d[p * 2] + d[(p * 2) + 1];
+}
+\end{lstlisting}
+
+查询时，亦可利用线段树的递归特性，拆分区间进行查询：
+\begin{lstlisting}
+int getsum(int l, int r, int s, int t, int p) {
+// [l, r] 为查询区间, 
+// [s, t] 为当前节点包含的区间, 
+// p 为当前节点的编号
+  if (l <= s && t <= r)
+    return d[p];  
+// 当前区间为询问区间的子集时直接返回当前区间的和
+  int m = s + ((t - s) >> 1), sum = 0;
+  if (l <= m) sum += getsum(l, r, s, m, p * 2);
+  // [l, m] 与询问区间有交集,
+  // 则递归查询左儿子
+  if (r > m) sum += 
+   getsum(l, r, m + 1, t, p * 2 + 1);
+  // [m + 1, r] 与询问区间有交集,
+  // 则递归查询右儿子
+  return sum;
+}
+\end{lstlisting}
+
+在修改区间时，为了避免对区间的每一个元素进行修改，我们引入“懒标记”的机制，延后对于节点的修改。每次执行修改时，我们通过打标记的方法表明该节点对应的区间在某一次操作中被更改，但不更新该节点的子节点的信息。实质性的修改则在下一次访问带有标记的节点时才进行。例如，对区间上的每个元素都加上某个值：
+\begin{lstlisting}
+void update(int l, int r, 
+            int c, 
+            int s, int t, 
+            int p) {
+// [l, r] 为修改区间, 
+// c 为被修改的元素的变化量, 
+// [s, t] 为当前节点包含的区间, 
+ // p 为当前节点的编号
+  if (l <= s && t <= r) {
+    d[p] += (t - s + 1) * c, b[p] += c;
+    return;
+  }  
+// 当前区间为修改区间的子集时
+// 直接修改当前节点的值,
+// 然后打标记,结束修改
+  int m = s + ((t - s) >> 1);
+  if (b[p] && s != t) {
+// 如果当前节点的懒标记非空,
+// 则更新当前节点两个子节点的值和懒标记值
+    d[p * 2] += b[p] * (m - s + 1);
+    d[p * 2 + 1] += b[p] * (t - m);
+    b[p * 2] += b[p];
+    b[p * 2 + 1] += b[p];  
+    // 将标记下传给子节点
+    b[p] = 0;                                
+    // 清空当前节点的标记
+  }
+  if (l <= m) 
+   update(l, r, c, s, m, p * 2);
+  if (r > m) 
+   update(l, r, c, m + 1, t, p * 2 + 1);
+  d[p] = d[p * 2] + d[p * 2 + 1];
+}
+\end{lstlisting}
+
+对于引入了懒标记的线段树，查询函数也应当进行相应的修改：
+\begin{lstlisting}
+int getsum(int l, int r, int s, int t, int p) {
+  // [l, r] 为查询区间, 
+  // [s, t] 为当前节点包含的区间, 
+  // p 为当前节点的编号
+  if (l <= s && t <= r) return d[p];
+  // 当前区间为询问区间的子集时
+  // 直接返回当前区间的和
+  int m = s + ((t - s) >> 1);
+  if (b[p]) {
+    // 如果当前节点的懒标记非空,
+    // 则更新当前节点两个子节点的值和懒标记值
+    d[p * 2] += b[p] * (m - s + 1);
+    d[p * 2 + 1] += b[p] * (t - m);
+    b[p * 2] += b[p];
+    b[p * 2 + 1] += b[p];  
+    // 将标记下传给子节点
+    b[p] = 0;                                    
+    // 清空当前节点的标记
+  }
+  int sum = 0;
+  if (l <= m) 
+    sum = getsum(l, r, s, m, p * 2);
+  if (r > m)
+    sum += getsum(l, r, m + 1, t, p * 2 + 1);
+  return sum;
+}
+\end{lstlisting}
+
+\subsubsection{复杂度分析}
+\paragraph{时间复杂度} 不难发现，线段树的深度是$\left \lceil log_2\,n \right \rceil $的，故其各个操作的时间复杂度为$O(log\,n)$。% ，但在极端情况下，可能退化至$O(n)$。
+\paragraph{空间复杂度} 使用堆式存储时，一般为保险起见，$d$的大小设为$4n$，故占用内存仍然为$O(n)$，只是常数略大。
+\subsubsection{适用范围与局限性}
+线段树是较为通用的，且较快的支持区间操作的数据结构，除了其实现较为繁杂（尤其当涉及懒标记和多个操作时），基本上满足了常规使用的需求。
+
+对于线段树的修改与查询都是在线的，且复杂度都能够接受，故线段树在生产实践中得到了广泛的使用。
+
 \subsection{Chtholly树}
 
-\section{总结}
+虽然线段树在理论上解决了绝大部分的区间操作问题，但对于复杂的功能（例如求区间第k大值，求区间元素n次方和），线段树的实现方式过于复杂，代码量较大，对于代码的维护比较不友好。出于实践上的需求，加上大部分情况下，区间操作时较为随机的，人们又构建了一种实现简单，且随机情况下性能极佳的，基于红黑树的数据结构：Chtholly树。
 
+\subsubsection{实现方式}
+Chtholly树的思想在于随机数据下的区间赋值操作很可能让大量元素变为同一个数。所以我们以三元组\lstinline{<l,r,v>}的形式保存数据（意为区间$[l,r]$中的元素的值都是$v$）：
+\begin{lstlisting}
+# define ll long long
+......
+struct node
+{
+    ll l, r;
+    mutable ll v; //这里mutable保证v可被操作
+    node(ll l, ll r, ll v) : l(l), r(r), v(v) {} 
+    bool operator<(const node &o) const 
+    { return l < o.l; };
+    //重载小于运算符，供std::set使用
+};
+\end{lstlisting}
+这样的节点存储到\lstinline{std::set}里，就完成了Chtholly树的建立，代码量十分简短。
+\begin{lstlisting}
+set<node> tree;
+\end{lstlisting}
+进行区间操作时并不总是那么幸运，原本连续的区间可能会被断开。我们需要一个函数来实现“断开”的操作，把\lstinline{<l,r,v>}断成\lstinline{<l,pos-1,v>}和\lstinline{<pos,r,v>}：
+\begin{lstlisting}
+set<node>::iterator split(ll pos)
+{
+    auto it = tree.lower_bound(node(pos, 0, 0)); 
+    // 寻找左端点大于等于pos的第一个节点
+    if (it != tree.end() && it->l == pos) 
+    // 如果已经存在以pos为左端点的节点，直接返回
+        return it;
+    it--; // 否则往前数一个节点
+    ll l = it->l, r = it->r, v = it->v;
+    tree.erase(it); // 删除该节点
+    tree.insert(node(l, pos - 1, v)); 
+    // 插入<l,pos-1,v>和<pos,r,v>
+    return tree.insert(node(pos, r, v)).first; 
+    // 返回以pos开头的那个节点的迭代器
+    // insert默认返回值是一个pair，
+    // 第一个成员是我们要的
+};
+\end{lstlisting}
+之后，对于一些复杂的操作，我们从\lstinline{std::set}里用\lstinline{split}取出相应的元素，然后使用朴素且暴力的方法操作即可。例如，区间赋值操作：
+\begin{lstlisting}
+void assign(ll l, ll r, ll v)
+{
+    auto end = split(r + 1);
+    auto begin = split(l); 
+    // 顺序不能颠倒
+    tree.erase(begin, end); 
+    // 清除一系列节点
+    tree.insert(node(l, r, v)); 
+    // 插入新的节点
+};
+\end{lstlisting}
+又如，区间元素同时加上一个数，直接取出后依次相加即可：
+\begin{lstlisting}
+void add(ll l, ll r, ll v)
+{
+    auto end = split(r + 1);
+    for (auto it = split(l); it != end; it++)
+        it->v += v;
+};
+\end{lstlisting}
+求第k大值时，直接取出后用\lstinline{std::sort}排序即可：
+\begin{lstlisting}
+ll kth(ll l, ll r, ll k)
+{
+    auto end = split(r + 1);
+    vector<pair<ll, ll>> v; 
+    // 这个pair里存节点的值和区间长度
+    for (auto it = split(l); it != end; it++)
+        v.push_back(
+        make_pair(it->v, it->r - it->l + 1));
+    sort(v.begin(), v.end()); 
+    // 直接按节点的值的大小排下序
+    for (int i = 0; i < v.size(); i++) 
+    // 然后挨个丢出来，直到丢出k个元素为止
+    {
+        k -= v[i].second;
+        if (k <= 0)
+            return v[i].first;
+    };
+};
+\end{lstlisting}
+查询n次方和亦然：
+\begin{lstlisting}
+ll sum_of_pow(ll l, ll r, ll x, ll y)
+{
+    ll tot = 0;
+    auto end = split(r + 1);
+    for (auto it = split(l); it != end; it++)
+        tot = (tot + qpow(it->v, x, y) 
+        * (it->r - it->l + 1)) % y; 
+        // qpow为快速幂
+    return tot;
+};
+\end{lstlisting}
 
+\subsubsection{复杂度分析}
+\paragraph{时间复杂度} 在随机数据的情况下Chtholly树的复杂度为$O(n\,log\,log\,n)$。具体的证明较为复杂，笔者在这里就不再赘述了。
+\paragraph{空间复杂度} 由于该数据结构依托于\lstinline{std::set}，因而其所占的内存为$O(n)$。
+\subsubsection{适用范围与局限性}
+Chtholly树的实现中，绝大部分进行实际计算的操作都是朴素的暴力求解，故而对于各类复杂的区间操作，Chtholly树都能胜任。但是，如果输入的数据具有严重的偏向性，不能保证随机性，则Chtholly树的复杂度将会逐渐接近朴素的数组实现。
 
-\section{一级标题}
+\section{各数据结构实际测评}
 
-对投稿的基本要求：
+\section{如何选择}
 
-（1）研究性论文主体应包括引言（重点论述研究的科学问题、意义、解决思路、价值、
-贡献等）、相关工作（为与引言部分独立的一个章节）、主要成果论述、关键实现技术、
-验证（对比实验或理论证明）、结论（结束语）等内容；系统实现或实验应有关键点的详细论述，以便读者能够重复实现论文所述成果。实验应有具体的实验环境设置、全面细致的数据对比分析。
-
-（2）综述应包括引言、问题与挑战、研究现状分析、未来研究方向、结论等内容。以分析、对比为主，避免堆砌文献或一般性介绍、叙述。
-
-（3）定理证明、公式推导、大篇幅的数学论述、原始数据，放到论文最后的附录中。
-
-稿件提交时的基本要求：
-
-（1）本模板中要求的各项内容正确齐全，无遗漏；
-
-（2）语句通顺，无中文、英文语法错误，易于阅读理解，符号使用正确，图、表清晰无误；
-
-（3）在学术、技术上，论文内容正确无误，各项内容确定。
-
-\subsection{二级标题}
-
-\subsubsection{三级标题}
-
-正文部分, 字体为5号宋体。
-
-文件排版采用 TeX Live。
-
-正文文字要求语句通顺，无语法错误，结构合理，条理清楚，不影响审稿人、读者阅读理解全文内容。以下几类问题请作者们特别注意：
-
-1)文章题目应明确反映文章的思想和方法；文字流畅，表述清楚；
-
-2)中文文字、英文表达无语法错误；
-
-3)公式中无符号、表达式的疏漏，没有同一个符号表示两种意思的情况；
-
-4)数学中使用的符号、函数名用斜体；
-
-5)使用的量符合法定计量单位标准；
-
-6)矢量为黑体，标量为白体；
-
-7)变量或表示变化的量用斜体；
-
-8)图表规范，量、线、序无误，位置正确（图表必须在正文中有所表述后出现，即…如图1所示）(注意纵、横坐标应有坐标名称和刻度值)。
-
-9)列出的参考文献必须在文中按顺序引用，即参考文献顺序与引用顺序一致，各项信息齐全(格式见参考文献部分)；
-
-10）首次出现的缩写需写明全称，首次出现的符号需作出解释。
-
-11）图的图例说明、坐标说明全部用中文或量符号。
-
-12）图应为矢量图。
-
-13）表中表头文字采用中文。
-
-14）公式尺寸：
-
-标准：10.5磅
-
-下标/上标：5.8磅
-
-次下标/上标：4.5磅
-
-符号：16磅
-
-次符号：10.5磅
-
-15）组合单位采用标准格式，如：“pJ/bit/m4”应为“\si{pJ/(bit.m^4)}”
-
-
-\begin{theorem}
-  定理内容。
-  “定义”、“假设”、“公理”、“引理”等的排版格式与此相同，详细定理证明、公式可放在附录中。
-\end{theorem}
-
-\begin{proof}
-  证明过程.
-\end{proof}
-
-\begin{figure}[htb]
-  \centering
-  \includegraphics[width=\linewidth]{example-fig.pdf}
-  \caption{图片说明 *字体为小 5 号，图片应为黑白图，图中的子图要有子图说明*}
-\end{figure}
+\section{结论}
 
 \begin{table}[htb]
   \centering
@@ -459,43 +602,6 @@ for (int i = bel[x] + 1; i < bel[y]; ++i)
     \bottomrule
   \end{tabular}
 \end{table}
-
-\begin{procedure}
-  \caption{过程名称}
-  \small
-  \begin{algorithmic}
-    \REQUIRE
-    \ENSURE
-    \STATE \COMMENT{《计算机学报》的方法过程描述字体为小5号宋体，IF 、THEN等伪代码关键词全部用大写字母，变量和函数名称用斜体}
-  \end{algorithmic}
-\end{procedure}
-
-\begin{algorithm}
-  \caption{算法名称}
-  \small
-  \begin{algorithmic}
-    \REQUIRE $n \geq 0 \vee x \neq 0$
-    \ENSURE $y = x^n$
-    \STATE $y \leftarrow 1$
-    \IF{$n < 0$}
-    \STATE $X \leftarrow 1 / x$
-    \STATE $N \leftarrow -n$
-    \ELSE
-    \STATE $X \leftarrow x$
-    \STATE $N \leftarrow n$
-    \ENDIF
-    \WHILE{$N \neq 0$}
-    \IF{$N$ is even}
-    \STATE $X \leftarrow X \times X$
-    \STATE $N \leftarrow N / 2$
-    \ELSE[$N$ is odd]
-    \STATE $y \leftarrow y \times X$
-    \STATE $N \leftarrow N - 1$
-    \ENDIF
-    \ENDWHILE
-  \end{algorithmic}
-\end{algorithm}
-
 
 
 \begin{acknowledgments}
