@@ -1,0 +1,240 @@
+%!TEX program = xelatex
+%!BIB program = bibtex
+\documentclass[cn,black,12pt,normal]{elegantnote}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{siunitx}[=v2]
+\usepackage{fancyhdr}
+\usepackage{newtxtext}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\newcommand{\uct}[1]{\textsuperscript{\textsuperscript{\cite{#1}}}}
+\renewcommand{\tablename}{\textbf{Table}}
+\renewcommand{\figurename}{Figure.}
+\renewcommand{\refname}{References}
+\renewcommand{\contentsname}{Contents}
+\renewcommand{\versiontext}{Version: }
+\renewcommand{\updatetext}{Update: }
+\PassOptionsToPackage{no-math}{fontspec}
+\lstset{basicstyle=\footnotesize\ttfamily\color[RGB]{50,0,130},numbers=none,frame=trBL}
+
+\sisetup{mode=text}
+\sisetup{range-phrase = \text{ \textasciitilde }}
+\pagestyle{fancy}
+\fancyhead[L]{School of Software Engineering, Tongji University}
+\fancyhead[R]{Data Structure Projects}
+\renewcommand{\headrulewidth}{1pt}
+
+\title{Electrical grid\\电网建设造价模拟系统}
+\author{1951510\; 姜文渊}
+\institute{\small \url{https://github.com/jwyjohn/Jwy_DataStructureHomework}}
+\version{0.50}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\textbf{Data structure involved:} Adjacency list, Heap, Priority queue, Union set
+
+\textbf{Algorithms involved:} Minimum spanning tree algorithms
+
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
+
+Suppose in a city, there are many communities that need to be powered by a electrical grid. Due to limited budget, the network should cost as little as possible. Here we have the estimated cost for connecting two certain communities, and the author need to implement an algorithm for giving out the optimized plan for the construction of such electrical grid.
+
+Graph is useful in modeling real world problems, and in this situation, the problem is equivalent to the construction of a minimum spanning tree in an undirected graph.
+
+A minimum spanning tree (MST) or minimum weight spanning tree is a subset of the edges of a connected, edge-weighted undirected graph that connects all the vertices together, without any cycles and with the minimum possible total edge weight. That is, it is a spanning tree whose sum of edge weights is as small as possible.\uct{wiki:Minimum_spanning_tree}
+
+Several algorithms can be used to solve such problems. The Prim's algorithm\uct{cheriton1976finding} is one of the widely used one, and another popular algorithm is Kruskal's algorithm\uct{kruskal1956shortest}. Both the two algorithms costs $O(m\, log\, n)$ time, but faster algorithm are still invented recently.
+
+The author implemented the Prim's algorithm in this project, considering its relatively fast speed and robustness.
+
+
+\section{Demostration}
+
+\subsection{Compile and run the program}
+
+On linux platform with \lstinline{make} and a \lstinline{g++} which supports C++ 11 Standard, just \lstinline{cd} to the \lstinline{./linux} and run \lstinline{make build}. The binary executable will be generated in the same dirctory named as \lstinline{a.out} or \lstinline{egrid}, according to the configurations in the \lstinline{Makefile}. Use \lstinline{./a.out} or \lstinline{./egrid} to run the program.
+
+The program is an interactive shell, where you can input commands and get results.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{image/grid_01.jpg}
+    \caption{The user interface of the program}
+\end{figure}
+
+Usage of commands can be found on the main screen, and the \lstinline{help} command can give you information about theses commands.  All available commands is listed below.
+
+\begin{enumerate}
+    \item \lstinline{help} : Show help for a certain command.
+    \item \lstinline{exit} : Exit the program.
+    \item \lstinline{init} : Clear and initialize the graph data.
+    \item \lstinline{adv A B C ...} : Add node A, B, C ... to the graph.
+    \item \lstinline{ade [FROM] [TO] [COST]} : Add an bi-directional edge connecting [FROM] and [TO] with cost [COST]. [COST] must be an integer larger than 0.
+    \item \lstinline{show} : Show the adjacency list of the graph.
+    \item \lstinline{run A} : Run Prim's algorithm from node A.
+\end{enumerate}
+
+\subsection{Input the data for testing}
+
+Type \lstinline{adv s a b c d t} to add some nodes to the graph. Then type \lstinline{ade s a 7} to add an edge connecting a with s at a cost of 7 to the graph.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{image/grid_02.jpg}
+    \caption{Adding vertex and edge data to the graph}
+\end{figure}
+
+Add more data to the graph describing the following graph. To examine our graph, use \lstinline{show}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{image/graph.png}
+    \caption{The final graph}
+\end{figure}
+
+
+\subsection{Run Prim}
+
+Type \lstinline{run s} to run Prim algorithm on the graph inputed, the results will be shown soon in the terminal. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{image/tree.png}
+    \caption{Use \lstinline{run s} to calculate solution}
+\end{figure}
+It can be seen that the solution given by the program is consistent with the theoretical answers, which is the graph on the left of the figure above.
+
+Changing starting vertex dose not change the solution in essence, which is shown in the figure below.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{image/grid_03.jpg}
+    \caption{Run Prim from different vertex}
+\end{figure}
+
+This property is consistent with the definition of a minimum spanning tree, and it can be proved that for a connected undirected graph with positive edge weights, the minimum spanning tree exists and is unique.
+
+\section{About the Prim's algorithm}
+
+The prim algorithm consists of three major steps:
+\begin{enumerate}
+    \item Initialize a tree with a given vertex
+    \item Expand the tree by one edge: find the minimum-weight edge in the edges that connect the tree to vertices but are not in the tree, and add it to the tree.
+    \item Repeat step 2 until all vertices are in the tree.
+\end{enumerate}
+
+The pseudocode below demostrats the procedure in more detail.
+\begin{algorithm}[H]
+    \caption{Prim algorithm}
+    \label{alg1}
+    \begin{algorithmic}
+        \REQUIRE Graph $G$, Starting vertex $a$
+        \ENSURE A set $T$, with edges of the minimum spanning tree of $G$
+        \STATE \textbf{Initialization:} $T=\{ \varnothing  \}$, $A = \{a\}$.
+        \WHILE{$V - A \neq \varnothing$}
+        \STATE $S \gets \{ e\,:\, e \notin T, V(e) \cap A \neq \varnothing \}$
+        \STATE $e \gets e:\min{C[e]}$
+        \STATE Add $e$ to $T$
+        \STATE Add $V(e) - (V(e) \cap A)$ to $A$
+        \ENDWHILE
+        \STATE \textbf{return:} $T$
+    \end{algorithmic}
+\end{algorithm}
+
+Depending on the data structures used for the graph and the algorithm for finding the minimal edges by weight, the computational complexity can range from $O(n^2)$ to $O(m\, log\, n)$. Using adjacency list to store the graph and a heap (priority queue) to find the most suitable edge is the optimal, which means it can achieve the $O(m\, log\, n)$ complexity.
+
+\section{Notes on the source code}
+
+If you want to modify or re-use the author's code, here are some explaination about the important part of the code. Comments in the source file can provide detailed help, but the following shows the outline.
+
+In the author's source code \lstinline{main_header.h}, you can find a line like this in the \lstinline{enetwork} class:
+\begin{lstlisting}[language = C++]
+map<string, map<string, int>> M;
+\end{lstlisting}
+The \lstinline{map<string, map<string, int>>} is used to store the graph, which performs even better than adjacency list. The first \lstinline{string} is the source node name, and the second \lstinline{string} is the target node name, with the \lstinline{int} indicating the cost.
+
+Then in the method \lstinline{run_prim(string start_node)}, the set $A$ and $T$ in the pseudocode above is initialized in the following code.
+\begin{lstlisting}[language = C++]
+    set<string> in_tree;
+    vector<edge> ans;
+\end{lstlisting}
+
+The code below is the main loop of the prim algorithm, which is exactly the implementation of the pseudocode:
+\begin{lstlisting}[language = C++]
+    ...
+    while (in_tree.size() < M.size())
+    {
+        priority_queue<edge> q;
+        for (auto node : in_tree)
+        {
+            for (auto node2 : M[node])
+            {
+                if (in_tree.find(node2.first) == in_tree.end())
+                {
+                    edge tmp_e;
+                    tmp_e.a = node;
+                    tmp_e.b = node2.first;
+                    tmp_e.cost = node2.second;
+                    q.push(tmp_e);
+                };
+            };
+        };
+        in_tree.insert(q.top().b);
+        ans.push_back(q.top());
+    };
+    ...
+\end{lstlisting}
+
+Note that before we run the Prim algorithm, we should check if the graph is connected. This project uses the union set to check graph connectivity, as in the code below.
+
+\begin{lstlisting}[language = C++]
+	string find_union(string node_a)
+	{
+		if (node_a == V[node_a])
+		{
+			return node_a;
+		}
+		else
+		{
+			V[node_a] = find_union(V[node_a]); // PATH COMPRESSION
+			return find_union(V[node_a]); 
+		};
+	};
+\end{lstlisting}
+
+This function is used to find the root of node a. The PATH COMPRESSION optimization is in the line with comment.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{image/grid_04.jpg}
+    \caption{A situation where the graph is not connected}
+\end{figure}
+
+
+Detailed implementation of other methods used to maintain the graph data structure follows the textbooks used in this course, and the code may help you understand how each algorithm actually works. Most of the code in \lstinline{main.cpp} and \lstinline{main_header.h} is for processing the user's input, which is not so interesting.
+
+\section{Discussion}
+
+The author implemented the Prim's algorithm and tested on the dataset, which turned out to give correct results. More dataset are also tested, which can be found in the Github repo as \lstinline{*.in} files in the projetc directory. For those graphs that are not connected, Prim's algorithm tend to fall in to a infinite loop, which may cause error.
+
+To detect is a graph is connected, a data structure called Union set (also called Disjoint-Set) can be used. Other methods, like the DFS or BFS, can also be used to detect if a graph is connected, with similar efficiency. In this project, the author uesd the union set to check if the graph is connected.
+
+
+Other minimum spanning tree algorithms, like the Kruskal algorithm, is not so intuitive as the Prim algorithm, but they are as efficient as the Prim, since the major cost of such algorithms is not the main loop, but the way to sort and choost the eligible edges. If with heap-based priority queue and suitable way to store graph, their computational complexity can all come to $O(m\, log\, n)$.
+
+Nowadays, ordinary PC have more than 4 cores, thus making the algorithm parallelizable is of importance. Note that both Prim and Kruskal are not parallelizable due to the fact that their main loop is sequencial, thus the $m$ in $O(m\, log\, n)$ cannot be optimized. However, optimization of the $log\, n$ term seems to be practical with a parallelized algorithm to determine which edge to choose as the next edge.\uct{quinn1984parallel}
+
+\newpage
+\bibliography{references}
+\end{document}
