@@ -980,7 +980,7 @@ using namespace std;
 
 #define PROG_INTRO "                        ___      \n                       /\\_ \\     \n   __   __  __     __  \\//\\ \\    \n /'__`\\/\\ \\/\\ \\  /'__`\\  \\ \\ \\   \n/\\  __/\\ \\ \\_/ |/\\ \\L\\.\\_ \\_\\ \\_ \n\\ \\____\\\\ \\___/ \\ \\__/.\\_\\/\\____\\\n \\/____/ \\/__/   \\/__/\\/_/\\/____/\n                                 \n                                 \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n=================================\n! This is a program to eval an expression.\n! Use \"calc [expression]\" to caculate an expression with [0-9]+_*/().\n"
 
-#define SOLVE_HELP "Use \"calc [expression]\" to caculate an expression with [0-9]+_*/()."
+#define SOLVE_HELP "Use \"calc [expression]\" to caculate an expression with '[0-9]+_*/()'."
 
 enum node_type
 {
