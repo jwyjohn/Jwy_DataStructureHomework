@@ -10,11 +10,12 @@
 \usepackage{algorithmic}
 \usepackage{siunitx}
 \usepackage{listings}
+\usepackage{float}
 
 \classsetup{
   % 配置里面不要出现空行
   title        = {浅谈区间操作及其数据结构},
-  title*       = {Range Operations and their data structure},
+  title*       = {Data structure for range operations},
   authors      = {
     author1 = {
       name         = {喵喵喵},
@@ -584,28 +585,63 @@ Chtholly树的实现中，绝大部分进行实际计算的操作都是朴素的
 
 \section{各数据结构实际测评}
 
-\section{如何选择}
+在本部分中，我们首先比较各类数据结构在随机查询任务下的性能；接着，对于可以在线操作的数据结构，我们比较其在特定随机任务下的性能。测试的环境为常见的x86兼容机，操作系统与编译器等具体信息见附录部分。
+
+\subsection{区间求和查询的性能比较}
+
+\paragraph{参与比较的算法}朴素的数组，前缀数组，树状数组，块状数组，线段树。
+\paragraph{输入格式} 第一行为两个整数$N$和$M$，表示初值为$N$个整数，供有$M$条询问，接下来$N$行，每行一个整数表示初值，接下来$M$行，每行两个整数$l$和$r$，表示查询的区间。保证$0\leq l \leq r \leq N$。
+
+在不同的$N$下，令$M=10000$为固定值，考察程序运行的相对时间，如下图所示：
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{images/performance1.eps}
+  \caption{查询任务下各数据结构的性能（双对数图，$M$固定）}
+\end{figure}
+由上图可见，除了朴素实现外，其余数据结构都有较好的时间复杂度。而且由于数据的随机性，使得分块等非对数复杂度的算法实际上也获得了与对数复杂度算法相似的性能。
+
+在不同的$N$下，令$M=N$，考察程序运行的相对时间，如下图所示：
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{images/performance2.eps}
+  \caption{查询任务下各数据结构的性能（双对数图，$M=N$）}
+\end{figure}
+由上图可见，当$M$与$N$同阶时，各数据结构的复杂度和理论计算相符。此时，分块等非对数复杂度的算法与对数复杂度的算法有来显著差距。
+
+\subsection{区间加法与区间求最值查询的性能比较}
+\paragraph{参与比较的算法} 线段树，Chtholly树。
+\paragraph{输入格式} 第一行为两个整数$N$和$M$，表示初值为$N$个整数，供有$M$条询问，接下来$N$行，每行一个整数表示初值，接下来$M$行，每行四个整数$\text{op}$、$l$、$r$和$v$，。$\text{op}=1$时，表示查询区间$[l,r]$上的最大值;$\text{op}=2$时，表示区间$[l,r]$上所有元素都赋值为$v$，区间加上保证$0\leq l \leq r \leq N$。
+
+在不同的$N$下，令$M$与$N$相同，考察程序运行的相对时间，如下图所示：
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{images/performance3.eps}
+  \caption{混合任务下两数据结构的性能（双对数图，$M=N$）}
+\end{figure}
+
+不难发现，Chtholly树虽然实现简单，但在随机数据的情况下，与线段树差距不大。
 
 \section{结论}
 
-\begin{table}[htb]
-  \centering
-  \caption{表说明}
-  \small
-  \begin{tabular}{cc}
-    \toprule
-    示例表格 & 第一行为表头，表头要有内容 \\
-    \midrule
-             &                            \\
-    \midrule
-             &                            \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+本文比较了各类支持区间操作的数据结构的实现方式，适用范围，局限性以及其时间、空间复杂度。此外，本文还利用实际数据，测量了在随机数据下一些支持区间操作的数据结构的性能，其结果与理论给出的结论相近。
+
+从上面的比较不难看出，从通用性上看，朴素算法与Chtholly树是最佳的，其对区间操作的支持几乎没有限制；而Chtholly树的复杂度要远优于朴素算法，故值得使用。而从性能与通用性两者权衡的角度来看，线段树则是优先的选择。
+
+如果仅考虑查询操作，则根据所查询的区间信息的性质，选取前缀和数组与ST表可以获得极好的性能；若要兼顾一些非密集的单点修改的操作，树状数组则是较好的权衡方案。
+
+\section{讨论}
+
+文中所提到的诸多数据结构，多数来自ACM界在实践中的创新，而很少见其发表于各类文献中。对于区间操作的需求，最初来自于计算机图形学：因为实际的空间中的物体的位置经常具有区间相互遮盖的关系。例如，线段树的提出，就是为了解决一类名为Klee's measure problem的图形学问题。此后，在计算机图形学迅猛发展期间，又出现了K-d Tree等由线段树发展而来的，维护高维区间的数据结构。
+
+除了树状结构外，支持区间的操作的数据结构一般有以下几个思路：如果区间操作的性质良好，则考虑类似前缀等数学方式进行优化；如果区间操作的性质十分一般，则考虑使用分块的思想，而不对操作进行优化。总体上看，线段树既利用了分块的思想，又利用了区间操作的性质，故而其通用性和性能都十分均衡。如果区间操作的性质实在坏到极致，以至于无法用线段树实现，则Chtholly树和本文中没有提到的分块数据结构“莫队”，也较直接暴力求解有着很大的优势。
+
+此外，面对一些新的需求，例如对区间的历史最值的查询等问题，其数据结构也是通过现有的数据结构改进而来，例如“可持久化线段树”等。又如在性能受限的平台上，由于线段树的实现复杂，其时间复杂度的常数较大，一种名为“Zkw线段树”的非递归线段树也相应地被提出。在理论界，对于传统的Range Minimum Query的研究也有较多成果，近年提出的很多算法甚至达到常数时间复杂度与线性空间复杂度，且近年的理论进展也逐步摸清了这类问题的复杂度下界。这些进展的背后除了突发的灵感外，有很多高观点的数学思想蕴含于其中。本文题目中因有“浅谈”二字，故不深入展开，仅作介绍而已，感兴趣的同学可以自行查阅学习。
+
+实际的软件开发过程中，现有的成熟的数据库已经能够满足大部分的需求，但是在极端的需求下，这些精巧却少见的数据结构，对项目的性能，将会产生较大的作用。很多同学将这些支持奇怪操作的数据结构认为是奇技淫巧，但在笔者看来，或许并非如此。
 
 
 \begin{acknowledgments}
-  致谢内容。
+  感谢讲授数据结构课程的张老师，和他的各位助教；没有他们的努力，就不会有如此优秀的课程。也感谢与笔者交流的同学们，他们的分享大大开阔了笔者的见识，使得笔者了解到课堂以外的一些有趣的数据结构。
 \end{acknowledgments}
 
 
@@ -619,30 +655,36 @@ Chtholly树的实现中，绝大部分进行实际计算的操作都是朴素的
 
 \appendix
 
-\section{}
+\section{测评机环境}
 
-附录内容置于此处，字体为小5号宋体。附录内容包括：详细的定理证明、公式推导、原始数据等
+\begin{lstlisting}[breaklines]
+-------------------
+OS: Linux x86_64
+Kernel: 5.10.70-1-MANJARO
+Uptime: 8 hours, 28 mins
+Shell: bash 5.1.8
+Resolution: 1536x864
+Terminal: /dev/pts/0
+CPU: Intel i3-10105 (8) @ 4.400GHz
+GPU: Intel CometLake-S GT2 [UHD Graphics 630]
+Memory: 867MiB / 15850MiB
+
+GCC Version:
+$ g++ -v
+Using built-in specs.
+COLLECT_GCC=g++
+COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-pc-linux-gnu/11.1.0/lto-wrapper
+Target: x86_64-pc-linux-gnu
+Configured with: /build/gcc/src/gcc/configure --prefix=/usr --libdir=/usr/lib --libexecdir=/usr/lib --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=https://bugs.archlinux.org/ --enable-languages=c,c++,ada,fortran,go,lto,objc,obj-c++,d --with-isl --with-linker-hash-style=gnu --with-system-zlib --enable-__cxa_atexit --enable-cet=auto --enable-checking=release --enable-clocale=gnu --enable-default-pie --enable-default-ssp --enable-gnu-indirect-function --enable-gnu-unique-object --enable-install-libiberty --enable-linker-build-id --enable-lto --enable-multilib --enable-plugin --enable-shared --enable-threads=posix --disable-libssp --disable-libstdcxx-pch --disable-libunwind-exceptions --disable-werror gdc_include_dir=/usr/include/dlang/gdc
+Thread model: posix
+Supported LTO compression algorithms: zlib zstd
+gcc version 11.1.0 (GCC)
+
+\end{lstlisting}
 
 
-\makebiographies
 
 
-\begin{background}
-  *论文背景介绍为英文，字体为小5号Times New Roman体*
 
-  论文后面为400单词左右的英文背景介绍。介绍的内容包括：
-
-  本文研究的问题属于哪一个领域的什么问题。该类问题目前国际上解决到什么程度。
-
-  本文将问题解决到什么程度。
-
-  课题所属的项目。
-
-  项目的意义。
-
-  本研究群体以往在这个方向上的研究成果。
-
-  本文的成果是解决大课题中的哪一部分，如果涉及863/973以及其项目、基金、研究计划，注意这些项目的英文名称应书写正确。
-\end{background}
 
 \end{document}
