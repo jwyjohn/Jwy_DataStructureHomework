@@ -1,0 +1,72 @@
+======================================
+./test_inputs/inverted_1000000.in
+Swap calls = 18787793
+Compare calls = 40575586
+======================================
+./test_inputs/inverted_100000.in
+Swap calls = 1550855
+Compare calls = 3401710
+======================================
+./test_inputs/inverted_10000.in
+Swap calls = 121957
+Compare calls = 273914
+======================================
+./test_inputs/inverted_1000.in
+Swap calls = 8699
+Compare calls = 20398
+======================================
+./test_inputs/inverted_100.in
+Swap calls = 541
+Compare calls = 1382
+======================================
+./test_inputs/inverted_10.in
+Swap calls = 19
+Compare calls = 68
+======================================
+./test_inputs/random_1000000.in
+Swap calls = 18048178
+Compare calls = 39096356
+======================================
+./test_inputs/random_100000.in
+Swap calls = 1475280
+Compare calls = 3250560
+======================================
+./test_inputs/random_10000.in
+Swap calls = 114093
+Compare calls = 258186
+======================================
+./test_inputs/random_1000.in
+Swap calls = 8092
+Compare calls = 19184
+======================================
+./test_inputs/random_100.in
+Swap calls = 488
+Compare calls = 1276
+======================================
+./test_inputs/random_10.in
+Swap calls = 18
+Compare calls = 66
+======================================
+./test_inputs/sorted_1000000.in
+Swap calls = 17333409
+Compare calls = 37666818
+======================================
+./test_inputs/sorted_100000.in
+Swap calls = 1397435
+Compare calls = 3094870
+======================================
+./test_inputs/sorted_10000.in
+Swap calls = 106697
+Compare calls = 243394
+======================================
+./test_inputs/sorted_1000.in
+Swap calls = 7317
+Compare calls = 17634
+======================================
+./test_inputs/sorted_100.in
+Swap calls = 417
+Compare calls = 1134
+======================================
+./test_inputs/sorted_10.in
+Swap calls = 12
+Compare calls = 54

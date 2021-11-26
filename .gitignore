@@ -31,3 +31,20 @@
 *.out
 *.app
 *inux
+
+# Profile temp files
+*.gcov
+*.gcda
+*.gcno
+*.in
+
+# Latex temp files
+*.synctex(busy)
+*.aux
+*.bbl
+*.blg
+*.log
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.pdf

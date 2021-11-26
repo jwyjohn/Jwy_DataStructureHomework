@@ -1,135 +1,165 @@
 #include <iostream>
+#include <string>
+#include "main_header.h"
+
+#define _CRT_SECURE_NO_WARNINGS
+#define LIBCMDF_IMPL
 
 using namespace std;
 
-template <class Type>
-class CircLL
+#define PROG_INTRO "                                    __         \n __                                /\\ \\        \n/\\_\\    ___     ____     __   _____\\ \\ \\___    \n\\/\\ \\  / __`\\  /',__\\  /'__`\\/\\ '__`\\ \\  _ `\\  \n \\ \\ \\/\\ \\L\\ \\/\\__, `\\/\\  __/\\ \\ \\L\\ \\ \\ \\ \\ \\ \n _\\ \\ \\ \\____/\\/\\____/\\ \\____\\\\ \\ ,__/\\ \\_\\ \\_\\\n/\\ \\_\\ \\/___/  \\/___/  \\/____/ \\ \\ \\/  \\/_/\\/_/\n\\ \\____/                        \\ \\_\\          \n \\/___/                          \\/_/          \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n===============================================\n! This is a program to simulate the Joseph problem.\n! Use 'solve [N] [S] [M] [K]', to solve a Joseph case with N participants,\n!  start from position S, kill every M position, and have K survivors. \n! (note: N>K>0, N>=S>=1 and M>0)\n"
+
+#define SOLVE_HELP "Use 'solve [N] [S] [M] [K]', to solve a Joseph case with N participants, start from position S, kill every M position, and have K survivors. (note: N>K>0, N>=S>=1 and M>0)"
+
+using namespace std;
+
+struct node
 {
+	int no;
+	node *next;
+};
 
-	struct Node
-	{
-		Type val;
-		Node *next;
-		Node(Type x) : val(x), next(NULL){};
-		Node(Type x, Node *next) : val(x), next(next){};
-	};
-	int N, M, S, K;
+node *current;
+node *pre;
 
-	Node *head;
+int N, S, M, K;
+int solve();
+int init();
+int init()
+{
+	current = new node;
+	node *first = current;
+	for (int i = 1; i < N; i++)
+	{
+		current->no = i;
+		current->next = new node;
+		current = current->next;
+		// cout << i << endl;
+	};
+	current->no = N;
+	current->next = first;
+	pre = current;
+	while (pre->next->no != S)
+	{
+		pre = pre->next;
+	};
+	current = pre->next;
+	// cout << pre->no << endl;
+	// cout << current->no << endl;
+	return 0;
+};
 
-public:
-	CircLL(int n, int m, int s, int k) : N(n), M(m), S(s), K(k)
+static CMDF_RETURN solve_joseph(cmdf_arglist *arglist)
+{
+	if (!arglist)
 	{
-		head = new Node(-1);
-		head->next = head;
-		for (int i = n; i >= 1; i--)
-		{
-			Node *node = new Node(i);
-			node->next = head->next;
-			head->next = node;
-		};
-		Node *tmp = head->next;
-		while (tmp->next != head)
-			tmp = tmp->next;
-		tmp->next = head->next;
+		cout << " [Sytax Error] No arguments provided!\n [Tip] Please Enter the command like \"solve 30 1 9 15\"" << endl;
+		return CMDF_OK;
 	};
-	int showLLparm() { cout << N << " " << M << " " << S << " " << K << endl; }
-	int printLL()
+	if (arglist->count != 4)
 	{
-		Node *cur = head;
-		for (int i = 0; i <= N * 2; i++)
-		{
-			cout << cur->val << ", ";
-			cur = cur->next;
-		};
-		cout << endl;
-		return 0;
+		cout << " [Sytax Error] Invaild arguments!\n [Tip] Please Enter the command like \"solve 30 1 9 15\"" << endl;
+		return CMDF_OK;
 	};
-	int printLLS()
-	{
-		Node *cur = head->next;
-		for (int i = 0; i < K; i++)
-		{
-			cout << cur->val << " ";
-			cur = cur->next;
-		};
-		cout << endl;
-		return 0;
-	};
-	Node *accessLLnode(int k)
-	{
-		Node *ret;
-		int i = k;
-		Node *cur = head;
-		while (i > 0)
-		{
-			i--;
-			cur = cur->next;
-		};
-		ret = cur;
-		return ret;
-	};
-	int delLLnode(Node *k)
-	{
-		Node *cur = head;
-		Node *tmp = k;
-		if (k == head->next)
-			head->next = head->next->next;
-		while (cur->next != k)
-		{
-			cur = cur->next;
-		};
-		cur->next = cur->next->next;
-		delete tmp;
-		return 0;
-	};
-	int runJoseph()
-	{
-		int n = N;
-		int i = 1, num = 0;
-		Node *cur = accessLLnode(S);
-		Node *tmp;
-		while (n > K)
-		{
-			if (i == M)
+	for (int j = 0; j < 4; j++)
+		for (int i = 0; i < strlen(arglist->args[j]); i++)
+			if ((int(arglist->args[j][i]) - int('0')) < 0 || (int(arglist->args[j][i]) - int('0')) > 9)
 			{
-				i = 1;
-				num++;
-				n--;
-				cout << "第" << num << "个死者的编号为：" << cur->val << endl;
-				delLLnode(cur);
-				//printLL();
-				//cout<<endl;
-				cur = cur->next;
-			}
-			else
-			{
-				i++;
-				cur = cur->next;
+				cout << " [Sytax Error] Invaild arguments!\n [Tip] Please Enter the command like \"test 8 y/n\"" << endl;
+				return CMDF_OK;
 			};
-		}
-		return 0;
+	N = stoi(arglist->args[0]);
+	S = stoi(arglist->args[1]);
+	M = stoi(arglist->args[2]);
+	K = stoi(arglist->args[3]);
+	if (N <= 0)
+	{
+		cout << " [Error] Invaild arguments!\n [Tip] N should be > 0." << endl;
+		return CMDF_OK;
+	};
+	if (M <= 0)
+	{
+		cout << " [Error] Invaild arguments!\n [Tip] M should be > 0." << endl;
+		return CMDF_OK;
+	};
+	if (S <= 0 || S > N)
+	{
+		cout << " [Error] Invaild arguments!\n [Tip] S should be N>=S>=1." << endl;
+		return CMDF_OK;
+	};
+	if (K <= 0 || K >= N)
+	{
+		cout << " [Error] Invaild arguments!\n [Tip] K should be N>K>0." << endl;
+		return CMDF_OK;
+	};
+	init();
+	solve();
+	return CMDF_OK;
+};
+
+int solve()
+{
+	int count = N;
+	int j = 1;
+	string ch = "th";
+	while (count > K)
+	{
+		for (int i = 0; i < M - 1; i++)
+		{
+			// cout << current->no << "->";
+			current = current->next;
+			pre = pre->next;
+		};
+		// cout << endl;
+		if (j % 10 == 1 && j != 11)
+			ch = "st";
+		else if (j % 10 == 2 && j != 12)
+			ch = "nd";
+		else if (j % 10 == 3 && j != 13)
+			ch = "rd";
+		else
+			ch = "th";
+		cout << "[KILLED] The position of the " << j << ch << " dead man is: " << current->no << endl;
+		j++;
+		pre->next = current->next;
+		delete current;
+		current = pre->next;
+		count--;
+	};
+	cout << endl;
+	if (K != 1)
+	{
+		cout << "The " << K << " survivors are: ";
 	}
+	else
+	{
+		cout << "The only survivor is: ";
+	};
+	node *stop = current;
+	while (current->next != stop)
+	{
+		cout << current->no << " ";
+		current = current->next;
+	};
+	cout << current->no << " ";
+	cout << endl;
+	// node *to_del;
+	// while (current->next != NULL)
+	// {
+	// 	to_del = current;
+	// 	current = current->next;
+	// 	delete to_del;
+	// };
+	return 0;
 };
 
 int main()
 {
-	//cout<<"Testing.."<<endl;
-	int N, M, S, K;
-	cout << "请输入总人数N：";
-	cin >> N;
-	cout << "请输入开始位置S：";
-	cin >> S;
-	cout << "请输入死亡数字M：";
-	cin >> M;
-	cout << "请输入剩余人数K：";
-	cin >> K;
-	cout << endl;
-	CircLL<int> list1(N, M, S, K);
-	list1.runJoseph();
-	//list1.delLLnode(list1.accessLLnode(S));
-	cout << "最后生还者为：" << endl;
-	list1.printLLS();
+	cmdf_init("joseph> ", PROG_INTRO, NULL, NULL, 0, 1);
 
+	/* Register our custom commands */
+	cmdf_register_command(solve_joseph, "solve", SOLVE_HELP);
+
+	cmdf_commandloop();
 	return 0;
 }
