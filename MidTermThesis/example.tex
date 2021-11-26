@@ -32,19 +32,16 @@
   % 国家名为中国可以不写，省会城市不写省的名称，其他国家必须写国家名。
   affiliations = {
     aff1 = {
-      name  = {单位全名\ 部门(系)全名, 市(或直辖市) 国家名\ 邮政编码},
-      name* = {Department of ****, University, City ZipCode, Country},
+      name  = {同济大学\; 软件工程学院, 上海 中国\ 201804},
+      name* = {School of Software Engineering, Tongji University, Shanghai, 201804, China},
     },
   },
-  abstract     = {
-    中文摘要内容置于此处(英文摘要中要有这些内容)，字体为小5号宋体。
-    摘要贡献部分，要有数据支持，不要出现“...大大提高”、“...显著改善”等描述，
-    正确的描述是“比…提高 X\%”、 “在…上改善 X\%”。
+  abstract     = {本文通过一个软件工程实践中的常见事例，对区间信息及区间操作进行了探究，进而引出了对支持高效区间操作的数据结构的需求。除了朴素的线性数据结构外，本文引入了几种支持区间操作的数据结构：前缀数组、ST表、树状数组、块状数组、线段树和Chtholly树；并分析了他们的实现、性能、应用场景及其局限性。这些数据结构各有特点：除了复杂度远好于朴素的结构外（一些文中的数据结构达到$O(log\,n)$），其实现与局限也各有不同。本文希望通过对这些数据结构进行比较，得出某些应用场景下的首选方案；本文也讨论了这些数据结构的后续发展，以期加深同学们对于数据结构的认识。
   },
-  abstract*    = {Abstract (500英文单词，内容包含中文摘要的内容). },
+  abstract*    = {This article uses a case in software engineering practice to explore range information and range operations, and then introduces the need for data structures that support efficient range operations. In addition to the simple linear data structure, this article introduces several data structures that support range operations: prefix array, ST table, BIT array, block array, segment tree and Chtholly tree; and analyzes their implementation, performance, application scenario and limitations. These data structures have their own features: in spite of the fact that the complexity of these structures is much better than the simple linear array (some can reach $O(log\,n)$), their implementation and limitations are also interesting. This article hopes to compare these data structures to get the preferred solution in certain application scenarios. This article also discusses the follow-up development of these data structures, in order to deepen students' understanding in data structures.},
   % 中文关键字与英文关键字对应且一致，应有5-7个关键词，不要用英文缩写
-  keywords     = {关键词, 关键词, 关键词, 关键词},
-  keywords*    = {key word, key word, key word, key word},
+  keywords     = {数据结构，区间操作，线段树，前缀和，分块思想},
+  keywords*    = {Data structure, Range operation, Segment tree, Prefix sum, Partition},
   %grants       = {
   %  本课题得到……基金中文完整名称(No.项目号)、
   %  ……基金中文完整名称(No.项目号)、
