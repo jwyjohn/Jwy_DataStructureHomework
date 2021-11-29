@@ -127,6 +127,7 @@ int queen_solution(int n, bool show_board)
 {
 	chessboard a;
 	// stack<chessboard> s, ans;
+	memset(a.board,0,sizeof(a.board));
 	N = n;
 	s.clear();
 	ans.clear();
