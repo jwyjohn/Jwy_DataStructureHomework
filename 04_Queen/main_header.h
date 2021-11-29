@@ -4,7 +4,7 @@
 
 #define MAX_CHESSBOARD_SIZE 32
 #define MAX_STACK_SIZE 10000
-#define _QUEEN 7
+#define _QUEEN 1
 
 #include <iostream>
 #include <string>
@@ -98,6 +98,7 @@ bool is_queen_safe(chessboard a, int x, int y)
 	// chessboard t = a;
 	// t.board[x][y] = _QUEEN;
 	bool flag = true;
+	// show_chessboard(a);
 	// for (int row = 0; row < N; row++)
 	// {
 	//     if (row != x)
@@ -126,6 +127,7 @@ bool is_queen_safe(chessboard a, int x, int y)
 int queen_solution(int n, bool show_board)
 {
 	chessboard a;
+	memset(a.board,0,sizeof(a.board));
 	// stack<chessboard> s, ans;
 	N = n;
 	s.clear();
