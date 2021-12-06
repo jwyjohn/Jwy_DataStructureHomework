@@ -3,13 +3,32 @@
  * @author JwyJohn (1951510@tongji.edu.cn)
  * @brief 将头文件和源码文件合并为一个文件，用于Windows下编译。
  * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
- * ! main.cpp的内容从1017行开始
+ * ! main.cpp的内容从1036行开始
  * @version 0.1
  * @date 2021-12-06
  * 
  * @copyright Copyright (c) 2021
  * 
  */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * @file main_header.h
@@ -1005,7 +1024,7 @@ struct cmdf_windowsize cmdf_get_window_size_unix(void)
 #endif
 /**
  * @file main.cpp
- * @author your name (you@domain.com)
+ * @author JwyJohn (1951510@tongji.edu.cn)
  * @brief 函数的具体实现和主程序
  * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
  * @version 0.1

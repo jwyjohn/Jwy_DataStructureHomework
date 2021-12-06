@@ -1,3 +1,33 @@
+/**
+ * @file main_header.h
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 头文件和Console库的合并
+ * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*** Start of inlined file: libcmdf.h ***/
 #ifndef LIBCMDF_H_INCLUDE
 #define LIBCMDF_H_INCLUDE

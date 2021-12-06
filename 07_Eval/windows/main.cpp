@@ -1,3 +1,66 @@
+/**
+ * @file main.cpp
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 将头文件和源码文件合并为一个文件，用于Windows下编译。
+ * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
+ * ! main.cpp的内容从1063行开始
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * @file main_header.h
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 头文件和Console库的合并
+ * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*** Start of inlined file: libcmdf.h ***/
 #ifndef LIBCMDF_H_INCLUDE
 #define LIBCMDF_H_INCLUDE
@@ -966,6 +1029,37 @@ struct cmdf_windowsize cmdf_get_window_size_unix(void)
 }
 #endif
 
+/**
+ * @file main.cpp
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 函数的具体实现和主程序
+ * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #include <iostream>
 #include <string>
 #include <stack>
@@ -978,10 +1072,19 @@ struct cmdf_windowsize cmdf_get_window_size_unix(void)
 
 using namespace std;
 
+/**
+ * @brief 显示输出的内容以及命令的帮助。
+ * 
+ */
+
 #define PROG_INTRO "                        ___      \n                       /\\_ \\     \n   __   __  __     __  \\//\\ \\    \n /'__`\\/\\ \\/\\ \\  /'__`\\  \\ \\ \\   \n/\\  __/\\ \\ \\_/ |/\\ \\L\\.\\_ \\_\\ \\_ \n\\ \\____\\\\ \\___/ \\ \\__/.\\_\\/\\____\\\n \\/____/ \\/__/   \\/__/\\/_/\\/____/\n                                 \n                                 \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n=================================\n! This is a program to eval an expression.\n! Use \"calc [expression]\" to caculate an expression with [0-9]+_*/().\n"
 
 #define SOLVE_HELP "Use \"calc [expression]\" to caculate an expression with [0-9]+_*/()."
 
+/**
+ * @brief 定义操作节点的类型
+ * 
+ */
 enum node_type
 {
 	NUM,
@@ -995,6 +1098,10 @@ enum node_type
 	ENDP
 };
 
+/**
+ * @brief 原始输入经过词法分析后的结构体
+ * 
+ */
 struct raw_input
 {
 	node_type ch;
@@ -1003,6 +1110,10 @@ struct raw_input
 	int pos;
 };
 
+/**
+ * @brief 第一层语法分析，处理括号后形成的中间语法树节点
+ * 
+ */
 struct p_node
 {
 	node_type op;
@@ -1012,6 +1123,10 @@ struct p_node
 	p_node *parent;
 };
 
+/**
+ * @brief 第二层语法分析，形成的表达式树节点
+ * 
+ */
 struct expr_node
 {
 	node_type op;
@@ -1021,6 +1136,13 @@ struct expr_node
 	bool is_evaled = false;
 };
 
+/**
+ * @brief 判断字符是否为数字，用于词法分析
+ * 
+ * @param ch 
+ * @return true 
+ * @return false 
+ */
 bool is_num(char ch)
 {
 	if (int(ch) - int('0') < 0 || int(ch) - int('9') > 0)
@@ -1029,6 +1151,13 @@ bool is_num(char ch)
 		return true;
 };
 
+/**
+ * @brief 过滤字符串，用于词法分析
+ * 
+ * @param s 
+ * @return true 
+ * @return false 
+ */
 bool is_valid_str(string s)
 {
 	string allowed = "0123456789+-*/()";
@@ -1042,11 +1171,25 @@ bool is_valid_str(string s)
 
 class E
 {
+	/**
+	 * @brief 表达式类
+	 * 
+	 */
 private:
+/**
+ * @brief 一些私有变量，包括词法分析、语法分析的中间数据
+ * 
+ */
 	vector<raw_input> ret;
 	p_node *root;
 	expr_node *expr_root;
 	bool is_error = false;
+	/**
+	 * @brief 词法分析
+	 * 
+	 * @param s 
+	 * @return int 
+	 */
 	int split_input(string s)
 	{
 		string tmp;
@@ -1119,6 +1262,13 @@ private:
 		return 0;
 	};
 
+	/**
+	 * @brief 第一次语法分析的内部函数，使用栈进行括号的处理
+	 * 
+	 * @param l 
+	 * @param r 
+	 * @return p_node* 
+	 */
 	p_node *prase1(int l, int r)
 	{
 		p_node *res = new p_node;
@@ -1156,6 +1306,12 @@ private:
 		return res;
 	};
 
+	/**
+	 * @brief 第二次语法分析，使用栈进行表达式树的建立
+	 * 
+	 * @param r 
+	 * @return expr_node* 
+	 */
 	expr_node *prase2(p_node *r)
 	{
 		stack<p_node *> v, op, s;
@@ -1297,7 +1453,13 @@ private:
 		};
 		return exprs.top();
 	};
-
+	/**
+	 * @brief 打印中间表示
+	 * 
+	 * @param r 
+	 * @param sp 
+	 * @return int 
+	 */
 	int print_r_expr(expr_node *r, string sp)
 	{
 		if (r == NULL)
@@ -1337,7 +1499,13 @@ private:
 		};
 		return 0;
 	};
-
+	/**
+	 * @brief 打印表达式树
+	 * 
+	 * @param r 
+	 * @param sp 
+	 * @return int 
+	 */
 	int print_root(p_node *r, string sp)
 	{
 		cout << sp;
@@ -1376,7 +1544,12 @@ private:
 
 		return 0;
 	};
-
+	/**
+	 * @brief 对表达式树进行求值
+	 * 
+	 * @param r 
+	 * @return double 
+	 */
 	double eval(expr_node *r)
 	{
 		if (r->is_evaled)
@@ -1395,7 +1568,7 @@ private:
 			switch (r->op)
 			{
 			case ADD:
-				tmp = (eval(r->op1) + eval(r->op2));
+				tmp = (eval(r->op1) + eval(r->op2)); // 利用表达式树的性质，此递归写起来省力
 				r->is_evaled = true;
 				break;
 			case SUB:
@@ -1421,7 +1594,12 @@ private:
 			return r->val;
 		};
 	};
-
+	/**
+	 * @brief 打印各类表达式的函数
+	 * 
+	 * @param r 
+	 * @return int 
+	 */
 	int print_midfix(expr_node *r)
 	{
 		if (r == NULL)
@@ -1490,6 +1668,11 @@ private:
 	};
 
 public:
+	/**
+	 * @brief Construct a new E object,构造函数就完成所有的解析工作
+	 * 
+	 * @param s 
+	 */
 	E(string s)
 	{
 		is_error = false;
@@ -1537,6 +1720,12 @@ public:
 	};
 };
 
+/**
+ * @brief 处理用户输入
+ * 
+ * @param arglist 
+ * @return CMDF_RETURN 
+ */
 static CMDF_RETURN calc_cmd(cmdf_arglist *arglist)
 {
 	if (!arglist)

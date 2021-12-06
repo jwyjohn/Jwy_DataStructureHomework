@@ -1,4 +1,73 @@
+/**
+ * @file main.cpp
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 将头文件和源码文件合并为一个文件，用于Windows下编译。
+ * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
+ * ! main.cpp的内容从1795行开始
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * @file main_header.h
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 头文件和Console库的合并
+ * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*** Start of inlined file: sort.h ***/
+/**
+ * 包括函数的声明和实现
+ *
+ */
+
+
 #ifndef _SORT_H__
 #define _SORT_H__
 
@@ -10,19 +79,26 @@
 #include <queue>
 #include <map>
 #include <time.h>
-#include <chrono>
 
 using namespace std;
-using namespace std::chrono;
 
 int GLOBAL_SWAP_CNT, GLOBAL_CMP_CNT; //Side effects introduced, TOO BAD!
 
+/**
+ * @brief 存放性能计数器的结构体
+ * 
+ */
 struct sort_func_result
 {
 	string func_name;
 	int swap_count, compare_count;
 };
 
+/**
+ * @brief 一些常用函数
+ * 
+ * @return int 
+ */
 int init_counter()
 {
 	GLOBAL_SWAP_CNT = 0;
@@ -33,15 +109,15 @@ int init_counter()
 template <class T>
 int print_array(T &array)
 {
-	int w = 8, num = 0;
-	cout << '\t';
+	int w = 10, num = 0;
+	cout << "  ";
 	for (auto i : array)
 	{
-		cout << i << '\t';
+		cout << i << ' ';
 		num++;
 		if (num % w == 0)
 			cout << endl
-				 << '\t';
+				 << "  ";
 	};
 	cout << endl;
 	return 0;
@@ -94,6 +170,23 @@ int force_swap(T &a, T &b)
 	return is_swapped;
 };
 
+/**
+ * @brief 不同排序算法的实现
+ * 
+ * @param array 
+ * @param array_size 
+ * @param cmp 
+ * @return sort_func_result 
+ */
+
+/**
+ * @brief STL algorithm 中的自带排序
+ * 
+ * @param array 
+ * @param array_size 
+ * @param cmp 
+ * @return sort_func_result 
+ */
 sort_func_result default_sort(int *array, int array_size, bool (*cmp)(int a, int b))
 {
 	sort_func_result ret;
@@ -105,6 +198,14 @@ sort_func_result default_sort(int *array, int array_size, bool (*cmp)(int a, int
 	return ret;
 };
 
+/**
+ * @brief 冒泡排序
+ * 
+ * @param array 
+ * @param array_size 
+ * @param cmp 
+ * @return sort_func_result 
+ */
 sort_func_result bubble_sort(int *array, int array_size, bool (*cmp)(int a, int b))
 {
 	sort_func_result ret;
@@ -114,7 +215,7 @@ sort_func_result bubble_sort(int *array, int array_size, bool (*cmp)(int a, int 
 	{
 		for (int j = 0; j < i; j++)
 		{
-			compare_and_swap(array[j], array[j + 1], cmp);
+			compare_and_swap(array[j], array[j + 1], cmp); // 此处冒泡交换
 		};
 	};
 	ret.swap_count = GLOBAL_SWAP_CNT;
@@ -122,6 +223,14 @@ sort_func_result bubble_sort(int *array, int array_size, bool (*cmp)(int a, int 
 	return ret;
 };
 
+/**
+ * @brief 选择排序
+ * 
+ * @param array 
+ * @param array_size 
+ * @param cmp 
+ * @return sort_func_result 
+ */
 sort_func_result selection_sort(int *array, int array_size, bool (*cmp)(int a, int b))
 {
 	sort_func_result ret;
@@ -131,7 +240,7 @@ sort_func_result selection_sort(int *array, int array_size, bool (*cmp)(int a, i
 	{
 		for (int j = i + 1; j < array_size; j++)
 		{
-			compare_and_swap(array[i], array[j], cmp);
+			compare_and_swap(array[i], array[j], cmp); // 此处交换
 		};
 	};
 	ret.swap_count = GLOBAL_SWAP_CNT;
@@ -139,6 +248,14 @@ sort_func_result selection_sort(int *array, int array_size, bool (*cmp)(int a, i
 	return ret;
 };
 
+/**
+ * @brief 插入排序
+ * 
+ * @param array 
+ * @param array_size 
+ * @param cmp 
+ * @return sort_func_result 
+ */
 sort_func_result insertion_sort(int *array, int array_size, bool (*cmp)(int a, int b))
 {
 	sort_func_result ret;
@@ -148,6 +265,7 @@ sort_func_result insertion_sort(int *array, int array_size, bool (*cmp)(int a, i
 	{
 		int tmp = array[i];
 		int pos = i;
+		// 找插入位置
 		while (pos > 0 && cmp(tmp, array[pos - 1]))
 		{
 			GLOBAL_SWAP_CNT += 1;
@@ -155,6 +273,7 @@ sort_func_result insertion_sort(int *array, int array_size, bool (*cmp)(int a, i
 			array[pos] = array[pos - 1];
 			pos--;
 		};
+		// 插入
 		array[pos] = tmp;
 		GLOBAL_SWAP_CNT += 1;
 	};
@@ -163,6 +282,14 @@ sort_func_result insertion_sort(int *array, int array_size, bool (*cmp)(int a, i
 	return ret;
 };
 
+/**
+ * @brief 二分搜索优化的插入排序
+ * 
+ * @param array 
+ * @param array_size 
+ * @param cmp 
+ * @return sort_func_result 
+ */
 sort_func_result binary_insertion_sort(int *array, int array_size, bool (*cmp)(int a, int b))
 {
 	sort_func_result ret;
@@ -174,6 +301,7 @@ sort_func_result binary_insertion_sort(int *array, int array_size, bool (*cmp)(i
 		int begin = 0, end = i;
 		while (begin < end)
 		{
+			// 找插入位置
 			int mid = (begin + end - 1) / 2;
 			if (cmp(tmp, array[mid]))
 				end = mid;
@@ -191,6 +319,14 @@ sort_func_result binary_insertion_sort(int *array, int array_size, bool (*cmp)(i
 	return ret;
 };
 
+/**
+ * @brief Shell排序
+ * 
+ * @param array 
+ * @param array_size 
+ * @param cmp 
+ * @return sort_func_result 
+ */
 sort_func_result shell_sort(int *array, int array_size, bool (*cmp)(int a, int b))
 {
 	sort_func_result ret;
@@ -215,7 +351,7 @@ sort_func_result shell_sort(int *array, int array_size, bool (*cmp)(int a, int b
 			};
 			array[pos] = temp;
 		};
-		gap /= 3;
+		gap /= 3; // 缩小gap可用其他方法
 	};
 	ret.swap_count = GLOBAL_SWAP_CNT;
 	ret.compare_count = GLOBAL_CMP_CNT;
@@ -223,6 +359,15 @@ sort_func_result shell_sort(int *array, int array_size, bool (*cmp)(int a, int b
 	return ret;
 };
 
+/**
+ * @brief 快排递归过程
+ * 
+ * @param array 
+ * @param left 
+ * @param right 
+ * @param cmp 
+ * @return int 
+ */
 int inside_quick_sort(int *array, int left, int right, bool (*cmp)(int a, int b))
 {
 	int swap_count = 0, cmp_count = 0;
@@ -252,6 +397,14 @@ int inside_quick_sort(int *array, int left, int right, bool (*cmp)(int a, int b)
 	return 0;
 };
 
+/**
+ * @brief 快排对外封装
+ * 
+ * @param array 
+ * @param array_size 
+ * @param cmp 
+ * @return sort_func_result 
+ */
 sort_func_result quick_sort(int *array, int array_size, bool (*cmp)(int a, int b))
 {
 	sort_func_result ret;
@@ -264,6 +417,14 @@ sort_func_result quick_sort(int *array, int array_size, bool (*cmp)(int a, int b
 	return ret;
 };
 
+/**
+ * @brief 非递归的堆排序
+ * 
+ * @param array 
+ * @param array_size 
+ * @param cmp 
+ * @return sort_func_result 
+ */
 sort_func_result heap_sort(int *array, int array_size, bool (*cmp)(int a, int b))
 {
 	sort_func_result ret;
@@ -277,6 +438,7 @@ sort_func_result heap_sort(int *array, int array_size, bool (*cmp)(int a, int b)
 		heap[i] = array[i];
 	for (int i = last_non_leaf_node; i >= 0; i--)
 	{
+		// 经典的堆操作：建队
 		int current_node = i;
 		int smaller_child = current_node * 2 + (cmp(heap[i * 2 + 1], heap[i * 2 + 2]) ? 1 : 2);
 		if (i * 2 + 2 > array_size - 1)
@@ -296,6 +458,7 @@ sort_func_result heap_sort(int *array, int array_size, bool (*cmp)(int a, int b)
 	int pos = 0;
 	while (heap_size > 0)
 	{
+		// 不断出堆
 		array[pos] = heap[0];
 		heap[0] = heap[heap_size - 1];
 		heap[heap_size - 1] = 2147483647;
@@ -318,12 +481,20 @@ sort_func_result heap_sort(int *array, int array_size, bool (*cmp)(int a, int b)
 	return ret;
 };
 
+/**
+ * @brief 桶排序
+ * 
+ * @param array 
+ * @param array_size 
+ * @param cmp 
+ * @return sort_func_result 
+ */
 sort_func_result bucket_sort(int *array, int array_size, bool (*cmp)(int a, int b))
 {
 	sort_func_result ret;
 	ret.func_name = __FUNCTION__;
 	init_counter();
-	const int bucket_size = 1000000;
+	const int bucket_size = 1000000; // 此处桶大小
 	unsigned char *bucket = new unsigned char[bucket_size];
 	memset(bucket, 0, sizeof(bucket));
 	for (int i = 0; i < array_size; i++)
@@ -346,6 +517,15 @@ sort_func_result bucket_sort(int *array, int array_size, bool (*cmp)(int a, int 
 	return ret;
 };
 
+/**
+ * @brief 归并排序的递归过程
+ * 
+ * @param array 
+ * @param left 
+ * @param right 
+ * @param cmp 
+ * @return int 
+ */
 int inside_merge_sort(int *array, int left, int right, bool (*cmp)(int a, int b))
 {
 	int mid = (left + right) / 2;
@@ -366,6 +546,7 @@ int inside_merge_sort(int *array, int left, int right, bool (*cmp)(int a, int b)
 	// };
 	int swap_count = 0, cmp_count = 0;
 
+	// 先左右排好
 	inside_merge_sort(array, left, mid, cmp);
 	inside_merge_sort(array, mid + 1, right, cmp);
 
@@ -376,6 +557,7 @@ int inside_merge_sort(int *array, int left, int right, bool (*cmp)(int a, int b)
 	int pos = right;
 	// print_array(left_merged);
 	// print_array(right_merged);
+	// 再并到一起
 	while (!left_merged.empty() && !right_merged.empty())
 	{
 		if (cmp(left_merged.back(), right_merged.back()))
@@ -425,6 +607,14 @@ int inside_merge_sort(int *array, int left, int right, bool (*cmp)(int a, int b)
 	return 0;
 };
 
+/**
+ * @brief 归并排序对外接口
+ * 
+ * @param array 
+ * @param array_size 
+ * @param cmp 
+ * @return sort_func_result 
+ */
 sort_func_result merge_sort(int *array, int array_size, bool (*cmp)(int a, int b))
 {
 	sort_func_result ret;
@@ -443,6 +633,16 @@ sort_func_result merge_sort(int *array, int array_size, bool (*cmp)(int a, int b
 //     int pos_b = (b >> pos) & 1;
 //     return cmp(pos_a, pos_b);
 // };
+
+/**
+ * @brief 基数排序的相关过程
+ * 
+ * @param array 
+ * @param array_size 
+ * @param cmp 
+ * @param pos 
+ * @return int 
+ */
 
 int inside_lsd_radix_sort(int *array, int array_size, bool (*cmp)(int a, int b), int pos)
 {
@@ -517,37 +717,52 @@ sort_func_result msd_radix_sort(int *array, int array_size, bool (*cmp)(int a, i
 	return ret;
 };
 
+
+/**
+ * @brief 用于测试排序函数的对外接口
+ * 
+ * @param fp 
+ * @param random_int_array 
+ * @param array_size 
+ * @param cmp 
+ * @return int 
+ */
 int test_sort_function(sort_func_result (*fp)(int *array, int array_size, bool (*cmp)(int a, int b)), const vector<int> random_int_array, const int array_size, bool (*cmp)(int a, int b))
 {
+	// 准备待排序数据
 	cout << " [Preparing] Copying dataset to sort func..." << endl;
 	int array_to_sort[random_int_array.size()], array_after_sort[random_int_array.size()];
 	sort_func_result res;
 	memcpy(array_to_sort, &random_int_array[0], random_int_array.size() * sizeof(random_int_array[0]));
 	memcpy(array_after_sort, &random_int_array[0], random_int_array.size() * sizeof(random_int_array[0]));
 	cout << " [Done] Data prepared, start to sort." << endl;
-	time_point<high_resolution_clock> start, end;
-	start = high_resolution_clock::now();;
+	clock_t start, end;
+	start = clock();
 	res = fp(array_after_sort, array_size, cmp);
-	end = high_resolution_clock::now();;
+	end = clock();
 	cout << " [" << res.func_name << "]" << endl;
 	cout << " [After sorting]";
-	int w = 8;
+	int w = 10;
 	cout << endl;
-	cout << '\t' ;
 	for (int i = 0; i < array_size; i++)
 	{
-		cout << array_after_sort[i] << '\t';
+		cout << "  " << array_after_sort[i] << ' ';
 		if ((i + 1) % w == 0)
-			cout << endl << '\t';
+			cout << endl;
 	};
 	cout << endl
 		 << endl;
+	cout << " [Sort Function] " << res.func_name << endl;
 	cout << " [Swap calls] " << res.swap_count << endl;
 	cout << " [Compare calls] " << res.compare_count << endl;
-	cout << " [Clocks used] " << duration_cast<microseconds>(end - start).count() << " clocks" << endl;
+	cout << " [Clocks used] " << (end - start) << " clocks" << endl;
 	return 0;
 };
 
+/**
+ * @brief 各排序函数的函数指针和对应的名字
+ * 
+ */
 sort_func_result (*sort_fp[12])(int *array, int array_size, bool (*cmp)(int a, int b)) =
 	{default_sort,
 	 bubble_sort,
@@ -1547,7 +1762,36 @@ struct cmdf_windowsize cmdf_get_window_size_unix(void)
 }
 #endif
 
-/*** Start of inlined file: main.cpp ***/
+/**
+ * @file main.cpp
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 用户输入的处理和主程序
+ * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #include <cstdio>
 #include <stdlib.h>
 #include <iostream>
@@ -1562,6 +1806,11 @@ struct cmdf_windowsize cmdf_get_window_size_unix(void)
 
 using namespace std;
 
+/**
+ * @brief 显示输出的内容以及命令的帮助。
+ * 
+ */
+
 #define PROG_INTRO "                     __      \n                    /\\ \\__   \n  ____    ___   _ __\\ \\ ,_\\  \n /',__\\  / __`\\/\\`'__\\ \\ \\/  \n/\\__, `\\/\\ \\L\\ \\ \\ \\/ \\ \\ \\_ \n\\/\\____/\\ \\____/\\ \\_\\  \\ \\__\\\n \\/___/  \\/___/  \\/_/   \\/__/\n                             \n                             \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n=============================\n! This is a program to compare sort algorithms.\n! Input command 'prep 10000 rand' to generate dataset.\n! Input command 'show' to inspect dataset.\n! If you want to see all the available algorithms , use 'help test'.\n! Use 'test bubble' to run bubble sort on the dataset.\n"
 #define SHOW_HELP "Used to inspect full dataset.\n"
 #define SEED_HELP "Used to inspect the random seed.\n"
@@ -1569,8 +1818,15 @@ using namespace std;
 #define PREP_HELP "Used to prepare dataset.\n Enter the command like \"prepare_dataset N rand/seq/inv\", where N is a number and rand/seq/inv indicates the sequence of data.\n"
 
 vector<int> random_int_array;
-unsigned int seed = static_cast<unsigned int>(time(0));
+unsigned int seed = static_cast<unsigned int>(time(0)); // 准备随机数种子
 
+/**
+ * @brief 检查输入是否合理
+ * 
+ * @param arglist 
+ * @return true 
+ * @return false 
+ */
 bool check_prepare_dataset(cmdf_arglist *arglist)
 {
 	if (arglist->count != 2)
@@ -1588,6 +1844,12 @@ bool check_prepare_dataset(cmdf_arglist *arglist)
 	return true;
 };
 
+/**
+ * @brief 处理用户输入，下同
+ * 
+ * @param arglist 
+ * @return CMDF_RETURN 
+ */
 static CMDF_RETURN prepare_dataset(cmdf_arglist *arglist)
 {
 	if (!arglist)
@@ -1736,6 +1998,3 @@ int main()
 	cmdf_commandloop();
 	return 0;
 }
-
-/*** End of inlined file: main.cpp ***/
-

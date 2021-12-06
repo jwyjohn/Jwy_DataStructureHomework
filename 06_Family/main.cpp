@@ -1,3 +1,33 @@
+/**
+ * @file main.cpp
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 函数的具体实现和主程序
+ * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #include "main_header.h"
 #include <iostream>
 #include <iomanip>
@@ -12,6 +42,11 @@
 
 using namespace std;
 
+/**
+ * @brief 显示输出的内容以及命令的帮助。
+ * 
+ */
+
 #define PROG_INTRO "   ___                     ___                    \n /'___\\                   /\\_ \\    __             \n/\\ \\__/   __      ___ ___ \\//\\ \\  /\\_\\  __  __    \n\\ \\ ,__\\/'__`\\  /' __` __`\\ \\ \\ \\ \\/\\ \\/\\ \\/\\ \\   \n \\ \\ \\_/\\ \\L\\.\\_/\\ \\/\\ \\/\\ \\ \\_\\ \\_\\ \\ \\ \\ \\_\\ \\  \n  \\ \\_\\\\ \\__/.\\_\\ \\_\\ \\_\\ \\_\\/\\____\\\\ \\_\\/`____ \\ \n   \\/_/ \\/__/\\/_/\\/_/\\/_/\\/_/\\/____/ \\/_/`/___/> \\\n                                            /\\___/\n                                            \\/__/ \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n==================================================\n! This is a program to manage a family tree.\n! FIRST, use 'init [Name]', to initialize a tree with root name [Name]\n! Then use 'add [Parent] [Child]', to add a child to a parent.\n! Use 'show', to show the family tree.\n! Use 'del', to delete a member and its children.\n! Use 'rename [Old] [New]', to rename a member.\n"
 
 #define INIT_HELP "Use 'init [Name]', to initialize a tree with root name [Name]"
@@ -24,6 +59,10 @@ bool is_init = false;
 
 struct family_node
 {
+	/**
+	 * @brief 家庭成员节点的结构体
+	 * 
+	 */
 	string name;
 	vector<family_node *> children;
 	family_node *parent;
@@ -31,6 +70,10 @@ struct family_node
 
 int init(string root_name)
 {
+	/**
+	 * @brief 初始化根节点
+	 * 
+	 */
 	root.name = root_name;
 	root.parent = &root;
 	root.children.clear();
@@ -51,6 +94,10 @@ private:
 	};
 	family_node *find_family_i(family_node *r, string name)
 	{
+		/**
+		 * @brief 树里查找节点
+		 * 
+		 */
 		if (r->name == name)
 			return r;
 		family_node *ret = NULL;
@@ -64,6 +111,10 @@ private:
 	};
 	int del_family_i(family_node *to_del)
 	{
+		/**
+		 * @brief 删除节点
+		 * 
+		 */
 		if (to_del != NULL)
 		{
 			for (auto i : to_del->children)
@@ -76,6 +127,10 @@ private:
 	};
 	int print_family_i(family_node *r, string sp)
 	{
+		/**
+		 * @brief 递归打印家谱树
+		 * 
+		 */
 		cout << sp;
 		string st;
 		if (r == &root)
@@ -114,6 +169,11 @@ private:
 	};
 
 public:
+/**
+ * @brief 常用的增查删改的接口
+ * 
+ * @return int 
+ */
 	int print_family() { return print_family_i(&root, ""); };
 	int add_family(string rname, string name)
 	{
@@ -169,6 +229,11 @@ public:
 		return 0;
 	};
 };
+
+/**
+ * @brief 具体的函数实现
+ * 
+ */
 
 family_node *find_family(family_node *r, string name)
 {
@@ -291,6 +356,13 @@ int print_family(family_node *r, string sp)
 
 	return 0;
 };
+
+/**
+ * @brief 处理用户输入
+ * 
+ * @param arglist 
+ * @return CMDF_RETURN 
+ */
 
 static CMDF_RETURN init_cmd(cmdf_arglist *arglist)
 {

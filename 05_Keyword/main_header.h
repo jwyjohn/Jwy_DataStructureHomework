@@ -1,3 +1,33 @@
+/**
+ * @file main_header.h
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 头文件和Console库的合并
+ * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*** Start of inlined file: kmp.h ***/
 #ifndef _KMP_H__
 #define _KMP_H__
@@ -10,6 +40,10 @@ using namespace std;
 
 class kmp_text
 {
+	/**
+	 * @brief 支持KMP的字符串类及其实现
+	 * 
+	 */
 
 	string raw_text;
 
@@ -17,6 +51,10 @@ public:
 	kmp_text(string t) : raw_text(t){};
 	vector<int> prefixFunction(string s)
 	{
+		/**
+		 * @brief KMP中前缀函数的实现
+		 * 
+		 */
 		int n = (int)s.length();
 		vector<int> pi(n);
 		for (int i = 1; i < n; i++)
@@ -32,6 +70,10 @@ public:
 	};
 	pair<int, vector<int>> countWord(string s)
 	{
+		/**
+		 * @brief 利用前缀和函数进行查找和统计
+		 * 
+		 */
 		int n = (int)s.length();
 		int ans = 0;
 		int j = 0;

@@ -1,3 +1,33 @@
+/**
+ * @file main.cpp
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 用户输入的处理和主程序
+ * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #include <cstdio>
 #include <stdlib.h>
 #include <iostream>
@@ -13,6 +43,11 @@
 
 using namespace std;
 
+/**
+ * @brief 显示输出的内容以及命令的帮助。
+ * 
+ */
+
 #define PROG_INTRO "                 ___  ______                      \n                /\\_ \\/\\__  _\\                     \n   __     __  __\\//\\ \\/_/\\ \\/ _ __    __     __   \n /'__`\\  /\\ \\/\\ \\ \\ \\ \\ \\ \\ \\/\\`'__\\/'__`\\ /'__`\\ \n/\\ \\L\\.\\_\\ \\ \\_/ | \\_\\ \\_\\ \\ \\ \\ \\//\\  __//\\  __/ \n\\ \\__/.\\_\\\\ \\___/  /\\____\\\\ \\_\\ \\_\\\\ \\____\\ \\____\\\n \\/__/\\/_/ \\/__/   \\/____/ \\/_/\\/_/ \\/____/\\/____/\n                                                  \n                                                  \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n==================================================\n! This is a program to operate an AVL Tree.\n! Input command 'add 19 7 6 4 ...' to add values to tree.\n! Input command 'lvr', 'lvr' or 'lrv' to expolre the tree.\n! Input command 'find 19 7 6 3...' to search value in the tree.\n! Use 'rm 9 7 5 3...' to remove value in tree.\n! Use 'init' to clear and init tree WITH CAUTION.\n"
 #define INIT_HELP "Initialize the binary sort tree.\n"
 #define VLR_HELP "Print the tree in ROOT LEFT RIGHT order.\n"
@@ -21,6 +56,13 @@ using namespace std;
 #define ADD_HELP "Add value to graph. Format \"add N\"\n"
 #define FIND_HELP "Add edge to graph. Format \"find N\"\n"
 #define REMOVE_HELP "Remove value from tree. Format \"rm N\"\n "
+
+/**
+ * @brief 处理用户输入，下同
+ * 
+ * @param arglist 
+ * @return CMDF_RETURN 
+ */
 
 static CMDF_RETURN init_tree(cmdf_arglist *arglist)
 {

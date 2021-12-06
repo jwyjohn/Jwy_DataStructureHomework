@@ -1,3 +1,38 @@
+/**
+ * @file main_header.h
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 头文件和Console库的合并
+ * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * 包括函数的声明和实现
+ *
+ */
+
 /*** Start of inlined file: bsorttree.h ***/
 #ifndef _BSORTTREE_H__
 #define _BSORTTREE_H__
@@ -16,6 +51,10 @@ using namespace std;
 
 typedef struct avl_tree_node
 {
+	/**
+	 * @brief 平衡树节点
+	 * 
+	 */
 	int data = 0;
 	int height = 0;
 	avl_tree_node *left = nullptr;
@@ -25,6 +64,12 @@ typedef struct avl_tree_node
 
 avl_tree *root;
 
+/**
+ * @brief 常用的几个查询节点性质的函数
+ * 
+ * @param t 
+ * @return int 
+ */
 int clear_tree(avl_tree *t);
 int get_balance(avl_tree *t);
 int get_height(avl_tree *t);
@@ -43,6 +88,13 @@ int clear_tree(avl_tree *t)
 	delete t;
 	return 0;
 };
+
+/**
+ * @brief 按不同次序打印平衡树
+ * 
+ * @param t 
+ * @return int 
+ */
 
 int print_tree_lvr(avl_tree *t)
 {
@@ -131,6 +183,13 @@ int get_balance(avl_tree *t)
 	// return get_height_s(t->right) - get_height_s(t->left);
 };
 
+/**
+ * @brief 四种旋转
+ * 
+ * @param t 
+ * @return avl_tree* 
+ */
+
 avl_tree *rotate_left(avl_tree *t)
 {
 	avl_tree *root;
@@ -175,6 +234,12 @@ avl_tree *adjust_tree_RL(avl_tree *t)
 	return root;
 };
 
+/**
+ * @brief 平衡化操作
+ * 
+ * @param t 
+ * @return int 
+ */
 int balance_node(avl_tree *&t)
 {
 	int bf = get_balance(t);
@@ -203,6 +268,13 @@ int balance_node(avl_tree *&t)
 	return 0;
 };
 
+/**
+ * @brief 查找节点
+ * 
+ * @param t 
+ * @param val 
+ * @return avl_tree* 
+ */
 avl_tree *find_val(avl_tree *t, int val)
 {
 	if (val == t->data)
@@ -249,6 +321,13 @@ int val_is_in(avl_tree *t, int val)
 	return 0;
 };
 
+/**
+ * @brief 插入节点
+ * 
+ * @param t 
+ * @param val 
+ * @return int 
+ */
 int insert_val(avl_tree *&t, int val)
 {
 	if (t->data == val)
@@ -289,6 +368,13 @@ int insert_val(avl_tree *&t, int val)
 	return 0;
 };
 
+/**
+ * @brief 删除节点
+ * 
+ * @param t 
+ * @param val 
+ * @return int 
+ */
 int remove_val(avl_tree *&t, int val)
 {
 	if (t->data == val)

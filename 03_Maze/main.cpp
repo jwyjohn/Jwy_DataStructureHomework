@@ -1,6 +1,6 @@
 /**
  * @file main.cpp
- * @author your name (you@domain.com)
+ * @author JwyJohn (1951510@tongji.edu.cn)
  * @brief 函数的具体实现和主程序
  * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
  * @version 0.1
@@ -22,6 +22,11 @@
 #define LIBCMDF_IMPL
 
 using namespace std;
+
+/**
+ * @brief 显示输出的内容以及命令的帮助。
+ * 
+ */
 
 #define PROG_INTRO "                                     \n                                     \n  ___ ___      __     ____      __   \n/' __` __`\\  /'__`\\  /\\_ ,`\\  /'__`\\ \n/\\ \\/\\ \\/\\ \\/\\ \\L\\.\\_\\/_/  /_/\\  __/ \n\\ \\_\\ \\_\\ \\_\\ \\__/.\\_\\ /\\____\\ \\____\\\n \\/_/\\/_/\\/_/\\/__/\\/_/ \\/____/\\/____/\n                                     \n                                     \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n=====================================\n! This is a program to generate and solve a maze.\n! FIRST, use 'init [H] [W]', to initialize a H*W maze. (H,W >= 10)\n! Then use 'solve', to solve the maze.\n! Use 'show', to show the maze.\n"
 

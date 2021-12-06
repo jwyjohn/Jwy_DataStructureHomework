@@ -1,4 +1,72 @@
+/**
+ * @file main.cpp
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 将头文件和源码文件合并为一个文件，用于Windows下编译。
+ * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
+ * ! main.cpp的内容从1250行开始
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * @file main_header.h
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 头文件和Console库的合并
+ * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*** Start of inlined file: network.h ***/
+/**
+ * 包括函数的声明和实现
+ *
+ */
+
 #ifndef _NETWORK_H__
 #define _NETWORK_H__
 
@@ -17,6 +85,10 @@ class enetwork
 {
 	map<string, map<string, int>> M;
 	map<string, string> V;
+	/**
+	 * @brief 存边的结构体，重载运算符以方便使用优先队列对prim进行优化
+	 * 
+	 */
 	struct edge
 	{
 		string a, b;
@@ -30,6 +102,11 @@ class enetwork
 public:
 	enetwork(){};
 	enetwork(map<string, map<string, int>> e) : M(e){};
+	/**
+	 * @brief 常见的维护操作
+	 * 
+	 * @return int 
+	 */
 	int init_map()
 	{
 		M.clear();
@@ -61,6 +138,12 @@ public:
 		M[node_a][node_b] = cost;
 		return 0;
 	};
+	/**
+	 * @brief 压缩路径的并查集
+	 * 
+	 * @param node_a 
+	 * @return string 
+	 */
 	string find_union(string node_a)
 	{
 		if (node_a == V[node_a])
@@ -70,9 +153,15 @@ public:
 		else
 		{
 			V[node_a] = find_union(V[node_a]); // PATH COMPRESSION
-			return find_union(V[node_a]); 
+			return find_union(V[node_a]); // 递归实现
 		};
 	};
+	/**
+	 * @brief 用并查集判断连通性，继而防止不连通的情况下运行Prim
+	 * 
+	 * @return true 
+	 * @return false 
+	 */
 	bool is_connected()
 	{
 		string s = find_union(V.begin()->first);
@@ -111,6 +200,12 @@ public:
 		// cout << " [Connected] " << is_connected() << endl;
 		return 0;
 	};
+	/**
+	 * @brief Prim算法的实现，利用优先队列优化
+	 * 
+	 * @param start_node 
+	 * @return int 
+	 */
 	int run_prim(string start_node)
 	{
 		assert(M.find(start_node) != M.end());
@@ -1122,6 +1217,36 @@ struct cmdf_windowsize cmdf_get_window_size_unix(void)
 }
 #endif
 
+/**
+ * @file main.cpp
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 用户输入的处理和主程序
+ * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #include <cstdio>
 #include <stdlib.h>
 #include <iostream>
@@ -1136,6 +1261,11 @@ struct cmdf_windowsize cmdf_get_window_size_unix(void)
 
 using namespace std;
 
+/**
+ * @brief 显示输出的内容以及命令的帮助。
+ * 
+ */
+
 #define PROG_INTRO "              __                               __         \n             /\\ \\__                           /\\ \\        \n  ___      __\\ \\ ,_\\  __  __  __    ___   _ __\\ \\ \\/'\\    \n/' _ `\\  /'__`\\ \\ \\/ /\\ \\/\\ \\/\\ \\  / __`\\/\\`'__\\ \\ , <    \n/\\ \\/\\ \\/\\  __/\\ \\ \\_\\ \\ \\_/ \\_/ \\/\\ \\L\\ \\ \\ \\/ \\ \\ \\\\`\\  \n\\ \\_\\ \\_\\ \\____\\\\ \\__\\\\ \\___x___/'\\ \\____/\\ \\_\\  \\ \\_\\ \\_\\\n \\/_/\\/_/\\/____/ \\/__/ \\/__//__/   \\/___/  \\/_/   \\/_/\\/_/\n                                                          \n                                                          \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n==========================================================\n! This is a program to optimize a plan for electric network.\n! Input command 'adv A B C ..' to add a city named A,B,C...\n! Input command 'ade A B 100' to add connect A WITH B at 100 million cost.\n! Input command 'show' to inspect the graph.\n! Use 'run A' to run optimization strating from city A.\n! Use 'init' to clear graph WITH CAUTION.\n"
 #define INIT_HELP "Clear graph data.\n"
 #define SHOW_GRAPH_HELP "Print the graph in a certain format.\n"
@@ -1145,6 +1275,12 @@ using namespace std;
 
 enetwork elec;
 
+/**
+ * @brief 处理用户输入，下同
+ * 
+ * @param arglist 
+ * @return CMDF_RETURN 
+ */
 static CMDF_RETURN init_graph(cmdf_arglist *arglist)
 {
 	elec.init_map();

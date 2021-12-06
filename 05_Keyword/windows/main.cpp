@@ -1,3 +1,46 @@
+/**
+ * @file main.cpp
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 将头文件和源码文件合并为一个文件，用于Windows下编译。
+ * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
+ * ! main.cpp的内容从1098行开始
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * @file main_header.h
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 头文件和Console库的合并
+ * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
 /*** Start of inlined file: kmp.h ***/
 #ifndef _KMP_H__
 #define _KMP_H__
@@ -10,6 +53,10 @@ using namespace std;
 
 class kmp_text
 {
+	/**
+	 * @brief 支持KMP的字符串类及其实现
+	 * 
+	 */
 
 	string raw_text;
 
@@ -17,6 +64,10 @@ public:
 	kmp_text(string t) : raw_text(t){};
 	vector<int> prefixFunction(string s)
 	{
+		/**
+		 * @brief KMP中前缀函数的实现
+		 * 
+		 */
 		int n = (int)s.length();
 		vector<int> pi(n);
 		for (int i = 1; i < n; i++)
@@ -32,6 +83,10 @@ public:
 	};
 	pair<int, vector<int>> countWord(string s)
 	{
+		/**
+		 * @brief 利用前缀和函数进行查找和统计
+		 * 
+		 */
 		int n = (int)s.length();
 		int ans = 0;
 		int j = 0;
@@ -1029,7 +1084,17 @@ struct cmdf_windowsize cmdf_get_window_size_unix(void)
 }
 #endif
 
-/*** Start of inlined file: main.cpp ***/
+/**
+ * @file main.cpp
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 函数的具体实现和主程序
+ * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
 #include <cstdio>
 #include <stdlib.h>
 #include <iostream>
@@ -1046,6 +1111,11 @@ struct cmdf_windowsize cmdf_get_window_size_unix(void)
 
 using namespace std;
 
+/**
+ * @brief 显示输出的内容以及命令的帮助。
+ * 
+ */
+
 #define PROG_INTRO " __  __           ____    \n/\\ \\/\\ \\  /'\\_/`\\/\\  _`\\  \n\\ \\ \\/'/'/\\      \\ \\ \\L\\ \\\n \\ \\ , < \\ \\ \\__\\ \\ \\ ,__/\n  \\ \\ \\\\`\\\\ \\ \\_/\\ \\ \\ \\/ \n   \\ \\_\\ \\_\\ \\_\\\\ \\_\\ \\_\\ \n    \\/_/\\/_/\\/_/ \\/_/\\/_/ \n                          \n                          \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n==========================\n! This is a program to find substring in a file.\n! Can also create, read, append a file.\n! Input command 'c mytext.txt' to create mytext.txt.\n! Input command 'r mytext.txt' to read from mytext.txt.\n! Input command 'a mytext.txt' to append content to mytext.txt.\n! Input command 's' to show loaded text.\n! Input command 'f substr' to serach substr in loaded text.\n! Use 'c mytext.txt' WITH CAUTION because it can overwrite existing file.\n"
 #define NEW_HELP "Create a new file and enter text into it. Format 'c mytext.txt'\n"
 #define FIND_HELP "Find a substring in the loaded file. Format 'f substr'\n"
@@ -1054,11 +1124,18 @@ using namespace std;
 #define APPEND_HELP "Append text to a file. Format 'a mytext.txt'\n"
 using namespace std;
 
+// 一些全局变量，用于暂存读入或要写入的文件
+
 string filename;
 string contents;
 
 static CMDF_RETURN read_filename(cmdf_arglist *arglist)
 {
+	/**
+	 * @brief 处理用户输入，读文件
+	 * 
+	 */
+
 	if (!arglist)
 	{
 		cout << " [Sytax Error] No file name provided!\n [Tip] Please provide file name like \"r mytext.txt\"" << endl;
@@ -1091,6 +1168,10 @@ static CMDF_RETURN read_filename(cmdf_arglist *arglist)
 
 static CMDF_RETURN show_file(cmdf_arglist *arglist)
 {
+	/**
+	 * @brief 显示文件暂存区内容
+	 * 
+	 */
 	cout << " [" << filename << "] :" << endl;
 	cout << contents << endl;
 	cout << endl;
@@ -1099,6 +1180,10 @@ static CMDF_RETURN show_file(cmdf_arglist *arglist)
 
 static CMDF_RETURN create_file(cmdf_arglist *arglist)
 {
+	/**
+	 * @brief 由用户输入创建文件
+	 * 
+	 */
 	if (!arglist)
 	{
 		cout << " [Sytax Error] No file name provided!\n [Tip] Please provide file name like \"c mytext.txt\"" << endl;
@@ -1135,6 +1220,10 @@ static CMDF_RETURN create_file(cmdf_arglist *arglist)
 
 static CMDF_RETURN append_file(cmdf_arglist *arglist)
 {
+	/**
+	 * @brief 对现有文件进行追加
+	 * 
+	 */
 	if (!arglist)
 	{
 		cout << " [Sytax Error] No file name provided!\n [Tip] Please provide file name like \"c mytext.txt\"" << endl;
@@ -1186,6 +1275,10 @@ static CMDF_RETURN append_file(cmdf_arglist *arglist)
 
 static CMDF_RETURN find_str(cmdf_arglist *arglist)
 {
+	/**
+	 * @brief 查找字符串功能
+	 * 
+	 */
 	if (!arglist)
 	{
 		cout << " [Sytax Error] No file name provided!\n [Tip] Please provide file name like \"f somestr\"" << endl;
@@ -1215,7 +1308,7 @@ static CMDF_RETURN find_str(cmdf_arglist *arglist)
 
 int main()
 {
-	cmdf_init("network> ", PROG_INTRO, NULL, NULL, 0, 1);
+	cmdf_init("keyword> ", PROG_INTRO, NULL, NULL, 0, 1);
 
 	/* Register our custom commands */
 	cmdf_register_command(read_filename, "r", READ_HELP);
@@ -1227,5 +1320,3 @@ int main()
 	cmdf_commandloop();
 	return 0;
 }
-
-/*** End of inlined file: main.cpp ***/
