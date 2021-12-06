@@ -1,3 +1,28 @@
+/**
+ * @file main.cpp
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 将头文件和源码文件合并为一个文件，用于Windows下编译。
+ * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
+ * ! main.cpp的内容从1061行开始
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
+
+/**
+ * @file main_header.h
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 将exam.h头文件和libcmdf.h这个命令行库合并在了这个头文件里。
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
 /*** Start of inlined file: exam.h ***/
 #ifndef _EXAM_H__
 #define _EXAM_H__
@@ -14,7 +39,10 @@ using namespace std;
 
 struct exam_candidate
 {
-	/* data */
+	/**
+	 * @brief 链表节点的定义
+	 * 
+	 */
 	int No = 0;
 	string name = "";
 	string Gender = "";
@@ -24,199 +52,32 @@ struct exam_candidate
 	exam_candidate *pre = NULL;
 };
 
-// struct op_parms
-// {
-// 	// int op_code = 0;
-// 	int no = 0;
-// 	exam_candidate *candidate = NULL;
-// };
+exam_candidate *head; // 链表头节点
 
-exam_candidate *head;
+/**
+ * @brief 一些常用函数
+ * 
+ * 
+ */
 
-int init_link();
-exam_candidate *find_candidate(int no);
-int insert_candidate_after(int no, exam_candidate *candidate);
-int remove_candidate(int no);
-int show_candidates();
-int show_single_candidate(exam_candidate *candidate);
-// exam_candidate *find_candidate(op_parms parms);
-// int insert_candidate_after(op_parms parms);
-// int remove_candidate(op_parms parms);
-// int show_candidates(op_parms parms);
-// int show_single_candidate(op_parms parms);
+int init_link(); // 初始化链表
+int clear_link(exam_candidate *head); // 清空链表
+exam_candidate *find_candidate(int no); // 查找特定编号的考生
+int insert_candidate_after(int no, exam_candidate *candidate); // 在特定考生后插入节点
+int remove_candidate(int no); // 删除考生
+int show_candidates(); // 打印所有考生
+int show_single_candidate(exam_candidate *candidate); // 打印单个考生
 
-// map<string, int> op_list = {{"ls", 0}, {"find", 1}, {"add", 2}, {"rm", 3}};
-// map<string, int> parm_list = {{"ls", 0}, {"find", 16}, {"add", 63}, {"rm", 16}}; // pos32 no16 name8 gender4 age2 subject1
-// const int parm_is_string = 13;
-// int (*func_ptr[4])(op_parms parms) = {show_candidates, show_single_candidate, insert_candidate_after, remove_candidate};
-// // Thank 644617926 for debugging.
-// int process_input(string op)
-// {
-//     int parm_needed = (parm_list.find(op) != parm_list.end()) ? parm_list[op] : -1;
-//     if (parm_needed == -1)
-//     {
-//         cout << "Unknown command." << endl;
-//         return 1;
-//     };
-//     string user_input[6];
-//     int tmp[6] = {0, 0, 0, 0, 0, 0};
-//     for (int i = 5; i >= 0; i--)
-//     {
-//         int res = (parm_needed >> i) & 1;
-//         int is_string = (parm_is_string >> i) & 1;
-//         // cout << res << ' ';
-//         if (res == 1)
-//         {
-//             cin >> user_input[i];
-//             if (is_string != 1)
-//                 tmp[i] = stoi(user_input[i]);
-//         };
-//     };
-//     exam_candidate *candidate_to_add = new exam_candidate;
-//     candidate_to_add->No = tmp[4];
-//     candidate_to_add->Age = tmp[1];
-//     candidate_to_add->Gender = tmp[2];
-//     candidate_to_add->name = user_input[3];
-//     candidate_to_add->subject = user_input[0];
-//     int pos = tmp[5];
-//     show_single_candidate(candidate_to_add);
-//     cout << endl;
-//     op_parms parms;
-//     parms.candidate = candidate_to_add;
-//     parms.no = pos;
-//     int func_needed = (op_list.find(op) != op_list.end()) ? op_list[op] : -1;
-//     int ret_code;
-//     ret_code = func_ptr[func_needed](parms);
-//     return ret_code;
-// };
-int clear_link(exam_candidate *head)
-{
-	if (head->next == nullptr)
-	{
-		delete head;
-	}
-	else
-	{
-		clear_link(head->next);
-	};
-	return 0;
-};
 
-int init_link()
-{
-	clear_link(head);
-	head = new exam_candidate;
-	head->No = -1;
-};
-
-int show_single_candidate(exam_candidate *candidate)
-{
-	if (candidate == NULL)
-		return 1;
-	cout << endl;
-	cout
-		<< "  [" << candidate->No << "] "
-		<< "  Name: " << candidate->name
-		<< "  Gender: " << candidate->Gender
-		<< "  Age: " << candidate->Age
-		<< "  Subject: " << candidate->subject << endl;
-	return 0;
-};
-
-// exam_candidate *find_candidate(op_parms parms)
-// {
-//     return find_candidate(parms.no);
-// };
-
-// int insert_candidate_after(op_parms parms)
-// {
-//     return insert_candidate_after(parms.no, parms.candidate);
-// };
-
-// int remove_candidate(op_parms parms)
-// {
-//     return remove_candidate(parms.candidate->No);
-// };
-
-// int show_candidates(op_parms parms)
-// {
-//     return show_candidates();
-// };
-
-// int show_single_candidate(op_parms parms)
-// {
-//     return show_single_candidate(parms.candidate);
-// };
-
-exam_candidate *find_candidate(int no)
-{
-	exam_candidate *ptr = head;
-	if (no == 0)
-		return ptr;
-	while (ptr->next != NULL)
-	{
-		ptr = ptr->next;
-		if (ptr->No == no)
-			return ptr;
-	};
-	return NULL;
-};
-
-int insert_candidate_after(int no, exam_candidate *candidate)
-{
-	exam_candidate *insert_position = find_candidate(no);
-	if (insert_position == NULL)
-		return 0;
-	if (insert_position->next != NULL)
-	{
-		exam_candidate *tmp = insert_position->next;
-		insert_position->next = candidate;
-		candidate->pre = insert_position;
-		candidate->next = tmp;
-		tmp->pre = candidate;
-	}
-	else
-	{
-		insert_position->next = candidate;
-		candidate->pre = insert_position;
-	};
-	return 1;
-};
-
-int remove_candidate(int no)
-{
-	exam_candidate *remove_position = find_candidate(no);
-	if (remove_position == NULL)
-		return 1;
-	if (remove_position->next != NULL)
-	{
-		// exam_candidate *tmp = remove_position;
-		remove_position->pre->next = remove_position->next;
-		remove_position->next->pre = remove_position->pre;
-		delete remove_position;
-	}
-	else
-	{
-		remove_position->pre->next = NULL;
-		delete remove_position;
-	};
-	return 0;
-};
-
-	// int show_candidates()
-	// {
-	// 	exam_candidate *ptr = head->next;
-	// 	while (ptr != NULL)
-	// 	{
-	// 		cout << ptr->No << ' ' << ptr->name << endl;
-	// 		ptr = ptr->next;
-	// 	}
-	// 	return 0;
-	// };
 
 #endif
 
 /*** End of inlined file: exam.h ***/
+
+/**
+ * @brief libcmdf命令行库的实现。
+ * 
+ */
 
 /*** Start of inlined file: libcmdf.h ***/
 #ifndef LIBCMDF_H_INCLUDE
@@ -1187,7 +1048,16 @@ struct cmdf_windowsize cmdf_get_window_size_unix(void)
 }
 #endif
 
-/*** Start of inlined file: main.cpp ***/
+/**
+ * @file main.cpp
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 头文件中函数及主程序的实现
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
 #include <cstdio>
 #include <stdlib.h>
 #include <iostream>
@@ -1204,6 +1074,11 @@ struct cmdf_windowsize cmdf_get_window_size_unix(void)
 
 using namespace std;
 
+/**
+ * @brief 显示输出的内容以及命令的帮助。
+ * 
+ */
+
 #define PROG_INTRO "                                    \n                                    \n   __   __  _    __      ___ ___    \n /'__`\\/\\ \\/'\\ /'__`\\  /' __` __`\\  \n/\\  __/\\/>  <//\\ \\L\\.\\_/\\ \\/\\ \\/\\ \\ \n\\ \\____\\/\\_/\\_\\ \\__/.\\_\\ \\_\\ \\_\\ \\_\\\n \\/____/\\//\\/_/\\/__/\\/_/\\/_/\\/_/\\/_/\n                                    \n                                    \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n====================================\n! This is a program to manage exam students.\n! Can also save student info to a file.\n! Input command 'i insert_position No. name gender age subject' to insert a student.\n! Input command 'f No.' to find info about a student.\n! Input command 'd No.' to delete a student.\n! Input command 'm No. new_No. new_name new_gender new_age new_subject' to modify student info.\n! Input command 's' to show statistcal data.\n! Input command 'l' to list all students.\n! Use 'w' WITH CAUTION to save data to student_data.txt because it can overwrite existing file.\n"
 #define INSERT_HELP "Insert a new candidate to the table.\n Format 'i insert_position No name gender age subject'\n"
 #define DEL_HELP "Delete a candidate from the table.\n Format 'd No'\n"
@@ -1212,10 +1087,108 @@ using namespace std;
 #define MODI_HELP "Modify a candidate in the table.\n Format 'm No No_nww name_new gender_new age_new subject_new'\n"
 #define STAT_HELP "Show statistic data.\n Format 's'\n"
 #define SAVE_HELP "Save data.\n Format 'w'\n"
-using namespace std;
+
+/**
+ * @brief 头文件中函数的实现
+ * 
+ */
+
+int clear_link(exam_candidate *head)
+{
+	if (head->next == nullptr)
+	{
+		delete head;
+	}
+	else
+	{
+		clear_link(head->next); // 递归删除节点
+	};
+	return 0;
+};
+
+int init_link()
+{
+	clear_link(head);
+	head = new exam_candidate;
+	head->No = -1;
+};
+
+int show_single_candidate(exam_candidate *candidate)
+{
+	if (candidate == NULL)
+		return 1;
+	cout << endl;
+	cout
+		<< "  [" << candidate->No << "] "
+		<< "  Name: " << candidate->name
+		<< "  Gender: " << candidate->Gender
+		<< "  Age: " << candidate->Age
+		<< "  Subject: " << candidate->subject << endl;
+	return 0;
+};
+
+exam_candidate *find_candidate(int no)
+{
+	exam_candidate *ptr = head;
+	if (no == 0)
+		return ptr;
+	while (ptr->next != NULL)
+	{
+		ptr = ptr->next;
+		if (ptr->No == no)
+			return ptr;
+	};
+	return NULL;
+};
+
+int insert_candidate_after(int no, exam_candidate *candidate)
+{
+	exam_candidate *insert_position = find_candidate(no);
+	if (insert_position == NULL)
+		return 0;
+	if (insert_position->next != NULL)
+	{
+		exam_candidate *tmp = insert_position->next;
+		insert_position->next = candidate;
+		candidate->pre = insert_position;
+		candidate->next = tmp;
+		tmp->pre = candidate; // 经典的链表插入操作
+	}
+	else
+	{
+		insert_position->next = candidate;
+		candidate->pre = insert_position;
+	};
+	return 1;
+};
+
+int remove_candidate(int no)
+{
+	exam_candidate *remove_position = find_candidate(no);
+	if (remove_position == NULL)
+		return 1;
+	if (remove_position->next != NULL)
+	{
+		remove_position->pre->next = remove_position->next;
+		remove_position->next->pre = remove_position->pre;
+		delete remove_position;
+	}
+	else
+	{
+		remove_position->pre->next = NULL;
+		delete remove_position;
+	};
+	// 经典的链表删除操作
+	return 0;
+};
 
 bool isNumber(const string &str)
 {
+	/**
+	 * @brief 判断字符串是否时纯数字，用于检测是否为合法输入。
+	 * 
+	 * @param str 
+	 */
 	for (char const &c : str)
 	{
 		if (std::isdigit(c) == 0)
@@ -1320,6 +1293,10 @@ Exam E;
 
 static CMDF_RETURN insert_student(cmdf_arglist *arglist)
 {
+	/**
+	 * @brief 过滤用户输入，并按需调用函数，下面几个函数同样是这个作用。
+	 * 
+	 */
 	if (!arglist)
 	{
 		cout << " [Sytax Error] No arguments provided!\n [Tip] Please provide info like 'i insert_position No name gender age subject'" << endl;
@@ -1660,11 +1637,10 @@ int main()
 }
 
 /*
+测试数据：
 i 1 25 jwy M 21 SE
 i 25 19 zkx F 21 AC
 i 25 2 ly M 21 SE
 i 25 9 dyy F 21 SE
 l
 */
-
-/*** End of inlined file: main.cpp ***/

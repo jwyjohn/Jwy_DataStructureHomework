@@ -1,3 +1,14 @@
+/**
+ * @file main.cpp
+ * @author your name (you@domain.com)
+ * @brief 函数的具体实现和主程序
+ * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
 #include "main_header.h"
 #include <iostream>
 #include <iomanip>
@@ -18,11 +29,11 @@ using namespace std;
 #define SOLVE_HELP "Use 'solve', to solve the maze."
 #define SHOW_HELP "Use 'show', to show the maze."
 
-const int dx[4] = {1, 0, -1, 0};
-const int dy[4] = {0, 1, 0, -1};
-const int c[24][4] = {{0, 1, 2, 3}, {0, 1, 3, 2}, {0, 2, 1, 3}, {0, 2, 3, 1}, {0, 3, 2, 1}, {0, 3, 1, 2}, {1, 2, 0, 3}, {1, 2, 3, 0}, {1, 3, 0, 2}, {1, 3, 2, 0}, {1, 0, 2, 3}, {1, 0, 3, 2}, {2, 1, 0, 3}, {2, 1, 3, 0}, {2, 0, 1, 3}, {2, 0, 3, 1}, {2, 3, 0, 1}, {2, 3, 1, 0}, {3, 1, 2, 0}, {3, 1, 0, 2}, {3, 2, 1, 0}, {3, 2, 0, 1}, {3, 0, 2, 1}, {3, 0, 1, 2}};
-
-int w, h, start, end_p;
+/**
+ * @brief 定义一些全局变量供后续使用
+ * 
+ */
+int w, h, start, end_p; // 迷宫的尺寸见is_in_M(int x, int y)
 int M[1000][1000];
 bool visited[1000][1000];
 int R[1000][1000];
@@ -35,23 +46,39 @@ int print_R();
 
 bool is_in_bound(int x, int y)
 {
+	/**
+	 * @brief 判断随机DFS是否出界
+	 * 
+	 */
 	return ((x < w) && (x > 0) && (y < h) && (y > 0));
 };
 
 bool is_in_M(int x, int y)
 {
+	/**
+	 * @brief 判断某点是否在迷宫内
+	 * 
+	 */
 	return ((x < w * 2) && (x > 0) && (y < h * 2) && (y > 0));
 };
 
 int start_generate_maze()
 {
+	/**
+	 * @brief 生成迷宫
+	 * 
+	 */
 	memset(M, 0, sizeof(M));
 	memset(R, 0, sizeof(R));
 	memset(visited, 0, sizeof(visited));
 	memset(S_visited, 0, sizeof(S_visited));
 	SOLUTION.clear();
 	is_solved = false;
-	walkmaze(1, 1, 1);
+	walkmaze(1, 1, 1); // 置初值后，随机游走开始
+	/**
+	 * @brief 将随机DFS转化为地图上的内容
+	 * 
+	 */
 	for (int i = 0; i <= w; i++)
 	{
 		for (int j = 0; j <= h; j++)
@@ -68,6 +95,10 @@ int start_generate_maze()
 			};
 		};
 	};
+	/**
+	 * @brief 进一步处理生成的地图
+	 * 
+	 */
 	for (int i = 1; i <= 2 * w; i++)
 	{
 		for (int j = 1; j <= 2 * h; j++)
@@ -88,6 +119,10 @@ int start_generate_maze()
 
 int walkmaze(int x, int y, int n)
 {
+	/**
+	 * @brief 随机DFS生成迷宫
+	 * 
+	 */
 	if (is_in_bound(x, y) && (!visited[x][y]))
 	{
 		R[x][y] = n;
@@ -95,7 +130,7 @@ int walkmaze(int x, int y, int n)
 		int di = rand() % 24;
 		for (int i = 0; i < 4; i++)
 		{
-			walkmaze(x + 1 * dx[c[di][i]], y + 1 * dy[c[di][i]], n + 1);
+			walkmaze(x + 1 * dx[c[di][i]], y + 1 * dy[c[di][i]], n + 1); // 递归随机游走
 		};
 	};
 
@@ -104,6 +139,10 @@ int walkmaze(int x, int y, int n)
 
 int print_M()
 {
+	/**
+	 * @brief 打印迷宫
+	 * 
+	 */
 	cout << "   ." << endl;
 	for (int i = 1; i <= 2 * w - 1; i++)
 	{
@@ -128,6 +167,10 @@ int print_M()
 
 int Solve(int x, int y, vector<pair<int, int>> sol)
 {
+	/**
+	 * @brief DFS求解迷宫
+	 * 
+	 */
 	if (!S_visited[x][y] && is_in_M(x, y) && M[x][y] != 0)
 	{
 		S_visited[x][y] = true;
@@ -140,7 +183,7 @@ int Solve(int x, int y, vector<pair<int, int>> sol)
 		};
 		for (int i = 0; i < 4; i++)
 		{
-			Solve(x + dx[i], y + dy[i], tmp);
+			Solve(x + dx[i], y + dy[i], tmp); // DFS的递归调用
 		};
 	};
 	return 0;
@@ -148,6 +191,10 @@ int Solve(int x, int y, vector<pair<int, int>> sol)
 
 int calc_solution()
 {
+	/**
+	 * @brief 包装的求解接口
+	 * 
+	 */
 	Solve(1, 2, {});
 	for (auto i : SOLUTION)
 	{
@@ -167,6 +214,10 @@ int calc_solution()
 
 static CMDF_RETURN init_cmd(cmdf_arglist *arglist)
 {
+	/**
+	 * @brief 处理用户输入
+	 * 
+	 */
 	if (!arglist)
 	{
 		cout << " [Sytax Error] No arguments provided!\n [Tip] Please Enter the command like \"init 10 10\"." << endl;
@@ -202,6 +253,10 @@ static CMDF_RETURN init_cmd(cmdf_arglist *arglist)
 
 static CMDF_RETURN solve_cmd(cmdf_arglist *arglist)
 {
+	/**
+	 * @brief 处理用户输入
+	 * 
+	 */
 	if (!is_init)
 	{
 		cout << " [ERROR] Need to Initialize maze first using \"init [H] [W]\"." << endl;
@@ -216,6 +271,10 @@ static CMDF_RETURN solve_cmd(cmdf_arglist *arglist)
 
 static CMDF_RETURN show_cmd(cmdf_arglist *arglist)
 {
+	/**
+	 * @brief 处理用户输入
+	 * 
+	 */
 	if (!is_init)
 	{
 		cout << " [ERROR] Need to Initialize maze first using \"init [H] [W]\"." << endl;

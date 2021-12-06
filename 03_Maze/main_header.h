@@ -1,3 +1,28 @@
+/**
+ * @file main_header.h
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 头文件和Console库的合并
+ * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+#ifndef _MAZE_H__
+#define _MAZE_H__
+
+/**
+ * @brief 定义一些常用的常量
+ * 
+ */
+
+const int dx[4] = {1, 0, -1, 0};
+const int dy[4] = {0, 1, 0, -1};
+const int c[24][4] = {{0, 1, 2, 3}, {0, 1, 3, 2}, {0, 2, 1, 3}, {0, 2, 3, 1}, {0, 3, 2, 1}, {0, 3, 1, 2}, {1, 2, 0, 3}, {1, 2, 3, 0}, {1, 3, 0, 2}, {1, 3, 2, 0}, {1, 0, 2, 3}, {1, 0, 3, 2}, {2, 1, 0, 3}, {2, 1, 3, 0}, {2, 0, 1, 3}, {2, 0, 3, 1}, {2, 3, 0, 1}, {2, 3, 1, 0}, {3, 1, 2, 0}, {3, 1, 0, 2}, {3, 2, 1, 0}, {3, 2, 0, 1}, {3, 0, 2, 1}, {3, 0, 1, 2}};
+
+#endif
+
 /*** Start of inlined file: libcmdf.h ***/
 #ifndef LIBCMDF_H_INCLUDE
 #define LIBCMDF_H_INCLUDE

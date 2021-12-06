@@ -1,3 +1,14 @@
+/**
+ * @file main.cpp
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 头文件中函数及主程序的实现
+ * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
 #include <cstdio>
 #include <stdlib.h>
 #include <iostream>
@@ -16,6 +27,11 @@
 
 using namespace std;
 
+/**
+ * @brief 显示输出的内容以及命令的帮助。
+ * 
+ */
+
 #define PROG_INTRO "                                    \n                                    \n   __   __  _    __      ___ ___    \n /'__`\\/\\ \\/'\\ /'__`\\  /' __` __`\\  \n/\\  __/\\/>  <//\\ \\L\\.\\_/\\ \\/\\ \\/\\ \\ \n\\ \\____\\/\\_/\\_\\ \\__/.\\_\\ \\_\\ \\_\\ \\_\\\n \\/____/\\//\\/_/\\/__/\\/_/\\/_/\\/_/\\/_/\n                                    \n                                    \n\n - Free Software by 1951510 JiangWenyuan \nNov 2021\n====================================\n! This is a program to manage exam students.\n! Can also save student info to a file.\n! Input command 'i insert_position No. name gender age subject' to insert a student.\n! Input command 'f No.' to find info about a student.\n! Input command 'd No.' to delete a student.\n! Input command 'm No. new_No. new_name new_gender new_age new_subject' to modify student info.\n! Input command 's' to show statistcal data.\n! Input command 'l' to list all students.\n! Use 'w' WITH CAUTION to save data to student_data.txt because it can overwrite existing file.\n"
 #define INSERT_HELP "Insert a new candidate to the table.\n Format 'i insert_position No name gender age subject'\n"
 #define DEL_HELP "Delete a candidate from the table.\n Format 'd No'\n"
@@ -24,10 +40,108 @@ using namespace std;
 #define MODI_HELP "Modify a candidate in the table.\n Format 'm No No_nww name_new gender_new age_new subject_new'\n"
 #define STAT_HELP "Show statistic data.\n Format 's'\n"
 #define SAVE_HELP "Save data.\n Format 'w'\n"
-using namespace std;
+
+/**
+ * @brief 头文件中函数的实现
+ * 
+ */
+
+int clear_link(exam_candidate *head)
+{
+	if (head->next == nullptr)
+	{
+		delete head;
+	}
+	else
+	{
+		clear_link(head->next); // 递归删除节点
+	};
+	return 0;
+};
+
+int init_link()
+{
+	clear_link(head);
+	head = new exam_candidate;
+	head->No = -1;
+};
+
+int show_single_candidate(exam_candidate *candidate)
+{
+	if (candidate == NULL)
+		return 1;
+	cout << endl;
+	cout
+		<< "  [" << candidate->No << "] "
+		<< "  Name: " << candidate->name
+		<< "  Gender: " << candidate->Gender
+		<< "  Age: " << candidate->Age
+		<< "  Subject: " << candidate->subject << endl;
+	return 0;
+};
+
+exam_candidate *find_candidate(int no)
+{
+	exam_candidate *ptr = head;
+	if (no == 0)
+		return ptr;
+	while (ptr->next != NULL)
+	{
+		ptr = ptr->next;
+		if (ptr->No == no)
+			return ptr;
+	};
+	return NULL;
+};
+
+int insert_candidate_after(int no, exam_candidate *candidate)
+{
+	exam_candidate *insert_position = find_candidate(no);
+	if (insert_position == NULL)
+		return 0;
+	if (insert_position->next != NULL)
+	{
+		exam_candidate *tmp = insert_position->next;
+		insert_position->next = candidate;
+		candidate->pre = insert_position;
+		candidate->next = tmp;
+		tmp->pre = candidate; // 经典的链表插入操作
+	}
+	else
+	{
+		insert_position->next = candidate;
+		candidate->pre = insert_position;
+	};
+	return 1;
+};
+
+int remove_candidate(int no)
+{
+	exam_candidate *remove_position = find_candidate(no);
+	if (remove_position == NULL)
+		return 1;
+	if (remove_position->next != NULL)
+	{
+		remove_position->pre->next = remove_position->next;
+		remove_position->next->pre = remove_position->pre;
+		delete remove_position;
+	}
+	else
+	{
+		remove_position->pre->next = NULL;
+		delete remove_position;
+	};
+	// 经典的链表删除操作
+	return 0;
+};
 
 bool isNumber(const string &str)
 {
+	/**
+	 * @brief 判断字符串是否时纯数字，用于检测是否为合法输入。
+	 * 
+	 * @param str 
+	 */
 	for (char const &c : str)
 	{
 		if (std::isdigit(c) == 0)
@@ -132,6 +246,10 @@ Exam E;
 
 static CMDF_RETURN insert_student(cmdf_arglist *arglist)
 {
+	/**
+	 * @brief 过滤用户输入，并按需调用函数，下面几个函数同样是这个作用。
+	 * 
+	 */
 	if (!arglist)
 	{
 		cout << " [Sytax Error] No arguments provided!\n [Tip] Please provide info like 'i insert_position No name gender age subject'" << endl;
@@ -472,6 +590,7 @@ int main()
 }
 
 /*
+测试数据：
 i 1 25 jwy M 21 SE
 i 25 19 zkx F 21 AC
 i 25 2 ly M 21 SE

@@ -1,3 +1,22 @@
+/**
+ * @file main_header.h
+ * @author JwyJohn (1951510@tongji.edu.cn)
+ * @brief 将一些声明和libcmdf.h这个命令行库合并在了这个头文件里。
+ * ! 务必使用支持C++11标准的编译器，仅保证在g++ 10.2.0 (GCC) 下编译通过。
+ * @version 0.1
+ * @date 2021-12-06
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+#ifndef _JOSEPH_H__
+#define _JOSEPH_H__
+
+struct node;
+int solve();
+int init();
+#endif
+
 /*** Start of inlined file: libcmdf.h ***/
 #ifndef LIBCMDF_H_INCLUDE
 #define LIBCMDF_H_INCLUDE
