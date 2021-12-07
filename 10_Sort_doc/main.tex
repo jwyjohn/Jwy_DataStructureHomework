@@ -111,7 +111,7 @@ Type \lstinline{test merge} to run Merge Sort on the generated dataset, the resu
 
 On many data structure or algorithm textbooks, it has been proved that comparison-based sorting algorithms have a fundamental requirement of $\Omega(n \, log \, n) $ comparisons,\uct{cormen2009introduction} whlie those sort methods not based on comparisons, such as Bucket Sort, can have better performance at a cost of more space.
 
-Here we consider Computational complexity (best, average and worst), memory usage and stability of these Sort Algorithms, and the results are shown in the table below. Detailed proof can be found on various papers or textbooks.
+Here we consider Computational complexity (best, average and worst), memory usage and stability (a stable sort means if two element have the same key, their relative position will not be changed) of these Sort Algorithms, and the results are shown in the table below. Detailed proof can be found on various papers or textbooks.
 
 \begin{table}[H]
     \caption{\textbf{Theoretical comparison of algorithms}}
@@ -122,7 +122,7 @@ Here we consider Computational complexity (best, average and worst), memory usag
         \midrule
         Bubble Sort           & $n$             & $n^2$             & $n^2$             & $1$        & Yes    \\
         Insertion Sort        & $n$             & $n^2$             & $n^2$             & $1$        & Yes    \\
-        Selection Sort        & $n^2$           & $n^2$             & $n^2$             & $1$        & Yes    \\
+        Selection Sort        & $n^2$           & $n^2$             & $n^2$             & $1$        & No    \\
         Binary insertion Sort & $n$             & $n^2$             & $n^2$             & $1$        & Yes    \\
         Shell Sort            & $n \, log \, n$ & $n^{\frac{4}{3}}$ & $n^{\frac{3}{2}}$ & 1          & No     \\
         Quick Sort            & $n \, log \, n$ & $n \, log \, n$   & $n^2$             & $log \, n$ & No     \\
@@ -196,7 +196,7 @@ On already sorted data, the log-log plot still comes with two groups, but severa
     \caption{Performance of different sort algorithms on already sorted dataset (log-log axis)}
 \end{figure}
 
-On inverted sorted data, the log-log plot still comes with two groups. Note that Quick sort now becomes $O(n^2)$, due to its instability if the input data is not random.
+On inverted sorted data, the log-log plot still comes with two groups. Note that Quick sort now becomes $O(n^2)$, due to its instability of computational complexity if the input data is not random.
 \begin{figure}[H]
     \centering
     \includegraphics[width=1.0\linewidth]{image/inv.eps}
@@ -209,7 +209,7 @@ In this project, we implemented several sorting algorithms and compared their pe
 
 Nowadays, an ordinary Personal Computer have more than several Gigabytes of memory, which seems enough for running those algorithms on less than $1\times10^7$ elements. However, the exlposion of data sizes never stops, and in banks or IT companies, there has TB or even EB of data need to be sorted, and the RAM of even a mainframe can not hold such amount of data.
 
-In the situation of BIG DATA, the array is stored in a hard drive or a tape, and visiting each element costs much more than $O(1)$. These sorting tasks are often done on a cluster. One of the widely used benchmarks for testing a cluster is called \textbf{TeraSort benchmark}.\uct{o2008terabyte} While sorting Terabyte of data, $O(n\,log\,n)$, \textbf{stable, parallelizable algorithms}, like the \textbf{Merge Sort}, is of much importance. 
+In the situation of BIG DATA, the array is stored in a hard drive or a tape, and visiting each element costs much more than $O(1)$. These sorting tasks are often done on a cluster. One of the widely used benchmarks for testing a cluster is called \textbf{TeraSort benchmark}.\uct{o2008terabyte} While sorting Terabyte of data, $O(n\,log\,n)$, \textbf{parallelizable algorithms}, like the \textbf{Merge Sort}, is of much importance. 
 
 \newpage
 \bibliography{references}
