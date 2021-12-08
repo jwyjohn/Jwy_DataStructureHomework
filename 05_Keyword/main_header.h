@@ -32,9 +32,7 @@
 #ifndef _KMP_H__
 #define _KMP_H__
 
-#include <iostream>
-#include <string>
-#include <vector>
+#include <bits/stdc++.h>
 
 using namespace std;
 

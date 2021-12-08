@@ -37,14 +37,7 @@
 #ifndef _BSORTTREE_H__
 #define _BSORTTREE_H__
 
-#include <iostream>
-#include <string>
-#include <cstring>
-#include <vector>
-#include <stack>
-#include <algorithm>
-#include <queue>
-#include <map>
+#include <bits/stdc++.h>
 #include <assert.h>
 
 using namespace std;

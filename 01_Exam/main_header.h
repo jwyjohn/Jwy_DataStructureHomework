@@ -33,13 +33,7 @@
 #ifndef _EXAM_H__
 #define _EXAM_H__
 
-#include <iostream>
-#include <string>
-#include <cstring>
-#include <vector>
-#include <algorithm>
-#include <queue>
-#include <map>
+#include <bits/stdc++.h>
 
 using namespace std;
 

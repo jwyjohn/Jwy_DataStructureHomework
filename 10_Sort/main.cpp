@@ -28,13 +28,6 @@
 
 
 
-#include <cstdio>
-#include <stdlib.h>
-#include <iostream>
-#include <string>
-#include <algorithm>
-#include <vector>
-#include <cstring>
 #include <exception>
 #include "main_header.h"
 

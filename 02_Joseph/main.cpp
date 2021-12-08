@@ -28,8 +28,6 @@
 
 
 
-#include <iostream>
-#include <string>
 #include "main_header.h"
 
 #define _CRT_SECURE_NO_WARNINGS

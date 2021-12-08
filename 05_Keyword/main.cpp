@@ -28,17 +28,6 @@
 
 
 
-#include <cstdio>
-#include <stdlib.h>
-#include <iostream>
-#include <string>
-#include <algorithm>
-#include <vector>
-#include <cstring>
-#include <stack>
-#include <fstream>
-#include <sstream>
-
 #include "main_header.h"
 
 #define _CRT_SECURE_NO_WARNINGS

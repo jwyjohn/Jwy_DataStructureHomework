@@ -31,7 +31,7 @@
 /*** Start of inlined file: libcmdf.h ***/
 #ifndef LIBCMDF_H_INCLUDE
 #define LIBCMDF_H_INCLUDE
-
+#include <bits/stdc++.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

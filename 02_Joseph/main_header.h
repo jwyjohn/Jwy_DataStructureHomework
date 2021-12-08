@@ -30,6 +30,7 @@
 
 #ifndef _JOSEPH_H__
 #define _JOSEPH_H__
+#include <bits/stdc++.h>
 
 struct node;
 int solve();

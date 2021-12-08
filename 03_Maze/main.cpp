@@ -10,13 +10,6 @@
  * 
  */
 #include "main_header.h"
-#include <iostream>
-#include <iomanip>
-#include <string>
-#include <cstring>
-#include <vector>
-#include <stdlib.h>
-#include <time.h>
 
 #define _CRT_SECURE_NO_WARNINGS
 #define LIBCMDF_IMPL

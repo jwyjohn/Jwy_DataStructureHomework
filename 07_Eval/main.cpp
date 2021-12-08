@@ -29,12 +29,6 @@
 
 
 #include "main_header.h"
-#include <iostream>
-#include <string>
-#include <stack>
-#include <cstring>
-#include <vector>
-#include <cmath>
 
 #define _CRT_SECURE_NO_WARNINGS
 #define LIBCMDF_IMPL

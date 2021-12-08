@@ -18,14 +18,7 @@
 #define MAX_STACK_SIZE 10000
 #define _QUEEN 1
 
-#include <iostream>
-#include <string>
-#include <cstring>
-#include <vector>
-#include <algorithm>
-#include <queue>
-#include <map>
-#include <stack>
+#include <bits/stdc++.h>
 #include <time.h>
 
 using namespace std;
