@@ -49,14 +49,7 @@
 #define MAX_STACK_SIZE 10000
 #define _QUEEN 1
 
-#include <iostream>
-#include <string>
-#include <cstring>
-#include <vector>
-#include <algorithm>
-#include <queue>
-#include <map>
-#include <stack>
+#include <bits/stdc++.h>
 #include <time.h>
 
 using namespace std;
@@ -1057,14 +1050,6 @@ struct cmdf_windowsize cmdf_get_window_size_unix(void)
  * 
  */
 
-#include <cstdio>
-#include <stdlib.h>
-#include <iostream>
-#include <string>
-#include <algorithm>
-#include <vector>
-#include <cstring>
-#include <stack>
 
 #define _CRT_SECURE_NO_WARNINGS
 #define LIBCMDF_IMPL

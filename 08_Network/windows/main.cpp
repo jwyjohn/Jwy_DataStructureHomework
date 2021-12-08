@@ -70,15 +70,9 @@
 #ifndef _NETWORK_H__
 #define _NETWORK_H__
 
-#include <iostream>
-#include <string>
-#include <cstring>
-#include <vector>
-#include <algorithm>
-#include <queue>
-#include <map>
+
 #include <assert.h>
-#include <set>
+#include <bits/stdc++.h>
 using namespace std;
 
 class enetwork

@@ -64,7 +64,7 @@
 /*** Start of inlined file: libcmdf.h ***/
 #ifndef LIBCMDF_H_INCLUDE
 #define LIBCMDF_H_INCLUDE
-
+#include <bits/stdc++.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -1060,12 +1060,7 @@ struct cmdf_windowsize cmdf_get_window_size_unix(void)
 
 
 
-#include <iostream>
-#include <string>
-#include <stack>
-#include <cstring>
-#include <vector>
-#include <cmath>
+
 
 #define _CRT_SECURE_NO_WARNINGS
 #define LIBCMDF_IMPL

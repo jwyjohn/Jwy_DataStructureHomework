@@ -48,7 +48,7 @@
  * @brief 定义一些常用的常量
  * 
  */
-
+#include <bits/stdc++.h>
 const int dx[4] = {1, 0, -1, 0};
 const int dy[4] = {0, 1, 0, -1};
 const int c[24][4] = {{0, 1, 2, 3}, {0, 1, 3, 2}, {0, 2, 1, 3}, {0, 2, 3, 1}, {0, 3, 2, 1}, {0, 3, 1, 2}, {1, 2, 0, 3}, {1, 2, 3, 0}, {1, 3, 0, 2}, {1, 3, 2, 0}, {1, 0, 2, 3}, {1, 0, 3, 2}, {2, 1, 0, 3}, {2, 1, 3, 0}, {2, 0, 1, 3}, {2, 0, 3, 1}, {2, 3, 0, 1}, {2, 3, 1, 0}, {3, 1, 2, 0}, {3, 1, 0, 2}, {3, 2, 1, 0}, {3, 2, 0, 1}, {3, 0, 2, 1}, {3, 0, 1, 2}};
@@ -1033,11 +1033,6 @@ struct cmdf_windowsize cmdf_get_window_size_unix(void)
  * @copyright Copyright (c) 2021
  * 
  */
-#include <iostream>
-#include <iomanip>
-#include <string>
-#include <cstring>
-#include <vector>
 #include <stdlib.h>
 #include <time.h>
 

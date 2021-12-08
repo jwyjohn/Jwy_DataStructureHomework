@@ -45,9 +45,7 @@
 #ifndef _KMP_H__
 #define _KMP_H__
 
-#include <iostream>
-#include <string>
-#include <vector>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -1095,16 +1093,7 @@ struct cmdf_windowsize cmdf_get_window_size_unix(void)
  * @copyright Copyright (c) 2021
  * 
  */
-#include <cstdio>
-#include <stdlib.h>
-#include <iostream>
-#include <string>
-#include <algorithm>
-#include <vector>
-#include <cstring>
-#include <stack>
-#include <fstream>
-#include <sstream>
+
 
 #define _CRT_SECURE_NO_WARNINGS
 #define LIBCMDF_IMPL

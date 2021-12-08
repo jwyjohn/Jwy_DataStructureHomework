@@ -16,7 +16,8 @@
             "name": "MinGW",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:\\msys64\\usr\\include\\**"
+                "C:\\msys64\\usr\\include\\**",
+                "C:\\msys64\\usr\\lib\\**"
             ],
             "defines": [
                 "_DEBUG",

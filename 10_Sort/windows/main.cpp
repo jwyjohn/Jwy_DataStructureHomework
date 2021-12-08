@@ -71,13 +71,7 @@
 #ifndef _SORT_H__
 #define _SORT_H__
 
-#include <iostream>
-#include <string>
-#include <cstring>
-#include <vector>
-#include <algorithm>
-#include <queue>
-#include <map>
+#include <bits/stdc++.h>
 #include <time.h>
 
 using namespace std;

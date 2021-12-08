@@ -41,7 +41,7 @@
  */
 #ifndef _JOSEPH_H__
 #define _JOSEPH_H__
-
+#include <bits/stdc++.h>
 struct node;
 int solve();
 int init();
@@ -1025,8 +1025,7 @@ struct cmdf_windowsize cmdf_get_window_size_unix(void)
  * @copyright Copyright (c) 2021
  * 
  */
-#include <iostream>
-#include <string>
+#include <bits/stdc++.h>
 
 #define _CRT_SECURE_NO_WARNINGS
 #define LIBCMDF_IMPL
