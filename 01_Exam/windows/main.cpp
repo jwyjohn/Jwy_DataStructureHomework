@@ -1097,6 +1097,7 @@ using namespace std;
 
 int clear_link(exam_candidate *head)
 {
+	// 清空链表
 	if (head->next == nullptr)
 	{
 		delete head;
@@ -1110,6 +1111,7 @@ int clear_link(exam_candidate *head)
 
 int init_link()
 {
+	// 初始化链表
 	clear_link(head);
 	head = new exam_candidate;
 	head->No = -1;
@@ -1117,6 +1119,7 @@ int init_link()
 
 int show_single_candidate(exam_candidate *candidate)
 {
+	// 打印单个人员信息
 	if (candidate == NULL)
 		return 1;
 	cout << endl;
@@ -1131,6 +1134,7 @@ int show_single_candidate(exam_candidate *candidate)
 
 exam_candidate *find_candidate(int no)
 {
+	// 遍历链表以查找特定人员
 	exam_candidate *ptr = head;
 	if (no == 0)
 		return ptr;
@@ -1145,6 +1149,7 @@ exam_candidate *find_candidate(int no)
 
 int insert_candidate_after(int no, exam_candidate *candidate)
 {
+	// 在某编号后插入人员
 	exam_candidate *insert_position = find_candidate(no);
 	if (insert_position == NULL)
 		return 0;
@@ -1166,6 +1171,7 @@ int insert_candidate_after(int no, exam_candidate *candidate)
 
 int remove_candidate(int no)
 {
+	// 移除人员
 	exam_candidate *remove_position = find_candidate(no);
 	if (remove_position == NULL)
 		return 1;
@@ -1201,6 +1207,7 @@ bool isNumber(const string &str)
 
 class Exam
 {
+	// 用类对这些操作进行包装
 private:
 public:
 	exam_candidate *head;
@@ -1538,6 +1545,7 @@ static CMDF_RETURN modify_student(cmdf_arglist *arglist)
 
 static CMDF_RETURN stat_student(cmdf_arglist *arglist)
 {
+	// 统计人员信息
 	if (E.head->next == NULL)
 	{
 		cout << " [Error] Table empty." << endl;
@@ -1594,6 +1602,7 @@ static CMDF_RETURN stat_student(cmdf_arglist *arglist)
 
 static CMDF_RETURN save_student(cmdf_arglist *arglist)
 {
+	// 将人员信息保存到文件
 	if (E.head->next == NULL)
 	{
 		cout << " [Error] Table empty." << endl;
