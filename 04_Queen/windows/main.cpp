@@ -1051,6 +1051,7 @@ struct cmdf_windowsize cmdf_get_window_size_unix(void)
  */
 
 
+
 #define _CRT_SECURE_NO_WARNINGS
 #define LIBCMDF_IMPL
 
@@ -1065,8 +1066,6 @@ using namespace std;
 
 #define SOLVE_HELP "Use like 'solve 8 y' or 'solve 9 n'. If you want to show all chessboards, use y, else use n."
 
-int N = 8; //Side effects.
-
 struct chessboard
 {
 	/**
@@ -1077,24 +1076,80 @@ struct chessboard
 	int board[MAX_CHESSBOARD_SIZE][MAX_CHESSBOARD_SIZE];
 };
 
-struct queen_stack
+// struct queen_stack
+// {
+// 	/**
+// 	 * @brief 放棋盘状态的栈及其实现
+// 	 *
+// 	 */
+// 	int ptr = 0;
+// 	chessboard data[MAX_STACK_SIZE];
+// 	queen_stack() : ptr(0){};
+// 	bool is_empty() { return (ptr == 0); };
+// 	bool empty() { return (ptr == 0); };
+// 	bool is_full() { return (ptr > (MAX_STACK_SIZE - 2)); }
+// 	chessboard top() { return data[ptr]; };
+// 	int pop()
+// 	{
+// 		if (!is_empty())
+// 		{
+// 			ptr--;
+// 			return 0;
+// 		}
+// 		else
+// 		{
+// 			return 1;
+// 		};
+// 	};
+// 	int push(chessboard data_to_push)
+// 	{
+// 		if (!is_full())
+// 		{
+// 			ptr++;
+// 			data[ptr] = data_to_push;
+
+// 			return 0;
+// 		}
+// 		else
+// 		{
+// 			return 1;
+// 		};
+// 	};
+// 	int size()
+// 	{
+// 		return ptr;
+// 	};
+// 	int clear()
+// 	{
+// 		ptr = 0;
+// 		return 0;
+// 	};
+// } s, ans;
+
+struct queen_stack_l_node
+{
+	chessboard data;
+	queen_stack_l_node *next = NULL;
+};
+
+struct queen_stack_l
 {
 	/**
-	 * @brief 放棋盘状态的栈及其实现
+	 * @brief 放棋盘状态的栈及其实现，链式栈改进。
 	 * 
 	 */
-	int ptr = 0;
-	chessboard data[MAX_STACK_SIZE];
-	queen_stack() : ptr(0){};
-	bool is_empty() { return (ptr == 0); };
-	bool empty() { return (ptr == 0); };
-	bool is_full() { return (ptr > (MAX_STACK_SIZE - 2)); }
-	chessboard top() { return data[ptr]; };
+	queen_stack_l_node *head;
+	queen_stack_l() : head(NULL){};
+	bool is_empty() { return (head == NULL); };
+	bool empty() { return (head == NULL); };
+	chessboard top() { return head->data; };
 	int pop()
 	{
 		if (!is_empty())
 		{
-			ptr--;
+			queen_stack_l_node *tmp = head;
+			head = head->next;
+			delete tmp;
 			return 0;
 		}
 		else
@@ -1104,26 +1159,32 @@ struct queen_stack
 	};
 	int push(chessboard data_to_push)
 	{
-		if (!is_full())
-		{
-			ptr++;
-			data[ptr] = data_to_push;
-
-			return 0;
-		}
-		else
-		{
-			return 1;
-		};
-	};
-	int size()
-	{
-		return ptr;
+		// 常见的链表操作
+		queen_stack_l_node *tmp = new queen_stack_l_node;
+		tmp->data = data_to_push;
+		tmp->next = head;
+		head = tmp;
+		return 0;
 	};
 	int clear()
 	{
-		ptr = 0;
+		while (head != NULL)
+		{
+			pop();
+		};
 		return 0;
+	};
+	int size()
+	{
+		// 遍历栈以获得栈的深度
+		int ret = 0;
+		queen_stack_l_node *tmp = head;
+		while (tmp != NULL)
+		{
+			tmp = tmp->next;
+			ret++;
+		};
+		return ret;
 	};
 } s, ans;
 
@@ -1194,7 +1255,7 @@ int queen_solution(int n, bool show_board)
 	 * 
 	 */
 	chessboard a;
-	memset(a.board,0,sizeof(a.board));
+	memset(a.board, 0, sizeof(a.board));
 	// stack<chessboard> s, ans;
 	N = n;
 	s.clear();
@@ -1271,9 +1332,19 @@ static CMDF_RETURN solve_queen(cmdf_arglist *arglist)
 		return CMDF_OK;
 	};
 	bool show_board = (strcmp(arglist->args[1], "y") == 0) ? true : false;
-	if (n > MAX_CHESSBOARD_SIZE)
+	if (n < 3)
 	{
-		cout << " [Size Error] Too large chessborad size!\n [Tip] Try between 4 to 25" << endl;
+		cout << " [Size Error] Invalid chessborad size!\n [Tip] Try between 4 to 16" << endl;
+		// return CMDF_OK;
+	};
+	if (n > MAX_CHESSBOARD_SIZE - 1)
+	{
+		cout << " [Size Error] Too large chessborad size!\n [Tip] Try between 4 to 16" << endl;
+		return CMDF_OK;
+	};
+	if (n > MAX_CHESSBOARD_SIZE - 1)
+	{
+		cout << " [WARNING] Too large chessborad size! May cause OOM (out of memory) error.\n" << endl;
 		return CMDF_OK;
 	};
 	queen_solution(n, show_board);
