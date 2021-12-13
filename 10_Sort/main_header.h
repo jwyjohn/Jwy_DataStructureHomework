@@ -10,36 +10,18 @@
  * 
  */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*** Start of inlined file: sort.h ***/
 /**
  * 包括函数的声明和实现
  *
  */
 
-
 #ifndef _SORT_H__
 #define _SORT_H__
 
 #include <bits/stdc++.h>
 #include <time.h>
+#include <chrono>
 
 using namespace std;
 
@@ -678,7 +660,6 @@ sort_func_result msd_radix_sort(int *array, int array_size, bool (*cmp)(int a, i
 	return ret;
 };
 
-
 /**
  * @brief 用于测试排序函数的对外接口
  * 
@@ -697,10 +678,10 @@ int test_sort_function(sort_func_result (*fp)(int *array, int array_size, bool (
 	memcpy(array_to_sort, &random_int_array[0], random_int_array.size() * sizeof(random_int_array[0]));
 	memcpy(array_after_sort, &random_int_array[0], random_int_array.size() * sizeof(random_int_array[0]));
 	cout << " [Done] Data prepared, start to sort." << endl;
-	clock_t start, end;
-	start = clock();
+	auto start = chrono::system_clock::now();
 	res = fp(array_after_sort, array_size, cmp);
-	end = clock();
+	auto end = chrono::system_clock::now();
+	auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
 	cout << " [" << res.func_name << "]" << endl;
 	cout << " [After sorting]";
 	int w = 10;
@@ -716,7 +697,7 @@ int test_sort_function(sort_func_result (*fp)(int *array, int array_size, bool (
 	cout << " [Sort Function] " << res.func_name << endl;
 	cout << " [Swap calls] " << res.swap_count << endl;
 	cout << " [Compare calls] " << res.compare_count << endl;
-	cout << " [Clocks used] " << (end - start) << " clocks" << endl;
+	cout << " [Clocks used] " << duration.count() << " clocks" << endl;
 	return 0;
 };
 
@@ -750,6 +731,20 @@ map<string, int> sorts_name = {
 	{"merge", 9},
 	{"lsd", 10},
 	{"msd", 11},
+};
+map<string, bool> sorts_help = {
+	{"default", false},
+	{"bubble", true},
+	{"selection", false},
+	{"insertion", false},
+	{"binsertion", false},
+	{"shell", false},
+	{"quick", false},
+	{"heap", false},
+	{"bucket", false},
+	{"merge", true},
+	{"lsd", true},
+	{"msd", true},
 };
 #endif
 

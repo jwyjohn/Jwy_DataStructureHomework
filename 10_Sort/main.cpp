@@ -10,24 +10,6 @@
  * 
  */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include <exception>
 #include "main_header.h"
 
@@ -157,27 +139,30 @@ static CMDF_RETURN test_sort(cmdf_arglist *arglist)
 	{
 		cout << " [Sytax Error] Invaild arguments!\n [Tip] Please Enter the command like \"test quick\"" << endl;
 		cout << " [Tip] Vaild sort algorithms are:" << endl;
-		for (auto u : sorts_name)
+		for (auto u : sorts_help)
 		{
-			cout << "\t- " << u.first << endl;
+			string stb = (u.second) ? " (stable)" : " (unstable)";
+			cout << "\t- " << u.first << stb << endl;
 		};
 		return CMDF_OK;
 	};
 	if (strcmp(arglist->args[0], "help") == 0)
 	{
 		cout << " [Tip] Vaild sort algorithms are:" << endl;
-		for (auto u : sorts_name)
+		for (auto u : sorts_help)
 		{
-			cout << "\t- " << u.first << endl;
+			string stb = (u.second) ? " (stable)" : " (unstable)";
+			cout << "\t- " << u.first << stb << endl;
 		};
 		return CMDF_OK;
 	};
 	if (sorts_name.find(arglist->args[0]) == sorts_name.end())
 	{
 		cout << " [Sytax Error] Invaild sort algorithm.\n [Tip] Vaild sort algorithms are:" << endl;
-		for (auto u : sorts_name)
+		for (auto u : sorts_help)
 		{
-			cout << "\t- " << u.first << endl;
+			string stb = (u.second) ? " (stable)" : " (unstable)";
+			cout << "\t- " << u.first << stb << endl;
 		};
 		return CMDF_OK;
 	};
