@@ -83,7 +83,7 @@ Usage of commands can be found on the main screen, and the \lstinline{help} comm
     \item \lstinline{exit} : Exit the program.
     \item \lstinline{solve [N] [S] [K] [M]} : Simulate the Josephus problem with $n$ people numbered from $1$ to $n$, starting from position $s$, kill one every $k$ people and left $m$ people ($n\geq s,m >0$,$k>0$).
 \end{enumerate}
-
+Note that if a user inputs invalid commands or arguments, the program will be robust enough (at least to some extent) to detect the exception and return an error message. Detailed Demostration of this feature can be explored when using this program.
 \subsection{Solve some cases}
 
 \paragraph{Case 1} Type \lstinline{solve 30 1 9 15} . Then the killed people and the survivors will be shown.
