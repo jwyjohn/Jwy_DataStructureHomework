@@ -49,3 +49,5 @@
 *.fls
 *.fdb_latexmk
 *.pdf
+
+!2021_Requirements.pdf
