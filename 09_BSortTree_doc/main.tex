@@ -117,6 +117,12 @@ After removing the element, the properties of the binary search tree remains the
 
 \section{About binary search tree}
 
+A binary search tree (BST), also called an ordered or sorted binary tree, is a rooted binary tree data structure whose internal nodes each store a key greater than all the keys in the node’s left subtree and less than those in its right subtree. A binary tree is a type of data structure for storing data such as numbers in an organized way. Binary search trees allow binary search for fast lookup, addition and removal of data items, and can be used to implement dynamic sets and lookup tables. The order of nodes in a BST means that each comparison skips about half of the remaining tree, so the whole lookup takes time proportional to the binary logarithm of the number of items stored in the tree. This is much better than the linear time required to find items by key in an (unsorted) array, but slower than the corresponding operations on hash tables. Several variants of the binary search tree have been studied.\uct{wiki:Binary_search_tree}
+
+Self-balancing binary search trees modify the basic insertion and deletion operations of binary search trees, often using additional information on each node, in order to maintain logarithmic depth. These include two early structures of this type, AVL trees, which maintain an invariant that subtree heights differ by at most one, and red-black trees, which instead color nodes red or black and maintain an invariant on the number of colored nodes on each root-to-leaf path.
+
+One of the commonly used binary search trees is the AVL tree, which is named after its two Soviet inventors, Georgy Adelson-Velsky and Evgenii Landis, who published it in their 1962 paper "An algorithm for the organization of information". AVL tree can support the operations of search and insertion in $O(log\ n)$ time, with an $O(n)$ extra space needed. The implementation of the AVL tree can be referenced in the author's source code.
+
 \section{Notes on the source code}
 
 If you want to re-use the author's source code in a project, the following are some explaination about the important part of the code. Comments in the source file can provide detailed help, but the following shows the outline.

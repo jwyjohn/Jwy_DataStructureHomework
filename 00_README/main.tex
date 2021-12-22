@@ -50,7 +50,7 @@ In the data structure project of this semester, the author completed the tasks r
     \item Family Tree (家谱管理系统)
     \item Expression Eval (表达式计算)
     \item Electric Network (电网建设造价模拟系统)
-    \item Binary Sort Tree (二叉排序数)
+    \item Binary Sort Tree (二叉排序树)
     \item Sort Algorithms (8种排序算法的比较案例)
 \end{enumerate}
 
@@ -63,20 +63,33 @@ In this \lstinline{README}, the author will show the general structure of the co
 In the root folder of the git repo, dirctories named like \lstinline{10_Sort} can be found. One example of the structure of these dirctories is shown below.
 
 \begin{lstlisting}
-10_Sort/
+.
 |-- 10_1951510_姜文渊.cpp
 |-- 10_1951510_姜文渊.exe
-`-- linux
+|-- 10_1951510_姜文渊.pdf
+`-- Linux
     |-- Makefile
-    |-- sort.cpp
-    `-- sort.h
-1 directory, 5 files
+    |-- linux_10
+    |-- main.cpp
+    `-- main_header.h
+
+1 directory, 7 files
 \end{lstlisting}
 
 As can be seen, one \lstinline{*.cpp} file and one \lstinline{*.exe} file can be found. They are the source file and its compiled corresponding windows executable. If the windows executable won't run properly on your windows platform (which is a rare situation), then it is recommended to recompile the source file on your platform.
 
-The \lstinline{linux} dirctory holds several files: \lstinline{*.cpp}, \lstinline{*.h}, \lstinline{Makefile} and two more text files. The header and source file are to be compiled using the configurations provided in \lstinline{Makefile}. Since there are no binary provided, you may need to compiled the files on your own linux distribution.
+The \lstinline{linux} dirctory holds several files: \lstinline{*.cpp}, \lstinline{*.h}, \lstinline{Makefile} and a \lstinline{linux_N} (where \lstinline{N} is the number of the project). The header and source file are to be compiled using the configurations provided in \lstinline{Makefile}. The binary \lstinline{linux_10} is an executable binary for most modern linux distributions on x86 64bit platform. Since there are no guarantee that the binary provided can run properly on your platform, you may need to compiled the files on your own linux distribution. Below is the file header of one linux binary, which indicates its architecture.
 
+\begin{lstlisting}
+linux_1:     file format elf64-x86-64
+architecture: i386:x86-64, flags 0x00000112:
+EXEC_P, HAS_SYMS, D_PAGED
+start address 0x000000000040135e
+\end{lstlisting}
+
+To run a binary on linux, simply cd into the directory and run \lstinline{./linux_*} in the shell.
+
+Note that the \lstinline{sha256sum.txt} is the checksum of each file of the uploaded projects.
 
 \section{How to build}
 
